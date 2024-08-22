@@ -101,9 +101,7 @@ const Nav = () => {
               />
             </svg>
             {!user && showAuthWarning && (
-              <div className="auth-warning">
-                Please sign in to bookmark items
-              </div>
+              <p className="auth-warning">Please sign in account</p>
             )}
           </div>
           <div className="nav__wrapper-sign">
@@ -121,8 +119,10 @@ const Nav = () => {
                 </button>
                 {showSignInOptions && (
                   <div className="nav__sign-in-options">
-                    Create account to save and retrieve bookmarks across your
-                    devices
+                    <div className="nav__warning">
+                      Create account to save and retrieve bookmarks across your
+                      devices
+                    </div>
                     <button className="google-btn" onClick={handleGoogleSignIn}>
                       <img
                         src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
