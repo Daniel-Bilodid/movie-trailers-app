@@ -6,7 +6,15 @@
   height: 40px;
   &__logo {
     color: white;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 40px;
+    p {
+      margin-top: 4px;
+      font-size: large;
+    }
   }
+
   &__wrapper {
     display: flex;
     gap: 20px;
@@ -16,6 +24,12 @@
     }
     &-sign {
       margin-left: 40px;
+
+      background-color: white;
+      background: none;
+      border: none;
+      color: white;
+      font-size: large;
     }
   }
 
@@ -24,4 +38,63 @@
     height: 1px;
     background-color: white;
   }
+}
+.nav__sign-in-options {
+  background: rgb(22, 29, 48);
+  position: absolute;
+
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  width: 220px;
+  height: 200px;
+  right: 9px;
+  margin-top: 10px;
+}
+
+.nav__wrapper-sign {
+  position: relative;
+}
+.google-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #555;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.google-btn img {
+  width: 20px;
+  margin-right: 10px;
+}
+.github-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.github-btn img {
+  width: 20px;
+  margin-right: 10px;
+}
+.sign-button {
+  padding: 10px 15px;
+  background: rgb(22, 29, 48);
+  border: none;
+  color: white;
+  border-radius: 999px;
+  cursor: pointer;
 }
