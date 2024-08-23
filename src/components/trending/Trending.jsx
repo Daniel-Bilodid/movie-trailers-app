@@ -1,36 +1,53 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-
+import Slider from "react-slick";
+import { fetchTrendingMovies } from "../../utils/fetchTrailers";
+import { Link } from "react-router-dom";
 import "./trending.scss";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const Trending = () => {
   const [trailers, setTrailers] = useState([]);
 
+  const NextArrow = (props) => {
+    const { onClick } = props;
+    return (
+      <div className="custom-next-arrow" onClick={onClick}>
+        →
+      </div>
+    );
+  };
+
+  const PrevArrow = (props) => {
+    const { onClick } = props;
+    return (
+      <div className="custom-prev-arrow" onClick={onClick}>
+        ←
+      </div>
+    );
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
   useEffect(() => {
-    const fetchTrendingMovies = async () => {
+    const loadTrailers = async () => {
       try {
-        const trendingResponse = await axios.get(
-          `https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
-        );
-        const trendingMovies = trendingResponse.data.results;
-
-        const trailersPromises = trendingMovies.map(async (movie) => {
-          const videoResponse = await axios.get(
-            `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
-          );
-          const videos = videoResponse.data.results.filter(
-            (video) => video.type === "Trailer" && video.site === "YouTube"
-          );
-          return { movie, trailers: videos, currentTrailerIndex: 0 };
-        });
-
-        const trailersData = await Promise.all(trailersPromises);
-        setTrailers(trailersData);
+        const trailersData = await fetchTrendingMovies(3);
+        setTrailers(trailersData.slice(0, 40));
       } catch (error) {
-        console.error("Error ", error);
+        console.error("Error loading trailers", error);
       }
     };
 
-    fetchTrendingMovies();
+    loadTrailers();
   }, []);
 
   const handleNextTrailer = (index) => {
@@ -66,34 +83,41 @@ const Trending = () => {
   };
 
   return (
-    <div>
-      <h2>Trending</h2>
-      {trailers.map(({ movie, trailers, currentTrailerIndex }, index) => (
-        <div key={movie.id}>
-          <h3>{movie.title}</h3>
-          {trailers.length > 0 ? (
-            <div>
-              <iframe
-                width="560"
-                height="315"
-                src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
-                title={trailers[currentTrailerIndex].name}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+    <div className="trending">
+      <div className="trending__wrapper">
+        <h2 className="trending__title">Trending</h2>
+        <Link className="trending__more" to="/more-trailers">
+          More Trailers
+        </Link>
+      </div>
+      <Slider {...settings}>
+        {trailers.map(({ movie, trailers, currentTrailerIndex }, index) => (
+          <div key={movie.id}>
+            <h3 className="trending__movie-title">{movie.title}</h3>
+            {trailers.length > 0 ? (
               <div>
-                <button onClick={() => handlePrevTrailer(index)}>next</button>
-                <button onClick={() => handleNextTrailer(index)}>
-                  previous
-                </button>
+                <iframe
+                  width="560"
+                  height="315"
+                  src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
+                  title={trailers[currentTrailerIndex].name}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+                <div>
+                  <button onClick={() => handlePrevTrailer(index)}>
+                    previous
+                  </button>
+                  <button onClick={() => handleNextTrailer(index)}>next</button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <p>no trailer</p>
-          )}
-        </div>
-      ))}
+            ) : (
+              <p>No trailer</p>
+            )}
+          </div>
+        ))}
+      </Slider>
     </div>
   );
 };

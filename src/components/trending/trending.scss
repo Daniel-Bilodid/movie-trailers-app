@@ -1,6 +1,30 @@
 .trending {
+  &__title {
+    color: white;
+  }
+  &__movie {
+    &-title {
+      color: white;
+    }
+  }
+
   &__wrapper {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-between;
   }
+  &__more {
+    color: white;
+    font-size: large;
+    cursor: pointer;
+  }
+}
+.custom-next-arrow {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+}
+.custom-prev-arrow {
+  width: 20px;
+  height: 20px;
+  background-color: white;
 }
