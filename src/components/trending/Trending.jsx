@@ -107,25 +107,31 @@ const Trending = () => {
                 <div>
                   {playVideo[index] ? (
                     <>
-                      <iframe
-                        className="trending__movie-frame"
-                        width="560"
-                        height="315"
-                        src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
-                        title={trailers[currentTrailerIndex].name}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
-                      <div className="trending__movie-year">{release_year}</div>
-                      *
-                      <div>
-                        <button onClick={() => handlePrevTrailer(index)}>
-                          previous
-                        </button>
-                        <button onClick={() => handleNextTrailer(index)}>
-                          next
-                        </button>
+                      <div className="trending__movie-modal">
+                        <iframe
+                          className="trending__movie-frame"
+                          width="560"
+                          height="315"
+                          src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
+                          title={trailers[currentTrailerIndex].name}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
+                        <div className="trending__movie-info">
+                          <div className="trending__movie-year">
+                            {release_year}
+                          </div>
+
+                          <div>
+                            <button onClick={() => handlePrevTrailer(index)}>
+                              previous
+                            </button>
+                            <button onClick={() => handleNextTrailer(index)}>
+                              next
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </>
                   ) : (
