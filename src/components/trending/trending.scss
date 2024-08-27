@@ -6,9 +6,11 @@
     &-title {
       color: white;
     }
-
+    &-year {
+      color: white;
+    }
     &-frame {
-      width: 440px;
+      width: 342px;
       height: 269px;
       border-radius: 10px;
     }
@@ -35,7 +37,7 @@
   background-color: white;
 }
 .slick-slider {
-  margin-left: 30px;
+  margin-left: 15px;
 }
 
 .trending__slider {
@@ -55,17 +57,19 @@
   }
 
   .custom-prev-arrow {
-    left: 10px;
+    left: -12px;
   }
 
   .custom-next-arrow {
     right: 10px;
   }
 }
-.trending__movie-thumbnail {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  overflow: hidden;
+.trending {
+  &__movie-thumbnail {
+    width: 342px;
+    height: auto; // Поддержание пропорций
+    object-fit: cover; // Обрезка изображения под контейнер
+    border-radius: 10px;
+    cursor: pointer;
+  }
 }

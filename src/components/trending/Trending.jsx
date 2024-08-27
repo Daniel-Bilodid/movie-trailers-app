@@ -32,8 +32,8 @@ const Trending = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToShow: 4,
+    slidesToScroll: 4,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
@@ -42,6 +42,7 @@ const Trending = () => {
     const loadTrailers = async () => {
       try {
         const trailersData = await fetchTrendingMovies(1);
+        console.log("Trailers Data in Component:", trailersData);
         setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);
@@ -57,6 +58,37 @@ const Trending = () => {
       [index]: true,
     }));
   };
+  const handleNextTrailer = (index) => {
+    setTrailers((prevTrailers) => {
+      const updatedTrailers = [...prevTrailers];
+      const currentTrailer = updatedTrailers[index];
+      const nextIndex =
+        (currentTrailer.currentTrailerIndex + 1) %
+        currentTrailer.trailers.length;
+      updatedTrailers[index] = {
+        ...currentTrailer,
+        currentTrailerIndex: nextIndex,
+      };
+      return updatedTrailers;
+    });
+  };
+
+  const handlePrevTrailer = (index) => {
+    setTrailers((prevTrailers) => {
+      const updatedTrailers = [...prevTrailers];
+      const currentTrailer = updatedTrailers[index];
+      const prevIndex =
+        (currentTrailer.currentTrailerIndex -
+          1 +
+          currentTrailer.trailers.length) %
+        currentTrailer.trailers.length;
+      updatedTrailers[index] = {
+        ...currentTrailer,
+        currentTrailerIndex: prevIndex,
+      };
+      return updatedTrailers;
+    });
+  };
 
   return (
     <div className="trending">
@@ -67,36 +99,50 @@ const Trending = () => {
         </Link>
       </div>
       <Slider {...settings} className="trending__slider">
-        {trailers.map(({ movie, trailers, currentTrailerIndex }, index) => (
-          <div key={movie.id}>
-            <h3 className="trending__movie-title">{movie.title}</h3>
-            {trailers.length > 0 ? (
-              <div>
-                {playVideo[index] ? (
-                  <iframe
-                    className="trending__movie-frame"
-                    width="560"
-                    height="315"
-                    src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
-                    title={trailers[currentTrailerIndex].name}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                ) : (
-                  <img
-                    className="trending__movie-thumbnail"
-                    src={`https://img.youtube.com/vi/${trailers[currentTrailerIndex].key}/hqdefault.jpg`}
-                    alt={`${trailers[currentTrailerIndex].name} thumbnail`}
-                    onClick={() => handlePlayVideo(index)}
-                  />
-                )}
-              </div>
-            ) : (
-              <p>No trailer</p>
-            )}
-          </div>
-        ))}
+        {trailers.map(
+          ({ movie, trailers, currentTrailerIndex, release_year }, index) => (
+            <div key={movie.id}>
+              <h3 className="trending__movie-title">{movie.title}</h3>
+              {trailers.length > 0 ? (
+                <div>
+                  {playVideo[index] ? (
+                    <>
+                      <iframe
+                        className="trending__movie-frame"
+                        width="560"
+                        height="315"
+                        src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
+                        title={trailers[currentTrailerIndex].name}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                      <div className="trending__movie-year">{release_year}</div>
+                      *
+                      <div>
+                        <button onClick={() => handlePrevTrailer(index)}>
+                          previous
+                        </button>
+                        <button onClick={() => handleNextTrailer(index)}>
+                          next
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <img
+                      className="trending__movie-thumbnail"
+                      src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
+                      alt={`${movie.title} thumbnail`}
+                      onClick={() => handlePlayVideo(index)}
+                    />
+                  )}
+                </div>
+              ) : (
+                <p>No trailer</p>
+              )}
+            </div>
+          )
+        )}
       </Slider>
     </div>
   );

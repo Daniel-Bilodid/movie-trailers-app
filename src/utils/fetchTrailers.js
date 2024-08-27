@@ -14,7 +14,17 @@ export const fetchTrendingMovies = async (page = 1) => {
       const videos = videoResponse.data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"
       );
-      return { movie, trailers: videos, currentTrailerIndex: 0 };
+      const releaseYear = movie.release_date
+        ? new Date(movie.release_date).getFullYear()
+        : "Unknown";
+      console.log(`Release Year for movie ${movie.title}:`, releaseYear);
+      return {
+        movie,
+        trailers: videos,
+        currentTrailerIndex: 0,
+        poster_path: movie.poster_path,
+        release_year: releaseYear,
+      };
     });
 
     return await Promise.all(trailersPromises);
