@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const Trending = () => {
   const [trailers, setTrailers] = useState([]);
+  const [playVideo, setPlayVideo] = useState({});
 
   const NextArrow = (props) => {
     const { onClick } = props;
@@ -40,8 +41,8 @@ const Trending = () => {
   useEffect(() => {
     const loadTrailers = async () => {
       try {
-        const trailersData = await fetchTrendingMovies(3);
-        setTrailers(trailersData.slice(0, 40));
+        const trailersData = await fetchTrendingMovies(1);
+        setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);
       }
@@ -50,36 +51,11 @@ const Trending = () => {
     loadTrailers();
   }, []);
 
-  const handleNextTrailer = (index) => {
-    setTrailers((prevTrailers) => {
-      const updatedTrailers = [...prevTrailers];
-      const currentTrailer = updatedTrailers[index];
-      const nextIndex =
-        (currentTrailer.currentTrailerIndex + 1) %
-        currentTrailer.trailers.length;
-      updatedTrailers[index] = {
-        ...currentTrailer,
-        currentTrailerIndex: nextIndex,
-      };
-      return updatedTrailers;
-    });
-  };
-
-  const handlePrevTrailer = (index) => {
-    setTrailers((prevTrailers) => {
-      const updatedTrailers = [...prevTrailers];
-      const currentTrailer = updatedTrailers[index];
-      const prevIndex =
-        (currentTrailer.currentTrailerIndex -
-          1 +
-          currentTrailer.trailers.length) %
-        currentTrailer.trailers.length;
-      updatedTrailers[index] = {
-        ...currentTrailer,
-        currentTrailerIndex: prevIndex,
-      };
-      return updatedTrailers;
-    });
+  const handlePlayVideo = (index) => {
+    setPlayVideo((prevState) => ({
+      ...prevState,
+      [index]: true,
+    }));
   };
 
   return (
@@ -90,27 +66,31 @@ const Trending = () => {
           More Trailers
         </Link>
       </div>
-      <Slider {...settings}>
+      <Slider {...settings} className="trending__slider">
         {trailers.map(({ movie, trailers, currentTrailerIndex }, index) => (
           <div key={movie.id}>
             <h3 className="trending__movie-title">{movie.title}</h3>
             {trailers.length > 0 ? (
               <div>
-                <iframe
-                  width="560"
-                  height="315"
-                  src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
-                  title={trailers[currentTrailerIndex].name}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-                <div>
-                  <button onClick={() => handlePrevTrailer(index)}>
-                    previous
-                  </button>
-                  <button onClick={() => handleNextTrailer(index)}>next</button>
-                </div>
+                {playVideo[index] ? (
+                  <iframe
+                    className="trending__movie-frame"
+                    width="560"
+                    height="315"
+                    src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
+                    title={trailers[currentTrailerIndex].name}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <img
+                    className="trending__movie-thumbnail"
+                    src={`https://img.youtube.com/vi/${trailers[currentTrailerIndex].key}/hqdefault.jpg`}
+                    alt={`${trailers[currentTrailerIndex].name} thumbnail`}
+                    onClick={() => handlePlayVideo(index)}
+                  />
+                )}
               </div>
             ) : (
               <p>No trailer</p>

@@ -6,6 +6,12 @@
     &-title {
       color: white;
     }
+
+    &-frame {
+      width: 440px;
+      height: 269px;
+      border-radius: 10px;
+    }
   }
 
   &__wrapper {
@@ -27,4 +33,39 @@
   width: 20px;
   height: 20px;
   background-color: white;
+}
+.slick-slider {
+  margin-left: 30px;
+}
+
+.trending__slider {
+  position: relative;
+
+  .custom-next-arrow,
+  .custom-prev-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1;
+  }
+
+  .custom-prev-arrow {
+    left: 10px;
+  }
+
+  .custom-next-arrow {
+    right: 10px;
+  }
+}
+.trending__movie-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  overflow: hidden;
 }

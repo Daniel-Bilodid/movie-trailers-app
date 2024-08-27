@@ -1,23 +1,46 @@
 import React, { useState, useEffect } from "react";
 import "./moreTrailers.scss";
-
 import { fetchTrendingMovies } from "../../utils/fetchTrailers";
 
 const MoreTrailers = () => {
   const [trailers, setTrailers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  const loadTrailers = async (page) => {
+    setLoading(true);
+    try {
+      const trailersData = await fetchTrendingMovies(page);
+      if (trailersData.length > 0) {
+        setTrailers((prevTrailers) => [...prevTrailers, ...trailersData]);
+        setCurrentPage(page);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error loading trailers", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadTrailers = async () => {
-      try {
-        const trailersData = await fetchTrendingMovies();
-        setTrailers(trailersData);
-      } catch (error) {
-        console.error("Error loading trailers", error);
-      }
-    };
-
-    loadTrailers();
+    loadTrailers(currentPage); // Загрузка трейлеров при первом рендере
   }, []);
+
+  const handleNextPage = () => {
+    if (hasMore && !loading) {
+      loadTrailers(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setTrailers([]);
+      loadTrailers(currentPage - 1);
+    }
+  };
 
   const handleNextTrailer = (index) => {
     setTrailers((prevTrailers) => {
@@ -79,6 +102,15 @@ const MoreTrailers = () => {
           )}
         </div>
       ))}
+      <div className="pagination-controls">
+        <button onClick={handlePrevPage} disabled={currentPage <= 1 || loading}>
+          Previous
+        </button>
+        <button onClick={handleNextPage} disabled={!hasMore || loading}>
+          Next
+        </button>
+        {loading && <p>Loading...</p>}
+      </div>
     </div>
   );
 };
