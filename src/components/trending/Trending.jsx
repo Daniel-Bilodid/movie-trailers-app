@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { fetchTrendingMovies } from "../../utils/fetchTrailers";
 import { Link } from "react-router-dom";
+import Modal from "../movieModal/MovieModal";
 import "./trending.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const Trending = () => {
   const [trailers, setTrailers] = useState([]);
-  const [playVideo, setPlayVideo] = useState({});
+  const [playVideo, setPlayVideo] = useState(null);
 
   const NextArrow = (props) => {
     const { onClick } = props;
@@ -42,7 +43,6 @@ const Trending = () => {
     const loadTrailers = async () => {
       try {
         const trailersData = await fetchTrendingMovies(1);
-        console.log("Trailers Data in Component:", trailersData);
         setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);
@@ -53,11 +53,13 @@ const Trending = () => {
   }, []);
 
   const handlePlayVideo = (index) => {
-    setPlayVideo((prevState) => ({
-      ...prevState,
-      [index]: true,
-    }));
+    setPlayVideo(index);
   };
+
+  const handleCloseModal = () => {
+    setPlayVideo(null);
+  };
+
   const handleNextTrailer = (index) => {
     setTrailers((prevTrailers) => {
       const updatedTrailers = [...prevTrailers];
@@ -105,43 +107,12 @@ const Trending = () => {
               <h3 className="trending__movie-title">{movie.title}</h3>
               {trailers.length > 0 ? (
                 <div>
-                  {playVideo[index] ? (
-                    <>
-                      <div className="trending__movie-modal">
-                        <iframe
-                          className="trending__movie-frame"
-                          width="560"
-                          height="315"
-                          src={`https://www.youtube.com/embed/${trailers[currentTrailerIndex].key}`}
-                          title={trailers[currentTrailerIndex].name}
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        ></iframe>
-                        <div className="trending__movie-info">
-                          <div className="trending__movie-year">
-                            {release_year}
-                          </div>
-
-                          <div>
-                            <button onClick={() => handlePrevTrailer(index)}>
-                              previous
-                            </button>
-                            <button onClick={() => handleNextTrailer(index)}>
-                              next
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <img
-                      className="trending__movie-thumbnail"
-                      src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
-                      alt={`${movie.title} thumbnail`}
-                      onClick={() => handlePlayVideo(index)}
-                    />
-                  )}
+                  <img
+                    className="trending__movie-thumbnail"
+                    src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
+                    alt={`${movie.title} thumbnail`}
+                    onClick={() => handlePlayVideo(index)}
+                  />
                 </div>
               ) : (
                 <p>No trailer</p>
@@ -150,6 +121,45 @@ const Trending = () => {
           )
         )}
       </Slider>
+
+      <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
+        {playVideo !== null && (
+          <>
+            <iframe
+              className="trending__movie-frame"
+              width="560"
+              height="315"
+              src={`https://www.youtube.com/embed/${
+                trailers[playVideo].trailers[
+                  trailers[playVideo].currentTrailerIndex
+                ].key
+              }`}
+              title={
+                trailers[playVideo].trailers[
+                  trailers[playVideo].currentTrailerIndex
+                ].name
+              }
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+            <div className="trending__movie-info">
+              <div className="trending__movie-year">
+                {trailers[playVideo].release_year}
+              </div>
+
+              <div>
+                <button onClick={() => handlePrevTrailer(playVideo)}>
+                  previous
+                </button>
+                <button onClick={() => handleNextTrailer(playVideo)}>
+                  next
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };
