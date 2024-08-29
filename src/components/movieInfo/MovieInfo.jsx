@@ -42,41 +42,57 @@ const MovieInfo = () => {
     <div className="movie__info">
       {movie ? (
         <>
-          <h1 className="movie__info-title">{movie.title}</h1>
-          <img
-            src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
-            alt={`${movie.title} thumbnail`}
-          />
-          <div className="movie__info-genres">
-            Genres: {movie.genres.map((genre) => genre.name).join(",")}
+          <div className="movie__info-title-wrapper">
+            <img
+              className="movie__info-img"
+              src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
+              alt={`${movie.title} thumbnail`}
+            />
           </div>
-          <div className="movie__info-tagline">Tagline: {movie.tagline}</div>
-          <div className="movie__info-overview">
-            Overview:
-            <br />
-            {movie.overview}
-          </div>
+          <div className="movie__info-wrapper">
+            <h1 className="movie__info-title">{movie.title}</h1>
+            <div className="movie__info-genres">
+              <span>Genres:</span>{" "}
+              {movie.genres.map((genre) => genre.name).join(",")}
+            </div>
+            <div className="movie__info-tagline">
+              <span>Tagline:</span> {movie.tagline}
+            </div>
+            <div className="movie__info-overview">
+              <span> Overview:</span>
+              <br />
+              <div className="movie__info-overview-text">{movie.overview}</div>
+            </div>
 
-          <div className="movie__info-cast">
-            <ul>
-              {cast.map((member) => (
-                <li key={member.cast_id}>{member.name}</li>
-              ))}
-            </ul>
-          </div>
+            <div className="movie__info-cast">
+              <span> Cast: </span>
+              <ul>
+                {cast.map((member) => (
+                  <li key={member.cast_id}>{member.name}</li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="movie__info-runtime">
-            Runtime: {movie.runtime} minutes
-          </div>
-          <div className="movie__info-language">
-            Language: {movie.spoken_languages[0]?.name}
-          </div>
+            <div className="movie__info-footer">
+              <div className="movie__info-runtime">
+                <span> Runtime: </span>
+                <br />
+                {movie.runtime} minutes
+              </div>
+              <div className="movie__info-language">
+                <span> Language:</span> <br /> {movie.spoken_languages[0]?.name}
+              </div>
 
-          <div className="movie__info-release">
-            Release date: {movie.release_date}
-          </div>
+              <div className="movie__info-release">
+                <span>Release date:</span> <br /> {movie.release_date}
+              </div>
 
-          <div className="movie__info-status">Status: {movie.status}</div>
+              <div className="movie__info-status">
+                <span>Status: </span> <br />
+                {movie.status}
+              </div>
+            </div>
+          </div>
         </>
       ) : (
         <p>Loading...</p>
