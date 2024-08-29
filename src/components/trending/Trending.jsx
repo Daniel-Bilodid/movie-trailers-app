@@ -104,6 +104,12 @@ const Trending = () => {
         {trailers.map(
           ({ movie, trailers, currentTrailerIndex, release_year }, index) => (
             <div key={movie.id}>
+              <Link
+                className="trending__bookmark"
+                to={`/movie-info/${movie.id}`}
+              >
+                Bookmark
+              </Link>
               <h3 className="trending__movie-title">{movie.title}</h3>
               {trailers.length > 0 ? (
                 <div className="trending__movie-thumbnail-container">
@@ -111,15 +117,17 @@ const Trending = () => {
                     className="trending__movie-thumbnail"
                     src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
                     alt={`${movie.title} thumbnail`}
-                    onClick={() => handlePlayVideo(index)}
                   />
-                  <div className="trending__movie-thumbnail-overlay">
+                  <div
+                    className="trending__movie-thumbnail-overlay"
+                    onClick={() => handlePlayVideo(index)}
+                  >
                     <span className="trending__movie-thumbnail-overlay-text">
                       Play Trailer
                     </span>
 
                     <div className="trending__movie-thumbnail-wrapper">
-                      <div className="trending__movie-thumbnail-wrapper-info">
+                      <div className="trending__movie-thumbnail-info">
                         <div className="trending__thumbnail-movie-year">
                           {release_year}
                         </div>
