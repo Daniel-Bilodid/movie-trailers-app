@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./movieInfo.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const MovieInfo = () => {
   const { movieId } = useParams();
@@ -91,6 +93,27 @@ const MovieInfo = () => {
                 <span>Status: </span> <br />
                 {movie.status}
               </div>
+            </div>
+
+            <div className="movie__info-websites">
+              <div className="movie__info-imdb">
+                <a href={`https://www.imdb.com/title/${movie.imdb_id}/`}>
+                  <button className="movie__info-homepage">Imdb</button>
+                </a>
+              </div>
+
+              <a href={movie.homepage}>
+                <button className="movie__info-homepage">Website</button>
+              </a>
+            </div>
+          </div>
+
+          <div className="movie__info-rating">
+            Rating <br />
+            <div className="movie__info-rating-wrapper">
+              <FontAwesomeIcon icon={faStar} size="2x" color="gold" />{" "}
+              <span>{movie.vote_average}</span>
+              /10
             </div>
           </div>
         </>
