@@ -6,6 +6,8 @@ import Modal from "../movieModal/MovieModal";
 import "./trending.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const Trending = () => {
   const [trailers, setTrailers] = useState([]);
@@ -104,12 +106,16 @@ const Trending = () => {
         {trailers.map(
           ({ movie, trailers, currentTrailerIndex, release_year }, index) => (
             <div key={movie.id}>
-              <Link
-                className="trending__bookmark"
-                to={`/movie-info/${movie.id}`}
-              >
-                Bookmark
-              </Link>
+              <div className="trending__btn-wrapper">
+                <Link className="trending__info" to={`/movie-info/${movie.id}`}>
+                  <FontAwesomeIcon
+                    icon={faInfoCircle}
+                    color="white"
+                    size="1x"
+                  />
+                </Link>
+                <div className="trending__bookmark">B</div>
+              </div>
               <h3 className="trending__movie-title">{movie.title}</h3>
               {trailers.length > 0 ? (
                 <div className="trending__movie-thumbnail-container">
