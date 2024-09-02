@@ -11,7 +11,7 @@
       z-index: 99999;
       /* right: 2px; */
       /* margin-right: 7rem; */
-      margin-left: 16rem;
+      margin-left: 18rem;
       width: 50px;
       height: 30px;
       background-color: gray;
@@ -19,6 +19,7 @@
     }
   }
   &__bookmark {
+    cursor: pointer;
   }
   &__movie {
     &-title {

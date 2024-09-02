@@ -1,0 +1,15 @@
+.search {
+  position: absolute;
+  right: 0;
+  background: #161d2f;
+  width: 200px;
+  height: 50px;
+
+  input {
+    background: none;
+    border: none;
+    ::placeholder {
+      color: white;
+    }
+  }
+}
