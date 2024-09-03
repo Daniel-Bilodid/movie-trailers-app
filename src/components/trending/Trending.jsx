@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Slider from "react-slick";
 import { fetchTrendingMovies } from "../../utils/fetchTrailers";
 import { Link } from "react-router-dom";
@@ -9,10 +9,14 @@ import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "../context/AuthContext";
+import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 import Search from "../search/Search";
 
 const Trending = () => {
+  const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
 
@@ -97,6 +101,28 @@ const Trending = () => {
     });
   };
 
+  const handleBookmarkClick = async (movieId) => {
+    if (!user) {
+      console.log("Please sign in to bookmark.");
+      return;
+    }
+
+    const bookmarkRef = doc(db, "bookmarks", user.uid);
+    const userBookmarks = await getDoc(bookmarkRef);
+    const bookmarks = userBookmarks.exists()
+      ? userBookmarks.data().movies || []
+      : [];
+
+    const isBookmarked = bookmarks.includes(movieId);
+    if (isBookmarked) {
+      const updatedBookmarks = bookmarks.filter((id) => id !== movieId);
+      await setDoc(bookmarkRef, { movies: updatedBookmarks });
+    } else {
+      const updatedBookmarks = [...bookmarks, movieId];
+      await setDoc(bookmarkRef, { movies: updatedBookmarks });
+    }
+  };
+
   return (
     <div className="trending">
       <Search />
@@ -118,7 +144,10 @@ const Trending = () => {
                     size="1x"
                   />
                 </Link>
-                <div className="trending__bookmark">
+                <div
+                  className="trending__bookmark"
+                  onClick={() => handleBookmarkClick(movie.id)}
+                >
                   <FontAwesomeIcon icon={faBookmark} color="white" size="1x" />
                 </div>
               </div>
