@@ -133,9 +133,11 @@ const Trending = () => {
       <Search />
       <div className="trending__wrapper">
         <h2 className="trending__title">Trending</h2>
-        <Link className="trending__more" to="/more-trailers">
-          More Trailers
-        </Link>
+        <div className="more">
+          <Link className="trending__more" to="/more-trailers">
+            More Trailers
+          </Link>
+        </div>
       </div>
       <Slider {...settings} className="trending__slider">
         {trailers.map(
