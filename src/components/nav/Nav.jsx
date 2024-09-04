@@ -7,7 +7,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, addUserToFirestore } from "../../firebase";
 import { Link } from "react-router-dom";
 
 const Nav = () => {
@@ -20,39 +20,40 @@ const Nav = () => {
     setActiveIcon(icon);
   };
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        await addUserToFirestore(currentUser);
+      }
       setUser(currentUser);
     });
     return () => unsubscribe();
   }, []);
-  // Авторизация через Google
-  const handleGoogleSignIn = () => {
+
+  const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result.user);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const result = await signInWithPopup(auth, provider);
+      await addUserToFirestore(result.user);
+      console.log(result.user);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  // Авторизация через GitHub
-  const handleGithubSignIn = () => {
+  const handleGithubSignIn = async () => {
     const provider = new GithubAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result.user);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const result = await signInWithPopup(auth, provider);
+      await addUserToFirestore(result.user);
+      console.log(result.user);
+    } catch (error) {
+      console.error(error);
+    }
   };
-
   const handleClickAuth = (e) => {
     if (!user) {
-      e.preventDefault(); // Предотвращаем переход
-      // Можно добавить уведомление для пользователя, если требуется
+      e.preventDefault();
+
       console.log("Please sign in to bookmark.");
       return;
     }

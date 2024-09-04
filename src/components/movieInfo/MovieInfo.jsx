@@ -16,7 +16,7 @@ const MovieInfo = () => {
           `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&language=en-US`
         );
         const data = await response.json();
-        console.log(data);
+
         setMovie(data);
       } catch (error) {
         console.error("Error fetching movie info:", error);
@@ -29,7 +29,7 @@ const MovieInfo = () => {
           `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${process.env.REACT_APP_TMDB_APIKEY}&language=en-US`
         );
         const data = await response.json();
-        console.log(data);
+
         setCast(data.cast.slice(0, 8));
       } catch (error) {
         console.error("Error fetching movie cast:", error);

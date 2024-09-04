@@ -17,7 +17,7 @@ export const fetchTrendingMovies = async (page = 1) => {
       const releaseYear = movie.release_date
         ? new Date(movie.release_date).getFullYear()
         : "Unknown";
-      console.log(`Release Year for movie ${movie.title}:`, releaseYear);
+
       return {
         movie,
         trailers: videos,

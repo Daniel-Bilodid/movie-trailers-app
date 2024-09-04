@@ -9,7 +9,6 @@ import {
 } from "firebase/auth";
 import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 
-// Ваши конфигурационные параметры Firebase
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -19,22 +18,19 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-// Инициализация приложения Firebase
 const app = initializeApp(firebaseConfig);
-
-// Инициализация Auth и Firestore
 const auth = getAuth(app);
-const db = getFirestore(app); // Экспортируем Firestore как db
+const db = getFirestore(app);
 
-// Функция для добавления пользователя в Firestore
+// Добавляем пользователя в Firestore
 const addUserToFirestore = async (user) => {
   if (auth.currentUser) {
     try {
-      const userRef = doc(db, "users", user.uid); // Используем db вместо firestore
+      const userRef = doc(db, "users", user.uid);
 
       await setDoc(userRef, {
         email: user.email,
-        // добавьте другие данные пользователя здесь
+        // другие данные пользователя, если нужно
       });
 
       console.log("User added to Firestore");
@@ -46,10 +42,32 @@ const addUserToFirestore = async (user) => {
   }
 };
 
+// Добавляем закладку в Firestore
+const addBookmarkToUser = async (user, bookmark) => {
+  if (auth.currentUser) {
+    try {
+      const bookmarkRef = doc(db, "users", user.uid, "bookmarks", bookmark.id);
+
+      await setDoc(bookmarkRef, {
+        title: bookmark.title,
+        url: bookmark.url,
+        // другие данные закладки, если нужно
+      });
+
+      console.log("Bookmark added to Firestore");
+    } catch (error) {
+      console.error("Error adding bookmark to Firestore: ", error);
+    }
+  } else {
+    console.error("User is not authenticated");
+  }
+};
+
 export {
   auth,
-  db, // Экспортируем db, чтобы использовать в других компонентах
+  db,
   addUserToFirestore,
+  addBookmarkToUser,
   GoogleAuthProvider,
   GithubAuthProvider,
   signInWithPopup,
