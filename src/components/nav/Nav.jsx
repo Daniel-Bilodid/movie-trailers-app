@@ -16,13 +16,10 @@ const Nav = () => {
   const [showAuthWarning, setShowAuthWarning] = useState(false);
   const [activeIcon, setActiveIcon] = useState("home");
 
-  const handleIconClick = (icon) => {
-    setActiveIcon(icon);
-  };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        await addUserToFirestore(currentUser);
+        await addUserToFirestore(currentUser); // Обновляем данные пользователя в Firestore
       }
       setUser(currentUser);
     });
@@ -33,8 +30,9 @@ const Nav = () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      await addUserToFirestore(result.user);
-      console.log(result.user);
+      const user = result.user;
+      await addUserToFirestore(user);
+      console.log(user);
     } catch (error) {
       console.error(error);
     }
@@ -44,30 +42,34 @@ const Nav = () => {
     const provider = new GithubAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      await addUserToFirestore(result.user);
-      console.log(result.user);
+      const user = result.user;
+      await addUserToFirestore(user);
+      console.log(user);
     } catch (error) {
       console.error(error);
     }
   };
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User signed out");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleIconClick = (icon) => {
+    setActiveIcon(icon);
+  };
+
   const handleClickAuth = (e) => {
     if (!user) {
       e.preventDefault();
-
       console.log("Please sign in to bookmark.");
       return;
     }
   };
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        console.log("User signed out");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
   return (
     <>
       <div className="nav">

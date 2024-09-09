@@ -1,14 +1,18 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
-  getAuth,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
+  getFirestore,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  addDoc,
+  getDocs,
+  collection,
+} from "firebase/firestore";
 
+// Конфигурация Firebase
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -18,59 +22,66 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
+// Инициализация Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 // Добавляем пользователя в Firestore
-const addUserToFirestore = async (user) => {
-  if (auth.currentUser) {
-    try {
-      const userRef = doc(db, "users", user.uid);
+export const addUserToFirestore = async (user) => {
+  const userRef = doc(db, `users/${user.uid}`);
+  const userDoc = await getDoc(userRef);
 
-      await setDoc(userRef, {
-        email: user.email,
-        // другие данные пользователя, если нужно
-      });
-
-      console.log("User added to Firestore");
-    } catch (error) {
-      console.error("Error adding user to Firestore: ", error);
-    }
-  } else {
-    console.error("User is not authenticated");
+  if (!userDoc.exists()) {
+    await setDoc(userRef, {
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      createdAt: new Date(),
+    });
   }
 };
 
-// Добавляем закладку в Firestore
-const addBookmarkToUser = async (user, bookmark) => {
-  if (auth.currentUser) {
-    try {
-      const bookmarkRef = doc(db, "users", user.uid, "bookmarks", bookmark.id);
+// Функция для добавления закладки
+export const addBookmark = async (userId, bookmark) => {
+  const bookmarksRef = collection(db, `users/${userId}/bookmarks`);
+  await addDoc(bookmarksRef, bookmark);
+};
 
-      await setDoc(bookmarkRef, {
-        title: bookmark.title,
-        url: bookmark.url,
-        // другие данные закладки, если нужно
-      });
+// Функция для получения закладок
+export const getBookmarks = async (userId) => {
+  const bookmarksRef = collection(db, `users/${userId}/bookmarks`);
+  const snapshot = await getDocs(bookmarksRef);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+};
 
-      console.log("Bookmark added to Firestore");
-    } catch (error) {
-      console.error("Error adding bookmark to Firestore: ", error);
-    }
-  } else {
-    console.error("User is not authenticated");
+// Обновляем данные пользователя
+const updateUserInFirestore = async (userId, updatedData) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, updatedData);
+    console.log("User updated in Firestore with ID: ", userId);
+  } catch (error) {
+    console.error("Error updating user in Firestore: ", error);
   }
 };
 
+// Удаляем пользователя из Firestore
+const deleteUserFromFirestore = async (userId) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await deleteDoc(userRef);
+    console.log("User deleted from Firestore with ID: ", userId);
+  } catch (error) {
+    console.error("Error deleting user from Firestore: ", error);
+  }
+};
+
+// Экспортируем функции и объекты
 export {
   auth,
   db,
-  addUserToFirestore,
-  addBookmarkToUser,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  signOut,
+  updateUserInFirestore,
+  deleteUserFromFirestore,
   onAuthStateChanged,
 };

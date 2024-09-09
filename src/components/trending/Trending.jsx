@@ -108,20 +108,15 @@ const Trending = () => {
     }
 
     try {
-      const bookmarkRef = doc(db, "bookmarks", user.uid);
-      const userBookmarks = await getDoc(bookmarkRef);
+      const bookmarkRef = doc(db, `users/${user.uid}/bookmarks/${movieId}`);
+      const bookmarkDoc = await getDoc(bookmarkRef);
 
-      const bookmarks = userBookmarks.exists()
-        ? userBookmarks.data().movies || []
-        : [];
-
-      const isBookmarked = bookmarks.includes(movieId);
-      if (isBookmarked) {
-        const updatedBookmarks = bookmarks.filter((id) => id !== movieId);
-        await setDoc(bookmarkRef, { movies: updatedBookmarks });
+      if (bookmarkDoc.exists()) {
+        // Если закладка уже существует, удаляем её
+        await deleteDoc(bookmarkRef);
       } else {
-        const updatedBookmarks = [...bookmarks, movieId];
-        await setDoc(bookmarkRef, { movies: updatedBookmarks });
+        // Если закладки нет, добавляем новую
+        await setDoc(bookmarkRef, { movieId });
       }
     } catch (error) {
       console.error("Error handling bookmark click:", error);
