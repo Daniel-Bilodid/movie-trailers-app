@@ -1,5 +1,18 @@
 import axios from "axios";
 
+export const fetchMovieById = async (id) => {
+  try {
+    const movieResponse = await axios.get(
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&append_to_response=videos`
+    );
+    const movie = movieResponse.data;
+    return movie;
+  } catch (error) {
+    console.error(`Ошибка при получении фильма с ID ${id}:`, error);
+    throw error;
+  }
+};
+
 export const fetchTrendingMovies = async (page = 1) => {
   try {
     const trendingResponse = await axios.get(
