@@ -9,8 +9,9 @@ import {
 } from "firebase/auth";
 import { auth, addUserToFirestore } from "../../firebase";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const Nav = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showSignInOptions, setShowSignInOptions] = useState(false);
   const [showAuthWarning, setShowAuthWarning] = useState(false);
@@ -25,6 +26,12 @@ const Nav = () => {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();

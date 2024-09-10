@@ -1,0 +1,23 @@
+.bookmarks {
+  width: 90%;
+
+  &__title {
+    font-size: 40px;
+    color: white;
+    margin-left: 40px;
+  }
+  &__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  &__movie {
+    &-item {
+      list-style-type: none;
+    }
+    &-title {
+      color: white;
+    }
+  }
+}

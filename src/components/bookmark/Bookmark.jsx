@@ -3,12 +3,7 @@ import { db, auth } from "../../firebase";
 import { getDocs, collection } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { fetchMovieById } from "../../utils/fetchTrailers";
-import { Trending } from "../../components/trending/Trending";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-
+import "./bookmark.scss";
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
   const [movies, setMovies] = useState([]); // Хранит данные о фильмах
@@ -70,82 +65,42 @@ const Bookmarks = () => {
   }, [bookmarks]);
 
   if (loading) {
-    return <div>Загрузка...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
-    <div>
-      <h1>Закладки</h1>
-      <ul>
+    <div className="bookmarks">
+      <h1 className="bookmarks__title">Bookmarks</h1>
+      <ul className="bookmarks__wrapper">
         {movies.length > 0 ? (
           movies.map((movie) => (
-            <div key={movie.id}>
-              <div className="trending__btn-wrapper ">
-                <Link className="trending__info" to={`/movie-info/${movie.id}`}>
-                  <FontAwesomeIcon
-                    icon={faInfoCircle}
-                    color="white"
-                    size="1x"
-                  />
-                </Link>
-                <div
-                  className="trending__bookmark"
-                  // onClick={() => handleBookmarkClick(movie.id)}
-                >
-                  <FontAwesomeIcon icon={faBookmark} color="white" size="1x" />
-                </div>
+            <li className="bookmarks__movie-item" key={movie.id}>
+              <h2 className="bookmarks__movie-title">{movie.title}</h2>
+              <div className="trending__movie-thumbnail-container">
+                <img
+                  className="trending__movie-thumbnail"
+                  src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
+                  alt={`${movie.title} thumbnail`}
+                />
               </div>
-              <h3 className="trending__movie-title">{movie.title}</h3>
-              {trailers.length > 0 ? (
-                <div className="trending__movie-thumbnail-container">
-                  <img
-                    className="trending__movie-thumbnail"
-                    src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
-                    alt={`${movie.title} thumbnail`}
-                  />
-                  <div
-                    className="trending__movie-thumbnail-overlay"
-                    onClick={() => handlePlayVideo(index)}
-                  >
-                    <span className="trending__movie-thumbnail-overlay-text">
-                      Play Trailer
-                    </span>
-
-                    <div className="trending__movie-thumbnail-wrapper">
-                      <div className="trending__movie-thumbnail-info">
-                        <div className="trending__thumbnail-movie-year">
-                          {release_year}
-                        </div>
-
-                        <div className="trending__movie-thumbnail-dot">·</div>
-
-                        <div className="trending__movie-thumbnail-svg">
-                          <svg
-                            width="20"
-                            height="20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M16.956 0H3.044A3.044 3.044 0 0 0 0 3.044v13.912A3.044 3.044 0 0 0 3.044 20h13.912A3.044 3.044 0 0 0 20 16.956V3.044A3.044 3.044 0 0 0 16.956 0ZM4 9H2V7h2v2Zm-2 2h2v2H2v-2Zm16-2h-2V7h2v2Zm-2 2h2v2h-2v-2Zm2-8.26V4h-2V2h1.26a.74.74 0 0 1 .74.74ZM2.74 2H4v2H2V2.74A.74.74 0 0 1 2.74 2ZM2 17.26V16h2v2H2.74a.74.74 0 0 1-.74-.74Zm16 0a.74.74 0 0 1-.74.74H16v-2h2v1.26Z"
-                              fill="#FFFFFF"
-                            />
-                          </svg>
-                        </div>
-                        <div className="trending__movie-thumbnail-dot">·</div>
-                        <div className="trending__movie-thumbnail-type">
-                          Movie
-                        </div>
-                      </div>
-                      <div className="trending__movie-thumbnail-overlay-name">
-                        {movie.title}
-                      </div>
+              {/* <div className="trending__movie-thumbnail-overlay">
+                <span className="trending__movie-thumbnail-overlay-text">
+                  Play Trailer
+                </span>
+                <div className="trending__movie-thumbnail-wrapper">
+                  <div className="trending__movie-thumbnail-info">
+                    <div className="trending__thumbnail-movie-year">
+                      {new Date(movie.release_date).getFullYear()}
                     </div>
+                    <div className="trending__movie-thumbnail-dot">·</div>
+                    <div className="trending__movie-thumbnail-type">Movie</div>
+                  </div>
+                  <div className="trending__movie-thumbnail-overlay-name">
+                    {movie.title}
                   </div>
                 </div>
-              ) : (
-                <p>No trailer</p>
-              )}
-            </div>
+              </div> */}
+            </li>
           ))
         ) : (
           <p>Нет закладок</p>
