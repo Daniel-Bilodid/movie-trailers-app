@@ -8,19 +8,18 @@ const useMovieTrailers = (fetchMovies) => {
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
   const { user } = useContext(AuthContext);
+  const loadTrailers = async (page) => {
+    try {
+      const trailersData = await fetchMovies(page);
+      setTrailers(trailersData);
+    } catch (error) {
+      console.error("Error loading trailers", error);
+    }
+  };
+
   useEffect(() => {
-    const loadTrailers = async () => {
-      try {
-        const trailersData = await fetchMovies();
-        setTrailers(trailersData);
-      } catch (error) {
-        console.error("Error loading trailers", error);
-      }
-    };
-
-    loadTrailers();
+    loadTrailers(1);
   }, [fetchMovies]);
-
   const handlePlayVideo = (index) => {
     setPlayVideo(index);
   };
@@ -91,6 +90,7 @@ const useMovieTrailers = (fetchMovies) => {
     handleNextTrailer,
     handlePrevTrailer,
     handleBookmarkClick,
+    loadTrailers,
   };
 };
 

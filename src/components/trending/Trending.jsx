@@ -127,14 +127,13 @@ const Trending = () => {
   return (
     <>
       <div className="trending">
-        <Search />
+        {/* <Search /> */}
         <div className="trending__wrapper">
           <h2 className="trending__title">Trending</h2>
-          <div className="more">
-            <Link className="trending__more" to="/more-trailers">
-              More Trailers
-            </Link>
-          </div>
+
+          <Link className="trending__more" to="/more-trailers">
+            More Trailers
+          </Link>
         </div>
         <Slider {...settings} className="trending__slider">
           {trailers.map(

@@ -1,5 +1,9 @@
 .more {
   color: white;
+  &__pages {
+    display: flex;
+    justify-content: center;
+  }
 }
 .trailers {
   display: flex;
