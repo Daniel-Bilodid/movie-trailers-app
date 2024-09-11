@@ -50,7 +50,7 @@ export const fetchTrendingMovies = async (page = 1) => {
 export const fetchPopularMovies = async (page = 1) => {
   try {
     const popularResponse = await axios.get(
-      `https://api.themoviedb.org/3/popular/movie/day?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
     );
     const popularMovies = popularResponse.data.results;
 
@@ -76,7 +76,7 @@ export const fetchPopularMovies = async (page = 1) => {
 
     return await Promise.all(trailersPromises);
   } catch (error) {
-    console.error("Error fetching trailers", error);
+    console.error("Error fetching popular movies", error);
     throw error;
   }
 };

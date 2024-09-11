@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
+import { AuthContext } from "../components/context/AuthContext";
+import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const useMovieTrailers = (fetchMovies) => {
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
-
+  const { user } = useContext(AuthContext);
   useEffect(() => {
     const loadTrailers = async () => {
       try {
@@ -58,6 +61,28 @@ const useMovieTrailers = (fetchMovies) => {
     });
   };
 
+  const handleBookmarkClick = async (movieId) => {
+    if (!user) {
+      console.log("Please sign in to bookmark.");
+      return;
+    }
+
+    try {
+      const bookmarkRef = doc(db, `users/${user.uid}/bookmarks/${movieId}`);
+      const bookmarkDoc = await getDoc(bookmarkRef);
+
+      if (bookmarkDoc.exists()) {
+        // Если закладка уже существует, удаляем её
+        await deleteDoc(bookmarkRef);
+      } else {
+        // Если закладки нет, добавляем новую
+        await setDoc(bookmarkRef, { movieId });
+      }
+    } catch (error) {
+      console.error("Error handling bookmark click:", error);
+    }
+  };
+
   return {
     trailers,
     playVideo,
@@ -65,6 +90,7 @@ const useMovieTrailers = (fetchMovies) => {
     handleCloseModal,
     handleNextTrailer,
     handlePrevTrailer,
+    handleBookmarkClick,
   };
 };
 

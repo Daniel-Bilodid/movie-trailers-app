@@ -1,3 +1,34 @@
 div {
   color: white;
 }
+.popular {
+  &__title {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 70px;
+    margin-left: 40px;
+  }
+  &__more {
+    margin-top: 70px;
+    margin-right: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  &__text {
+    &-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  &__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+}
