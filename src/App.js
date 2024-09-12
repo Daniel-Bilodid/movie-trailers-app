@@ -10,6 +10,7 @@ import MorePopularMovies from "./components/morePopularMovies/MorePopularMovies"
 import MoreNowPlaying from "./components/moreNowPlaying/MoreNowPlaying";
 import MoreTopRated from "./components/moreTopRated/MoreTopRated";
 import MoreUpcoming from "./components/moreUpcoming/MoreUpcoming";
+import AllMovies from "./pages/allMovies/AllMovies";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/more-now-playing" element={<MoreNowPlaying />} />
             <Route path="/more-top-rated" element={<MoreTopRated />} />
             <Route path="/more-upcoming" element={<MoreUpcoming />} />
+            <Route path="/all-movies" element={<AllMovies />} />
           </Routes>
         </div>
       </Router>
