@@ -80,3 +80,105 @@ export const fetchPopularMovies = async (page = 1) => {
     throw error;
   }
 };
+
+export const fetchNowPlayingMovies = async (page = 1) => {
+  try {
+    const nowPlayingResponse = await axios.get(
+      `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+    );
+    const nowPlayingMovies = nowPlayingResponse.data.results;
+
+    const trailersPromises = nowPlayingMovies.map(async (movie) => {
+      const videoResponse = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+      );
+      const videos = videoResponse.data.results.filter(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+      const releaseYear = movie.release_date
+        ? new Date(movie.release_date).getFullYear()
+        : "Unknown";
+
+      return {
+        movie,
+        trailers: videos,
+        currentTrailerIndex: 0,
+        poster_path: movie.poster_path,
+        release_year: releaseYear,
+      };
+    });
+
+    return await Promise.all(trailersPromises);
+  } catch (error) {
+    console.error("Error fetching popular movies", error);
+    throw error;
+  }
+};
+
+export const fetchUpcomingMovies = async (page = 1) => {
+  try {
+    const upcomingResponse = await axios.get(
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+    );
+    const upcomingMovies = upcomingResponse.data.results;
+
+    const trailersPromises = upcomingMovies.map(async (movie) => {
+      const videoResponse = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+      );
+      const videos = videoResponse.data.results.filter(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+      const releaseYear = movie.release_date
+        ? new Date(movie.release_date).getFullYear()
+        : "Unknown";
+
+      return {
+        movie,
+        trailers: videos,
+        currentTrailerIndex: 0,
+        poster_path: movie.poster_path,
+        release_year: releaseYear,
+      };
+    });
+
+    return await Promise.all(trailersPromises);
+  } catch (error) {
+    console.error("Error fetching popular movies", error);
+    throw error;
+  }
+};
+
+export const fetchTopRatedMovies = async (page = 1) => {
+  try {
+    const topRatedResponse = await axios.get(
+      `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+    );
+    const topRatedMovies = topRatedResponse.data.results;
+
+    const trailersPromises = topRatedMovies.map(async (movie) => {
+      const videoResponse = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+      );
+      const videos = videoResponse.data.results.filter(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+      const releaseYear = movie.release_date
+        ? new Date(movie.release_date).getFullYear()
+        : "Unknown";
+
+      return {
+        movie,
+        trailers: videos,
+        currentTrailerIndex: 0,
+        poster_path: movie.poster_path,
+        release_year: releaseYear,
+      };
+    });
+
+    return await Promise.all(trailersPromises);
+  } catch (error) {
+    console.error("Error fetching popular movies", error);
+    throw error;
+  }
+};

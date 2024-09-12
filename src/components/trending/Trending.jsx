@@ -13,6 +13,9 @@ import { AuthContext } from "../context/AuthContext";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import PopularMovies from "../popularMovies/PopularMovies";
+import NowPlayingMovies from "../nowPlayingMovies/NowPlayingMovies";
+import UpcomingMovies from "../upcomingMovies/UpcomingMovies";
+import TopRatedMovies from "../topRatedMovies/TopRatedMovies";
 
 import Search from "../search/Search";
 
@@ -276,6 +279,12 @@ const Trending = () => {
       </div>
 
       <PopularMovies />
+
+      <NowPlayingMovies />
+
+      <UpcomingMovies />
+
+      <TopRatedMovies />
     </>
   );
 };
