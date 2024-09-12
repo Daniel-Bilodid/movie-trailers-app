@@ -7,6 +7,9 @@ import MovieInfo from "./components/movieInfo/MovieInfo";
 import Bookmark from "./components/bookmark/Bookmark";
 import { AuthProvider } from "./components/context/AuthContext";
 import MorePopularMovies from "./components/morePopularMovies/MorePopularMovies";
+import MoreNowPlaying from "./components/moreNowPlaying/MoreNowPlaying";
+import MoreTopRated from "./components/moreTopRated/MoreTopRated";
+import MoreUpcoming from "./components/moreUpcoming/MoreUpcoming";
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
             <Route path="/movie-info/:movieId" element={<MovieInfo />} />
             <Route path="/bookmarks" element={<Bookmark />} />
             <Route path="/more-popular" element={<MorePopularMovies />} />
+            <Route path="/more-now-playing" element={<MoreNowPlaying />} />
+            <Route path="/more-top-rated" element={<MoreTopRated />} />
+            <Route path="/more-upcoming" element={<MoreUpcoming />} />
           </Routes>
         </div>
       </Router>

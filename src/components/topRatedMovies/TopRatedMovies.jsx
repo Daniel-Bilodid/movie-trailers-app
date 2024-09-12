@@ -21,7 +21,7 @@ const TopRatedMovies = () => {
     <div className="popular">
       <div className="popular__text-wrapper">
         <div className="popular__title">Top Rated</div>
-        <Link className="popular__more" to="/more-popular">
+        <Link className="popular__more" to="/more-top-rated">
           See more
         </Link>
       </div>

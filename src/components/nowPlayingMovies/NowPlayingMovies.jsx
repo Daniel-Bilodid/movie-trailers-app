@@ -21,7 +21,7 @@ const NowPlayingMovies = () => {
     <div className="popular">
       <div className="popular__text-wrapper">
         <div className="popular__title">Now Playing Movies</div>
-        <Link className="popular__more" to="/more-popular">
+        <Link className="popular__more" to="/more-now-playing">
           See more
         </Link>
       </div>

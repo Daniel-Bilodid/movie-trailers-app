@@ -21,7 +21,7 @@ const UpcomingMovies = () => {
     <div className="popular">
       <div className="popular__text-wrapper">
         <div className="popular__title">Upcoming Movies</div>
-        <Link className="popular__more" to="/more-popular">
+        <Link className="popular__more" to="/more-upcoming">
           See more
         </Link>
       </div>
