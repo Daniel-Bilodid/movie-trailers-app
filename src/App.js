@@ -11,28 +11,32 @@ import MoreNowPlaying from "./components/moreNowPlaying/MoreNowPlaying";
 import MoreTopRated from "./components/moreTopRated/MoreTopRated";
 import MoreUpcoming from "./components/moreUpcoming/MoreUpcoming";
 import AllMovies from "./pages/allMovies/AllMovies";
-
+import SearchResult from "./pages/searchResult/SearchResult";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="App">
-          <Nav />
-          <Routes>
-            <Route path="/" element={<Trending />} />
-            <Route path="/more-trailers" element={<MoreTrailers />} />
-            <Route path="/movie-info/:movieId" element={<MovieInfo />} />
-            <Route path="/bookmarks" element={<Bookmark />} />
-            <Route path="/more-popular" element={<MorePopularMovies />} />
-            <Route path="/more-now-playing" element={<MoreNowPlaying />} />
-            <Route path="/more-top-rated" element={<MoreTopRated />} />
-            <Route path="/more-upcoming" element={<MoreUpcoming />} />
-            <Route path="/all-movies" element={<AllMovies />} />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <Router>
+          <div className="App">
+            <Nav />
+            <Routes>
+              <Route path="/" element={<Trending />} />
+              <Route path="/more-trailers" element={<MoreTrailers />} />
+              <Route path="/movie-info/:movieId" element={<MovieInfo />} />
+              <Route path="/bookmarks" element={<Bookmark />} />
+              <Route path="/more-popular" element={<MorePopularMovies />} />
+              <Route path="/more-now-playing" element={<MoreNowPlaying />} />
+              <Route path="/more-top-rated" element={<MoreTopRated />} />
+              <Route path="/more-upcoming" element={<MoreUpcoming />} />
+              <Route path="/all-movies" element={<AllMovies />} />
+              <Route path="/search-result" element={<SearchResult />} />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </Provider>
   );
 }
-
 export default App;

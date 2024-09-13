@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import Search from "../../components/search/Search";
 const AllMovies = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const {
@@ -41,6 +42,7 @@ const AllMovies = () => {
     <div className="popular">
       <div className="popular__text-wrapper">
         <div className="popular__title">All Movies</div>
+        <Search />
       </div>
       <div className="popular__wrapper">
         {trailers.map(

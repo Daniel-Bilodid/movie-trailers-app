@@ -249,7 +249,11 @@ const Trending = () => {
                     </div>
                   </div>
                 ) : (
-                  <p>No trailer</p>
+                  <img
+                    className="trending__movie-thumbnail"
+                    src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
+                    alt={`${movie.title} thumbnail`}
+                  />
                 )}
               </div>
             )

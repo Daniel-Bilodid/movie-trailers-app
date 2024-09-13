@@ -7,6 +7,12 @@
   margin-top: 50px;
   margin-right: 50px;
   border-radius: 99px;
+  display: flex;
+  &__results {
+    position: absolute;
+    z-index: 1000;
+    background-color: #161d2f;
+  }
   input {
     background: none;
     border: none;
