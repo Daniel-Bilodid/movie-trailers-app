@@ -167,7 +167,7 @@ const Trending = () => {
   return (
     <>
       <div className="trending">
-        {/* <Search /> */}
+        <Search />
         <div className="trending__wrapper">
           <h2 className="trending__title">Trending</h2>
 

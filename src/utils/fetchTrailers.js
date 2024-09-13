@@ -252,3 +252,37 @@ export const fetchAllMoviesWithTrailers = async () => {
     throw error;
   }
 };
+
+export const searchMovies = async (query, page = 1) => {
+  try {
+    const searchResponse = await axios.get(
+      `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_TMDB_APIKEY}&query=${query}&page=${page}`
+    );
+    const searchResults = searchResponse.data.results;
+
+    const trailersPromises = searchResults.map(async (movie) => {
+      const videoResponse = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+      );
+      const videos = videoResponse.data.results.filter(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+      const releaseYear = movie.release_date
+        ? new Date(movie.release_date).getFullYear()
+        : "Unknown";
+
+      return {
+        movie,
+        trailers: videos,
+        currentTrailerIndex: 0,
+        poster_path: movie.poster_path,
+        release_year: releaseYear,
+      };
+    });
+
+    return await Promise.all(trailersPromises);
+  } catch (error) {
+    console.error("Error searching movies", error);
+    throw error;
+  }
+};
