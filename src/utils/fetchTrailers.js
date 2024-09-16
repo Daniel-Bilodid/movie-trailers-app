@@ -216,3 +216,43 @@ export const searchMovies = async (query, page = 1) => {
     throw error;
   }
 };
+
+export const fetchGenres = async () => {
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+    );
+    return response.data.genres; // возвращаем массив жанров
+  } catch (error) {
+    console.error("Ошибка при получении жанров", error);
+    throw error;
+  }
+};
+
+export const fetchMoviesWithGenres = async (page = 1) => {
+  try {
+    const [moviesResponse, genres] = await Promise.all([
+      axios.get(
+        `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      ),
+      fetchGenres(),
+    ]);
+
+    const movies = moviesResponse.data.results;
+
+    const moviesWithGenres = movies.map((movie) => {
+      const movieGenres = movie.genre_ids.map(
+        (genreId) => genres.find((genre) => genre.id === genreId)?.name
+      );
+      return {
+        ...movie,
+        genres: movieGenres,
+      };
+    });
+
+    return moviesWithGenres;
+  } catch (error) {
+    console.error("Ошибка при получении фильмов с жанрами", error);
+    throw error;
+  }
+};

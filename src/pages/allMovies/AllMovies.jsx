@@ -8,6 +8,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import Search from "../../components/search/Search";
+import Genre from "../../components/genre/Genre";
+
+import "./allMovies.scss";
 const AllMovies = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const {
@@ -38,10 +41,12 @@ const AllMovies = () => {
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
+  console.log(trailers);
   return (
     <div className="popular">
       <div className="popular__text-wrapper">
         <div className="popular__title">All Movies</div>
+        <Genre />
         <Search />
       </div>
       <div className="popular__wrapper">

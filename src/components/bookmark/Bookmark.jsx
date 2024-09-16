@@ -4,6 +4,7 @@ import { getDocs, collection } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { fetchMovieById } from "../../utils/fetchTrailers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useMovieTrailers from "../../hooks/useMovieTrailers";
 import {
   faInfoCircle,
   faBookmark,
@@ -13,20 +14,23 @@ import { Link } from "react-router-dom";
 import Modal from "../movieModal/MovieModal";
 import "./bookmark.scss";
 
-const Bookmarks = ({
-  trailers,
-  handleCloseModal,
-  handlePrevTrailer,
-  handleNextTrailer,
-}) => {
+const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [playVideo, setPlayVideo] = useState(null); // Индекс активного трейлера
 
-  // Функция для воспроизведения трейлера
+  const {
+    trailers,
+    playVideo,
+    setPlayVideo,
+    handlePlayVideo,
+    handleCloseModal,
+    handleNextTrailer,
+    handlePrevTrailer,
+  } = useMovieTrailers(bookmarks);
+
   const handlePlayTrailer = (index) => {
-    setPlayVideo(index); // Устанавливаем индекс трейлера для воспроизведения
+    setPlayVideo(index);
   };
 
   const fetchBookmarks = async (userId) => {
@@ -78,7 +82,7 @@ const Bookmarks = ({
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  console.log(trailers);
   return (
     <div className="bookmarks">
       <h1 className="bookmarks__title">Bookmarks</h1>
