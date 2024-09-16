@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import "./genre.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedGenre } from "../../redux/store";
 import { fetchMoviesWithGenres, fetchGenres } from "../../utils/fetchTrailers";
+import "./genre.scss";
 
 const Genre = () => {
+  const dispatch = useDispatch();
+  const selectedGenre = useSelector((state) => state.data.selectedGenre);
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState("");
 
   useEffect(() => {
     const loadMoviesAndGenres = async () => {
@@ -33,7 +36,7 @@ const Genre = () => {
         <select
           id="genre"
           value={selectedGenre}
-          onChange={(e) => setSelectedGenre(e.target.value)}
+          onChange={(e) => dispatch(setSelectedGenre(e.target.value))}
         >
           <option value="">All genres</option>
           {genres.map((genre) => (

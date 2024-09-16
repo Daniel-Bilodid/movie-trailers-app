@@ -39,7 +39,7 @@ const MovieInfo = () => {
     fetchMovieInfo();
     fetchMovieCast();
   }, [movieId]);
-
+  console.log(movie);
   return (
     <div className="movie__info">
       {movie ? (

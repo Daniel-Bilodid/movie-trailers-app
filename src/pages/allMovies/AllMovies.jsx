@@ -9,6 +9,7 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import Search from "../../components/search/Search";
 import Genre from "../../components/genre/Genre";
+import { useSelector } from "react-redux";
 
 import "./allMovies.scss";
 const AllMovies = () => {
@@ -23,7 +24,8 @@ const AllMovies = () => {
     handleBookmarkClick,
     loadTrailers,
   } = useMovieTrailers(fetchPopularMovies);
-
+  const selectedGenre = useSelector((state) => state.data.selectedGenre);
+  const [filteredTrailers, setFilteredTrailers] = useState([]);
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
   }, [currentPage, loadTrailers]);
@@ -41,7 +43,17 @@ const AllMovies = () => {
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
-  console.log(trailers);
+  // useEffect(() => {
+  //   if (selectedGenre) {
+  //     const filtered = trailers.filter((trailer) =>
+  //       trailer.movie.genres.includes(selectedGenre)
+  //     );
+  //     setFilteredTrailers(filtered);
+  //   } else {
+  //     setFilteredTrailers(trailers);
+  //   }
+  // }, [selectedGenre, trailers]);
+
   return (
     <div className="popular">
       <div className="popular__text-wrapper">
@@ -50,7 +62,7 @@ const AllMovies = () => {
         <Search />
       </div>
       <div className="popular__wrapper">
-        {trailers.map(
+        {filteredTrailers.map(
           ({ movie, trailers, currentTrailerIndex, release_year }, index) => (
             <div key={movie.id}>
               <div className="trending__btn-wrapper">
