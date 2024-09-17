@@ -40,7 +40,7 @@ const Genre = () => {
         >
           <option value="">All genres</option>
           {genres.map((genre) => (
-            <option key={genre.id} value={genre.name}>
+            <option key={genre.id} value={genre.id}>
               {genre.name}
             </option>
           ))}
