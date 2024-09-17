@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import axios from "axios";
 import { AuthContext } from "../components/context/AuthContext";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
@@ -8,14 +8,25 @@ const useMovieTrailers = (fetchMovies) => {
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
   const { user } = useContext(AuthContext);
-  const loadTrailers = async (page) => {
-    try {
-      const trailersData = await fetchMovies(page);
-      setTrailers(trailersData);
-    } catch (error) {
-      console.error("Error loading trailers", error);
-    }
-  };
+  const loadTrailers = useCallback(
+    async (page) => {
+      try {
+        const fetchedTrailers = await fetchMovies(page);
+        setTrailers((prevTrailers) => {
+          // Обновляем состояние только если новые трейлеры отличаются от предыдущих
+          if (
+            JSON.stringify(fetchedTrailers) !== JSON.stringify(prevTrailers)
+          ) {
+            return fetchedTrailers;
+          }
+          return prevTrailers;
+        });
+      } catch (error) {
+        console.error("Failed to load trailers:", error);
+      }
+    },
+    [fetchMovies]
+  );
 
   useEffect(() => {
     loadTrailers(1);
