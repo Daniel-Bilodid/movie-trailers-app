@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect, useCallback } from "react";
-import axios from "axios";
 import { AuthContext } from "../components/context/AuthContext";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -8,29 +7,24 @@ const useMovieTrailers = (fetchMovies) => {
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
   const { user } = useContext(AuthContext);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const loadTrailers = useCallback(
     async (page) => {
       try {
-        const fetchedTrailers = await fetchMovies(page);
-        setTrailers((prevTrailers) => {
-          // Обновляем состояние только если новые трейлеры отличаются от предыдущих
-          if (
-            JSON.stringify(fetchedTrailers) !== JSON.stringify(prevTrailers)
-          ) {
-            return fetchedTrailers;
-          }
-          return prevTrailers;
-        });
+        const trailersData = await fetchMovies(page);
+        setTrailers(trailersData);
       } catch (error) {
-        console.error("Failed to load trailers:", error);
+        console.error("Error loading trailers", error);
       }
     },
     [fetchMovies]
   );
 
   useEffect(() => {
-    loadTrailers(1);
-  }, [fetchMovies]);
+    loadTrailers(currentPage);
+  }, [loadTrailers, currentPage]);
+
   const handlePlayVideo = (index) => {
     setPlayVideo(index);
   };
@@ -82,10 +76,8 @@ const useMovieTrailers = (fetchMovies) => {
       const bookmarkDoc = await getDoc(bookmarkRef);
 
       if (bookmarkDoc.exists()) {
-        // Если закладка уже существует, удаляем её
         await deleteDoc(bookmarkRef);
       } else {
-        // Если закладки нет, добавляем новую
         await setDoc(bookmarkRef, { movieId });
       }
     } catch (error) {
@@ -96,6 +88,7 @@ const useMovieTrailers = (fetchMovies) => {
   return {
     trailers,
     playVideo,
+    setPlayVideo,
     handlePlayVideo,
     handleCloseModal,
     handleNextTrailer,

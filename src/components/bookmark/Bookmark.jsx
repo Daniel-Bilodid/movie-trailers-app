@@ -27,12 +27,13 @@ const Bookmarks = () => {
     handleCloseModal,
     handleNextTrailer,
     handlePrevTrailer,
-  } = useMovieTrailers(bookmarks);
-
+  } = useMovieTrailers(movies);
+  console.log(movies);
   const handlePlayTrailer = (index) => {
     setPlayVideo(index);
   };
 
+  // Функция для получения закладок
   const fetchBookmarks = async (userId) => {
     try {
       const bookmarksCollection = collection(db, `users/${userId}/bookmarks`);
@@ -40,15 +41,17 @@ const Bookmarks = () => {
       const bookmarksList = bookmarksSnapshot.docs.map((doc) => ({
         id: doc.data().movieId,
       }));
-      setBookmarks(bookmarksList);
+      return bookmarksList;
     } catch (error) {
       console.error("Ошибка при получении закладок: ", error);
+      return [];
     }
   };
 
-  const loadMovies = async () => {
+  // Функция для загрузки фильмов по закладкам
+  const loadMovies = async (bookmarksList) => {
     try {
-      const moviePromises = bookmarks.map(async (bookmark) => {
+      const moviePromises = bookmarksList.map(async (bookmark) => {
         const movie = await fetchMovieById(bookmark.id);
         return movie;
       });
@@ -56,13 +59,22 @@ const Bookmarks = () => {
       setMovies(movies);
     } catch (error) {
       console.error("Ошибка при загрузке фильмов", error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // useEffect для загрузки закладок и фильмов
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await fetchBookmarks(user.uid);
+        const bookmarksList = await fetchBookmarks(user.uid);
+        setBookmarks(bookmarksList);
+        if (bookmarksList.length > 0) {
+          await loadMovies(bookmarksList);
+        } else {
+          setLoading(false);
+        }
       } else {
         setLoading(false);
       }
@@ -71,18 +83,10 @@ const Bookmarks = () => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (bookmarks.length > 0) {
-      loadMovies();
-    } else {
-      setLoading(false);
-    }
-  }, [bookmarks]);
-
   if (loading) {
     return <div>Loading...</div>;
   }
-  console.log(trailers);
+
   return (
     <div className="bookmarks">
       <h1 className="bookmarks__title">Bookmarks</h1>

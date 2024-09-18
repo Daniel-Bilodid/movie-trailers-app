@@ -37,7 +37,6 @@ const AllMovies = () => {
 
   useEffect(() => {
     if (selectedGenre) {
-      console.log(selectedGenre);
       const filtered = trailers.filter((trailer) =>
         trailer.movie.genre_ids.includes(Number(selectedGenre))
       );
@@ -47,7 +46,7 @@ const AllMovies = () => {
       setFilteredTrailers(trailers);
     }
   }, [selectedGenre, trailers]);
-  console.log(filteredTrailers);
+
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1);
