@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 
-import { fetchUpcomingMovies } from "../../utils/fetchTrailers";
-import Modal from "../movieModal/MovieModal";
-import useMovieTrailers from "../../hooks/useMovieTrailers";
+import { fetchTopRatedMovies } from "../../../utils/fetchTrailers";
+import Modal from "../../movieModal/MovieModal";
+import useMovieTrailers from "../../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-const MoreUpcoming = () => {
+const MoreTopRated = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const {
     trailers,
@@ -18,7 +18,7 @@ const MoreUpcoming = () => {
     handlePrevTrailer,
     handleBookmarkClick,
     loadTrailers,
-  } = useMovieTrailers(fetchUpcomingMovies);
+  } = useMovieTrailers(fetchTopRatedMovies);
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
@@ -40,7 +40,7 @@ const MoreUpcoming = () => {
   return (
     <div className="popular">
       <div className="popular__text-wrapper">
-        <div className="popular__title">Upcoming Movies</div>
+        <div className="popular__title">Top Rated Movies</div>
       </div>
       <div className="popular__wrapper">
         {trailers.map(
@@ -188,4 +188,4 @@ const MoreUpcoming = () => {
   );
 };
 
-export default MoreUpcoming;
+export default MoreTopRated;

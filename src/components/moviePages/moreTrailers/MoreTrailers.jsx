@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
-
-import { fetchNowPlayingMovies } from "../../utils/fetchTrailers";
-import Modal from "../movieModal/MovieModal";
-import useMovieTrailers from "../../hooks/useMovieTrailers";
+import "./moreTrailers.scss";
+import { fetchTrendingMovies } from "../../../utils/fetchTrailers";
+import Modal from "../../movieModal/MovieModal";
+import useMovieTrailers from "../../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-const MoreNowPlaying = () => {
+const MoreTrailers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const {
     trailers,
@@ -18,7 +18,7 @@ const MoreNowPlaying = () => {
     handlePrevTrailer,
     handleBookmarkClick,
     loadTrailers,
-  } = useMovieTrailers(fetchNowPlayingMovies);
+  } = useMovieTrailers(fetchTrendingMovies);
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
@@ -40,7 +40,7 @@ const MoreNowPlaying = () => {
   return (
     <div className="popular">
       <div className="popular__text-wrapper">
-        <div className="popular__title">Now Playing Movies</div>
+        <div className="popular__title">Popular Movies</div>
       </div>
       <div className="popular__wrapper">
         {trailers.map(
@@ -188,4 +188,4 @@ const MoreNowPlaying = () => {
   );
 };
 
-export default MoreNowPlaying;
+export default MoreTrailers;

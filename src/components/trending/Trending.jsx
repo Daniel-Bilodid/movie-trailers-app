@@ -12,10 +12,10 @@ import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AuthContext";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import PopularMovies from "../popularMovies/PopularMovies";
-import NowPlayingMovies from "../nowPlayingMovies/NowPlayingMovies";
-import UpcomingMovies from "../upcomingMovies/UpcomingMovies";
-import TopRatedMovies from "../topRatedMovies/TopRatedMovies";
+import PopularMovies from "../moviePages/popularMovies/PopularMovies";
+import NowPlayingMovies from "../moviePages/nowPlayingMovies/NowPlayingMovies";
+import UpcomingMovies from "../moviePages/upcomingMovies/UpcomingMovies";
+import TopRatedMovies from "../moviePages/topRatedMovies/TopRatedMovies";
 
 import Search from "../search/Search";
 

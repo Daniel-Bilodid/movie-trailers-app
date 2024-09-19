@@ -1,13 +1,13 @@
 import React from "react";
-import "./nowPlayingMovies.scss";
-import { fetchNowPlayingMovies } from "../../utils/fetchTrailers";
-import Modal from "../movieModal/MovieModal";
-import useMovieTrailers from "../../hooks/useMovieTrailers";
+import "./upcomingMovies.scss";
+import { fetchUpcomingMovies } from "../../../utils/fetchTrailers";
+import Modal from "../../movieModal/MovieModal";
+import useMovieTrailers from "../../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-const NowPlayingMovies = () => {
+const UpcomingMovies = () => {
   const {
     trailers,
     playVideo,
@@ -16,12 +16,12 @@ const NowPlayingMovies = () => {
     handleNextTrailer,
     handlePrevTrailer,
     handleBookmarkClick,
-  } = useMovieTrailers(fetchNowPlayingMovies);
+  } = useMovieTrailers(fetchUpcomingMovies);
   return (
     <div className="popular">
       <div className="popular__text-wrapper">
-        <div className="popular__title">Now Playing Movies</div>
-        <Link className="popular__more" to="/more-now-playing">
+        <div className="popular__title">Upcoming Movies</div>
+        <Link className="popular__more" to="/more-upcoming">
           See more
         </Link>
       </div>
@@ -168,4 +168,4 @@ const NowPlayingMovies = () => {
   );
 };
 
-export default NowPlayingMovies;
+export default UpcomingMovies;

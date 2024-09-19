@@ -1,13 +1,13 @@
 import React from "react";
-import "./topRatedMovies.scss";
-import { fetchTopRatedMovies } from "../../utils/fetchTrailers";
-import Modal from "../movieModal/MovieModal";
-import useMovieTrailers from "../../hooks/useMovieTrailers";
+import "./popularMovies.scss";
+import { fetchPopularMovies } from "../../../utils/fetchTrailers";
+import Modal from "../../movieModal/MovieModal";
+import useMovieTrailers from "../../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-const TopRatedMovies = () => {
+const PopularMovies = () => {
   const {
     trailers,
     playVideo,
@@ -16,13 +16,13 @@ const TopRatedMovies = () => {
     handleNextTrailer,
     handlePrevTrailer,
     handleBookmarkClick,
-  } = useMovieTrailers(fetchTopRatedMovies);
+  } = useMovieTrailers(fetchPopularMovies);
   return (
     <div className="popular">
       <div className="popular__text-wrapper">
-        <div className="popular__title">Top Rated</div>
-        <Link className="popular__more" to="/more-top-rated">
-          See more
+        <div className="popular__title">Popular Movies</div>
+        <Link className="popular__more" to="/more-popular">
+          More Popular Movies
         </Link>
       </div>
       <div className="popular__wrapper">
@@ -168,4 +168,4 @@ const TopRatedMovies = () => {
   );
 };
 
-export default TopRatedMovies;
+export default PopularMovies;

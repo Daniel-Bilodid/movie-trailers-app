@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
-import "./moreTrailers.scss";
-import { fetchTrendingMovies } from "../../utils/fetchTrailers";
-import Modal from "../movieModal/MovieModal";
-import useMovieTrailers from "../../hooks/useMovieTrailers";
+import "./morePopularMovies.scss";
+import { fetchPopularMovies } from "../../../utils/fetchTrailers";
+import Modal from "../../movieModal/MovieModal";
+import useMovieTrailers from "../../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-const MoreTrailers = () => {
+const MorePopularMovies = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const {
     trailers,
@@ -18,7 +18,7 @@ const MoreTrailers = () => {
     handlePrevTrailer,
     handleBookmarkClick,
     loadTrailers,
-  } = useMovieTrailers(fetchTrendingMovies);
+  } = useMovieTrailers(fetchPopularMovies);
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
@@ -188,4 +188,4 @@ const MoreTrailers = () => {
   );
 };
 
-export default MoreTrailers;
+export default MorePopularMovies;
