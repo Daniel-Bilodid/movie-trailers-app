@@ -4,35 +4,37 @@ import { searchMovies } from "../../utils/fetchTrailers";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setData } from "../../redux/store";
+
 const Search = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
-    const searchTrailers = async () => {
+    const delayDebounceFn = setTimeout(() => {
       if (query.length > 0) {
-        setLoading(true);
-        try {
-          const movies = await searchMovies(query);
-          setResults(movies);
-          dispatch(setData(movies));
-        } catch (error) {
-          console.error("Error searching movies", error);
-        } finally {
-          setLoading(false);
-        }
+        searchTrailers();
       } else {
         setResults([]);
       }
-    };
-
-    const delayDebounceFn = setTimeout(() => {
-      searchTrailers();
-    }, 100);
+    }, 300);
 
     return () => clearTimeout(delayDebounceFn);
   }, [query]);
+
+  const searchTrailers = async () => {
+    setLoading(true);
+    try {
+      const movies = await searchMovies(query);
+      setResults(movies);
+      dispatch(setData(movies));
+    } catch (error) {
+      console.error("Error searching movies", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="search">
@@ -47,16 +49,16 @@ const Search = () => {
         {loading && <p>Loading...</p>}
         <div className="search__results">
           {results.length > 0
-            ? results.map((result, index) => (
-                <div key={index} className="search__result-item">
-                  <p>{result.movie.title || result.movie.name}</p>{" "}
+            ? results.map((result) => (
+                <div key={result.movie.id} className="search__result-item">
+                  <p>{result.movie.title || result.movie.name}</p>
                 </div>
               ))
             : !loading && query && <p>No results found</p>}
         </div>
       </div>
       <Link to="/search-result">
-        <button>Search</button>
+        <button disabled={!query}>Search</button>
       </Link>
     </div>
   );

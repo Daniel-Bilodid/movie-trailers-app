@@ -70,7 +70,8 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
-
+    width: 342px; // Добавьте фиксированную ширину
+    height: 513px;
     &:hover .trending__movie-thumbnail-overlay {
       opacity: 1;
     }
@@ -82,8 +83,8 @@
 
   &__movie-thumbnail {
     display: block;
-    width: 342px;
-    height: auto;
+    width: 100%; // Установите 100% для обеспечения адаптивности
+    height: auto; // Высота будет определяться пропорциями изображения
     object-fit: cover;
     border-radius: 10px;
     cursor: pointer;

@@ -208,6 +208,8 @@ const Trending = () => {
                       className="trending__movie-thumbnail"
                       src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
                       alt={`${movie.title} thumbnail`}
+                      width="342"
+                      height="auto"
                     />
                     <div
                       className="trending__movie-thumbnail-overlay"
@@ -253,6 +255,8 @@ const Trending = () => {
                     className="trending__movie-thumbnail"
                     src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
                     alt={`${movie.title} thumbnail`}
+                    width="342"
+                    height="auto"
                   />
                 )}
               </div>

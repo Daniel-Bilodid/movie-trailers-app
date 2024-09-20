@@ -4,7 +4,7 @@ import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
-
+import "./movieList.scss";
 const MovieCard = React.memo(
   ({
     movie,
@@ -34,6 +34,8 @@ const MovieCard = React.memo(
             src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
             alt={`${movie.title} thumbnail`}
             loading="lazy"
+            width="342"
+            height="513"
           />
           <div
             className="trending__movie-thumbnail-overlay"
@@ -115,7 +117,18 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
+  const preloadImage = (src) => {
+    const img = new Image();
+    img.src = src;
+  };
 
+  useEffect(() => {
+    if (trailers.length > 0) {
+      preloadImage(
+        `https://image.tmdb.org/t/p/w780${trailers[0].movie.poster_path}`
+      );
+    }
+  }, [trailers]);
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">
