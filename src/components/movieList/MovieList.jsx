@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import Modal from "../movieModal/MovieModal";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
@@ -76,7 +76,7 @@ const MovieCard = React.memo(
   )
 );
 
-const MovieList = ({ fetchMovies, title, moreLink }) => {
+const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const {
     trailers,
     playVideo,
@@ -84,8 +84,18 @@ const MovieList = ({ fetchMovies, title, moreLink }) => {
     handleCloseModal,
     handleNextTrailer,
     handlePrevTrailer,
+    loadTrailers,
     handleBookmarkClick: originalHandleBookmarkClick,
   } = useMovieTrailers(fetchMovies);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const fetchPageData = useCallback(() => {
+    loadTrailers(currentPage);
+  }, [currentPage, loadTrailers]);
+
+  useEffect(() => {
+    fetchPageData();
+  }, [fetchPageData]);
 
   const handlePlayVideo = useCallback(
     (index) => originalHandlePlayVideo(index),
@@ -96,6 +106,16 @@ const MovieList = ({ fetchMovies, title, moreLink }) => {
     [originalHandleBookmarkClick]
   );
 
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">
@@ -105,18 +125,46 @@ const MovieList = ({ fetchMovies, title, moreLink }) => {
         </Link>
       </div>
       <div className="popular__wrapper">
-        {trailers.slice(0, 10).map((item, index) => (
-          <MovieCard
-            key={item.movie.id}
-            movie={item.movie}
-            trailers={item.trailers}
-            currentTrailerIndex={item.currentTrailerIndex}
-            release_year={item.release_year}
-            onPlayVideo={() => handlePlayVideo(index)}
-            onBookmarkClick={handleBookmarkClick}
-          />
-        ))}
+        {enablePagination
+          ? trailers.map((item, index) => (
+              <MovieCard
+                key={item.movie.id}
+                movie={item.movie}
+                trailers={item.trailers}
+                currentTrailerIndex={item.currentTrailerIndex}
+                release_year={item.release_year}
+                onPlayVideo={() => handlePlayVideo(index)}
+                onBookmarkClick={handleBookmarkClick}
+              />
+            ))
+          : trailers
+              .slice(0, 10)
+              .map((item, index) => (
+                <MovieCard
+                  key={item.movie.id}
+                  movie={item.movie}
+                  trailers={item.trailers}
+                  currentTrailerIndex={item.currentTrailerIndex}
+                  release_year={item.release_year}
+                  onPlayVideo={() => handlePlayVideo(index)}
+                  onBookmarkClick={handleBookmarkClick}
+                />
+              ))}
       </div>
+      {enablePagination && (
+        <div className="pagination">
+          <button
+            className="pagination__button"
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
+            Previous Page
+          </button>
+          <button className="pagination__button" onClick={handleNextPage}>
+            Next Page
+          </button>
+        </div>
+      )}
       <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
         {playVideo !== null && (
           <>

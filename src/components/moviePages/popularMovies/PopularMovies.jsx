@@ -8,6 +8,7 @@ const PopularMovies = () => (
     fetchMovies={fetchPopularMovies}
     title="Popular Movies"
     moreLink="/more-popular"
+    enablePagination={false}
   />
 );
 
