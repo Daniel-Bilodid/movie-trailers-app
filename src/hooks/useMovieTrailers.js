@@ -87,6 +87,7 @@ const useMovieTrailers = (fetchMovies) => {
 
   return {
     trailers,
+    setTrailers,
     playVideo,
     setPlayVideo,
     handlePlayVideo,

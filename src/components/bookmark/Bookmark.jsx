@@ -21,16 +21,57 @@ const Bookmarks = () => {
 
   const {
     trailers,
+    setTrailers,
     playVideo,
     setPlayVideo,
     handlePlayVideo,
     handleCloseModal,
-    handleNextTrailer,
-    handlePrevTrailer,
-  } = useMovieTrailers(movies);
+  } = useMovieTrailers();
 
   const handlePlayTrailer = (index) => {
     setPlayVideo(index);
+  };
+
+  const handleNextMovie = (index) => {
+    setMovies((prevMovies) => {
+      const updatedMovies = [...prevMovies];
+      const currentMovie = updatedMovies[index];
+
+      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
+        const nextIndex =
+          (currentMovie.currentTrailerIndex + 1) %
+          currentMovie.videos.results.length;
+
+        updatedMovies[index] = {
+          ...currentMovie,
+          currentTrailerIndex: nextIndex,
+        };
+      }
+
+      return updatedMovies;
+    });
+  };
+
+  const handlePrevMovie = (index) => {
+    setMovies((prevMovies) => {
+      const updatedMovies = [...prevMovies];
+      const currentMovie = updatedMovies[index];
+
+      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
+        const prevIndex =
+          (currentMovie.currentTrailerIndex -
+            1 +
+            currentMovie.videos.results.length) %
+          currentMovie.videos.results.length;
+
+        updatedMovies[index] = {
+          ...currentMovie,
+          currentTrailerIndex: prevIndex,
+        };
+      }
+
+      return updatedMovies;
+    });
   };
 
   // Функция для получения закладок
@@ -48,12 +89,11 @@ const Bookmarks = () => {
     }
   };
 
-  // Функция для загрузки фильмов по закладкам
   const loadMovies = async (bookmarksList) => {
     try {
       const moviePromises = bookmarksList.map(async (bookmark) => {
         const movie = await fetchMovieById(bookmark.id);
-        // console.log("Fetched movie:", movie.videos.results[0]); // Проверь, что возвращаемые данные содержат `videos`
+
         return movie;
       });
       const movies = await Promise.all(moviePromises);
@@ -157,23 +197,25 @@ const Bookmarks = () => {
               width="560"
               height="315"
               src={`https://www.youtube.com/embed/${
-                movies[playVideo].videos.results[
-                  movies[playVideo].videos.results?.currentTrailerIndex || 0
+                movies[playVideo]?.videos?.results?.[
+                  movies[playVideo]?.videos?.currentMovieIndex || 0
                 ]?.key || ""
               }`}
               title={
-                trailers[playVideo]?.trailers[
-                  trailers[playVideo]?.currentTrailerIndex
+                movies[playVideo]?.movies?.[
+                  movies[playVideo]?.currentMovieIndex
                 ]?.name || "Trailer"
               }
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
+
             <div className="trending__movie-info">
               <div className="trending__movie-wrapper">
                 <div className="trending__movie-year">
-                  {trailers[playVideo]?.release_year || "Unknown Year"}
+                  {movies[playVideo]?.release_year || "Unknown Year"}
+                  )}
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-svg">
@@ -192,12 +234,10 @@ const Bookmarks = () => {
                 <div className="trending__movie-type">Movie</div>
               </div>
               <div>
-                <button onClick={() => handlePrevTrailer(playVideo)}>
+                <button onClick={() => handlePrevMovie(playVideo)}>
                   previous
                 </button>
-                <button onClick={() => handleNextTrailer(playVideo)}>
-                  next
-                </button>
+                <button onClick={() => handleNextMovie(playVideo)}>next</button>
               </div>
             </div>
           </>
