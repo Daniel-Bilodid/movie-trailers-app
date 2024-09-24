@@ -4,6 +4,7 @@ import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import useBookmarks from "../../hooks/useBookmarks";
 import "./movieList.scss";
 const MovieCard = React.memo(
   ({
