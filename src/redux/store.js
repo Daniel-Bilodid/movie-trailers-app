@@ -5,6 +5,7 @@ const dataSlice = createSlice({
   initialState: {
     value: "",
     selectedGenre: "",
+    movies: [],
   },
   reducers: {
     setData: (state, action) => {
@@ -13,10 +14,22 @@ const dataSlice = createSlice({
     setSelectedGenre: (state, action) => {
       state.selectedGenre = action.payload;
     },
+    setMovies: (state, action) => {
+      state.movies = action.payload;
+    },
+    addMovie: (state, action) => {
+      state.movies.push(action.payload);
+    },
+    removeMovie: (state, action) => {
+      state.movies = state.movies.filter(
+        (movie) => movie.id !== action.payload
+      );
+    },
   },
 });
 
-export const { setData, setSelectedGenre } = dataSlice.actions;
+export const { setData, setSelectedGenre, setMovies, addMovie, removeMovie } =
+  dataSlice.actions;
 
 const store = configureStore({
   reducer: {

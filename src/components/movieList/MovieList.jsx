@@ -4,7 +4,7 @@ import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
-import useBookmarks from "../../hooks/useBookmarks";
+import { useSelector } from "react-redux";
 import "./movieList.scss";
 const MovieCard = React.memo(
   ({
@@ -14,6 +14,7 @@ const MovieCard = React.memo(
     release_year,
     onPlayVideo,
     onBookmarkClick,
+    movies,
   }) => (
     <div key={movie.id}>
       <div className="trending__btn-wrapper">
@@ -25,6 +26,7 @@ const MovieCard = React.memo(
           onClick={() => onBookmarkClick(movie.id)}
         >
           <FontAwesomeIcon icon={faBookmark} color="white" size="1x" />
+          {console.log(movies)}
         </div>
       </div>
       <h3 className="trending__movie-title">{movie.title}</h3>
@@ -91,7 +93,11 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     handleBookmarkClick: originalHandleBookmarkClick,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
+  const movies = useSelector((state) => state.data.movies);
 
+  useEffect(() => {
+    console.log(movies);
+  }, [movies]);
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
   }, [currentPage, loadTrailers]);
@@ -149,6 +155,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 release_year={item.release_year}
                 onPlayVideo={() => handlePlayVideo(index)}
                 onBookmarkClick={handleBookmarkClick}
+                movies={movies}
               />
             ))
           : trailers

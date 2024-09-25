@@ -5,6 +5,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { fetchMovieById } from "../../utils/fetchTrailers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
+import { useDispatch, useSelector } from "react-redux";
+import { setMovies } from "../../redux/store";
 import {
   faInfoCircle,
   faBookmark,
@@ -16,8 +18,10 @@ import "./bookmark.scss";
 
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
-  const [movies, setMovies] = useState([]);
+  const [localMovies, setLocalMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const moviesFromStore = useSelector((state) => state.data.movies);
 
   const {
     trailers,
@@ -33,7 +37,7 @@ const Bookmarks = () => {
   };
 
   const handleNextMovie = (index) => {
-    setMovies((prevMovies) => {
+    setLocalMovies((prevMovies) => {
       const updatedMovies = [...prevMovies];
       const currentMovie = updatedMovies[index];
 
@@ -53,7 +57,7 @@ const Bookmarks = () => {
   };
 
   const handlePrevMovie = (index) => {
-    setMovies((prevMovies) => {
+    setLocalMovies((prevMovies) => {
       const updatedMovies = [...prevMovies];
       const currentMovie = updatedMovies[index];
 
@@ -94,12 +98,12 @@ const Bookmarks = () => {
         const movie = await fetchMovieById(bookmark.id);
         return {
           ...movie,
-          currentTrailerIndex: 0, // Убедитесь, что поле currentTrailerIndex присутствует
+          currentTrailerIndex: 0,
         };
       });
-      const movies = await Promise.all(moviePromises);
-      setMovies(movies);
-      console.log(movies);
+      const moviesData = await Promise.all(moviePromises);
+      dispatch(setMovies(moviesData)); // Обновляем Redux Store
+      setLocalMovies(moviesData); // Обновляем локальное состояние
     } catch (error) {
       console.error("Ошибка при загрузке фильмов", error);
     } finally {
@@ -125,6 +129,11 @@ const Bookmarks = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    setLocalMovies(moviesFromStore);
+    setLoading(false);
+  }, [moviesFromStore]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -133,8 +142,8 @@ const Bookmarks = () => {
     <div className="bookmarks">
       <h1 className="bookmarks__title">Bookmarks</h1>
       <ul className="bookmarks__wrapper">
-        {movies.length > 0 ? (
-          movies.map((movie, index) => (
+        {localMovies.length > 0 ? (
+          localMovies.map((movie, index) => (
             <div key={movie.id}>
               <div className="trending__btn-wrapper">
                 <Link className="trending__info" to={`/movie-info/${movie.id}`}>
@@ -191,20 +200,20 @@ const Bookmarks = () => {
       </ul>
 
       <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
-        {playVideo !== null && movies.length > 0 && (
+        {playVideo !== null && localMovies.length > 0 && (
           <>
             <iframe
               className="trending__movie-frame"
               width="560"
               height="315"
               src={`https://www.youtube.com/embed/${
-                movies[playVideo].videos.results?.[
-                  movies[playVideo].currentTrailerIndex // Используйте currentTrailerIndex
+                localMovies[playVideo].videos.results?.[
+                  localMovies[playVideo].currentTrailerIndex
                 ]?.key || ""
               }`}
               title={
-                movies[playVideo]?.videos.results?.[
-                  movies[playVideo].currentTrailerIndex
+                localMovies[playVideo]?.videos.results?.[
+                  localMovies[playVideo].currentTrailerIndex
                 ]?.name || "Trailer"
               }
               frameBorder="0"
@@ -215,7 +224,7 @@ const Bookmarks = () => {
             <div className="trending__movie-info">
               <div className="trending__movie-wrapper">
                 <div className="trending__movie-year">
-                  {movies[playVideo]?.release_date.slice(0, 4) ||
+                  {localMovies[playVideo]?.release_date.slice(0, 4) ||
                     "Unknown Year"}
                 </div>
                 <div className="trending__movie-dot">·</div>
