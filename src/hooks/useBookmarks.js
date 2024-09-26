@@ -9,7 +9,7 @@ import { onAuthStateChanged } from "firebase/auth";
 const useBookmarks = () => {
   const dispatch = useDispatch();
   const [movies, setMoviesList] = useState([]); // Состояние для хранения фильмов
-
+  const [loading, setLoading] = useState(true);
   const fetchBookmarks = async (userId) => {
     try {
       const bookmarksCollection = collection(db, `users/${userId}/bookmarks`);
@@ -26,18 +26,43 @@ const useBookmarks = () => {
 
   const loadMovies = async (bookmarksList) => {
     try {
+      if (!Array.isArray(bookmarksList)) {
+        console.error("Bookmarks List is not an array:", bookmarksList);
+        return;
+      }
+
       const moviePromises = bookmarksList.map(async (bookmark) => {
-        const movie = await fetchMovieById(bookmark.id);
-        return {
-          ...movie,
-          currentTrailerIndex: 0,
-        };
+        if (
+          typeof bookmark === "object" &&
+          bookmark !== null &&
+          "id" in bookmark
+        ) {
+          if (Array.isArray(bookmark.id)) {
+            console.warn("Bookmark id is an array, skipping:", bookmark);
+            return null;
+          }
+
+          const movie = await fetchMovieById(bookmark.id);
+          return {
+            ...movie,
+            currentTrailerIndex: 0,
+          };
+        } else {
+          console.warn("Invalid bookmark structure:", bookmark);
+          return null;
+        }
       });
+
       const moviesData = await Promise.all(moviePromises);
-      setMoviesList(moviesData); // Обновляем состояние с загруженными фильмами
-      dispatch(setMovies(moviesData)); // Если нужно сохранить в Redux
+
+      const validMoviesData = moviesData.filter((movie) => movie !== null);
+
+      dispatch(setMovies(validMoviesData));
+      setMoviesList(validMoviesData);
     } catch (error) {
       console.error("Ошибка при загрузке фильмов", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,7 +78,7 @@ const useBookmarks = () => {
 
     return () => unsubscribe();
   }, [dispatch]);
-
+  console.log(movies);
   return movies; // Возвращаем список фильмов
 };
 

@@ -25,7 +25,6 @@ const MovieCard = React.memo(
           <FontAwesomeIcon icon={faInfoCircle} color="white" size="1x" />
         </Link>
 
-        {console.log(movies)}
         <div
           className="trending__bookmark"
           onClick={() => onBookmarkClick(movie.id)}
@@ -105,9 +104,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     handleBookmarkClick: originalHandleBookmarkClick,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
-  const movies = useBookmarks(); // Получаем фильмы из хука
+  const movies = useBookmarks();
 
-  // Выводим фильмы в консоль
   useEffect(() => {
     console.log("Movies from Redux:", movies);
   }, [movies]);

@@ -86,6 +86,7 @@ const Bookmarks = () => {
       const bookmarksList = bookmarksSnapshot.docs.map((doc) => ({
         id: doc.data().movieId,
       }));
+
       return bookmarksList;
     } catch (error) {
       console.error("Ошибка при получении закладок: ", error);
@@ -95,16 +96,39 @@ const Bookmarks = () => {
 
   const loadMovies = async (bookmarksList) => {
     try {
+      if (!Array.isArray(bookmarksList)) {
+        console.error("Bookmarks List is not an array:", bookmarksList);
+        return;
+      }
+
       const moviePromises = bookmarksList.map(async (bookmark) => {
-        const movie = await fetchMovieById(bookmark.id);
-        return {
-          ...movie,
-          currentTrailerIndex: 0,
-        };
+        if (
+          typeof bookmark === "object" &&
+          bookmark !== null &&
+          "id" in bookmark
+        ) {
+          if (Array.isArray(bookmark.id)) {
+            console.warn("Bookmark id is an array, skipping:", bookmark);
+            return null;
+          }
+
+          const movie = await fetchMovieById(bookmark.id);
+          return {
+            ...movie,
+            currentTrailerIndex: 0,
+          };
+        } else {
+          console.warn("Invalid bookmark structure:", bookmark);
+          return null;
+        }
       });
+
       const moviesData = await Promise.all(moviePromises);
-      dispatch(setMovies(moviesData));
-      setLocalMovies(moviesData);
+
+      const validMoviesData = moviesData.filter((movie) => movie !== null);
+
+      dispatch(setMovies(validMoviesData));
+      setLocalMovies(validMoviesData);
     } catch (error) {
       console.error("Ошибка при загрузке фильмов", error);
     } finally {
