@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { getDocs, collection } from "firebase/firestore";
 import { fetchMovieById } from "../utils/fetchTrailers";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
+import { useDispatch } from "react-redux";
+import { setMovies } from "../redux/store";
+import { onAuthStateChanged } from "firebase/auth";
 
-const useBookmarks = (userId) => {
-  const [bookmarks, setBookmarks] = useState([]);
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+const useBookmarks = () => {
+  const dispatch = useDispatch();
+  const [movies, setMoviesList] = useState([]); // Состояние для хранения фильмов
 
-  const fetchBookmarks = async () => {
+  const fetchBookmarks = async (userId) => {
     try {
       const bookmarksCollection = collection(db, `users/${userId}/bookmarks`);
       const bookmarksSnapshot = await getDocs(bookmarksCollection);
       const bookmarksList = bookmarksSnapshot.docs.map((doc) => ({
-        id: doc.data().movieId, // Извлечение ID фильма из закладки
+        id: doc.data().movieId,
       }));
       return bookmarksList;
     } catch (error) {
@@ -28,38 +30,31 @@ const useBookmarks = (userId) => {
         const movie = await fetchMovieById(bookmark.id);
         return {
           ...movie,
-          currentTrailerIndex: 0, // Индекс текущего трейлера
+          currentTrailerIndex: 0,
         };
       });
-      const movies = await Promise.all(moviePromises);
-      setMovies(movies);
+      const moviesData = await Promise.all(moviePromises);
+      setMoviesList(moviesData); // Обновляем состояние с загруженными фильмами
+      dispatch(setMovies(moviesData)); // Если нужно сохранить в Redux
     } catch (error) {
       console.error("Ошибка при загрузке фильмов", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (userId) {
-      const loadBookmarksAndMovies = async () => {
-        const bookmarksList = await fetchBookmarks();
-        setBookmarks(bookmarksList);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const bookmarksList = await fetchBookmarks(user.uid);
         if (bookmarksList.length > 0) {
           await loadMovies(bookmarksList);
-        } else {
-          setLoading(false);
         }
-      };
-      loadBookmarksAndMovies();
-    }
-  }, [userId]);
+      }
+    });
 
-  return {
-    bookmarks,
-    movies,
-    loading,
-  };
+    return () => unsubscribe();
+  }, [dispatch]);
+
+  return movies; // Возвращаем список фильмов
 };
 
 export default useBookmarks;

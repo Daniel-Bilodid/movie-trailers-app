@@ -6,6 +6,7 @@ import { fetchMovieById } from "../../utils/fetchTrailers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { useDispatch, useSelector } from "react-redux";
+import { useBookmarks } from "../../hooks/useBookmarks.js";
 import { setMovies } from "../../redux/store";
 import {
   faInfoCircle,
@@ -102,8 +103,8 @@ const Bookmarks = () => {
         };
       });
       const moviesData = await Promise.all(moviePromises);
-      dispatch(setMovies(moviesData)); // Обновляем Redux Store
-      setLocalMovies(moviesData); // Обновляем локальное состояние
+      dispatch(setMovies(moviesData));
+      setLocalMovies(moviesData);
     } catch (error) {
       console.error("Ошибка при загрузке фильмов", error);
     } finally {

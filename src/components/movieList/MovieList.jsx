@@ -4,8 +4,11 @@ import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setMovies, selectMovies } from "../../redux/store";
+import useBookmarks from "../../hooks/useBookmarks";
 import "./movieList.scss";
+
 const MovieCard = React.memo(
   ({
     movie,
@@ -21,12 +24,21 @@ const MovieCard = React.memo(
         <Link className="trending__info" to={`/movie-info/${movie.id}`}>
           <FontAwesomeIcon icon={faInfoCircle} color="white" size="1x" />
         </Link>
+
+        {console.log(movies)}
         <div
           className="trending__bookmark"
           onClick={() => onBookmarkClick(movie.id)}
         >
-          <FontAwesomeIcon icon={faBookmark} color="white" size="1x" />
-          {console.log(movies)}
+          <FontAwesomeIcon
+            icon={faBookmark}
+            color={
+              Array.isArray(movies) && movies.some((m) => m.id === movie.id)
+                ? "yellow"
+                : "white"
+            }
+            size="1x"
+          />
         </div>
       </div>
       <h3 className="trending__movie-title">{movie.title}</h3>
@@ -93,11 +105,13 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     handleBookmarkClick: originalHandleBookmarkClick,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
-  const movies = useSelector((state) => state.data.movies);
+  const movies = useBookmarks(); // Получаем фильмы из хука
 
+  // Выводим фильмы в консоль
   useEffect(() => {
-    console.log(movies);
+    console.log("Movies from Redux:", movies);
   }, [movies]);
+
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
   }, [currentPage, loadTrailers]);
@@ -169,6 +183,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   release_year={item.release_year}
                   onPlayVideo={() => handlePlayVideo(index)}
                   onBookmarkClick={handleBookmarkClick}
+                  movies={movies}
                 />
               ))}
       </div>
