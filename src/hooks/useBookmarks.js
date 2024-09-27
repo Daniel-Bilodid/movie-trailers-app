@@ -78,8 +78,7 @@ const useBookmarks = () => {
 
     return () => unsubscribe();
   }, [dispatch]);
-  console.log(movies);
-  return movies; // Возвращаем список фильмов
+  return { movies, loadMovies, fetchBookmarks, loading };
 };
 
 export default useBookmarks;

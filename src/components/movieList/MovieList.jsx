@@ -104,7 +104,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     handleBookmarkClick: originalHandleBookmarkClick,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
-  const movies = useBookmarks();
+  const { movies } = useBookmarks();
 
   useEffect(() => {
     console.log("Movies from Redux:", movies);
