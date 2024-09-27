@@ -18,6 +18,8 @@ const MovieCard = React.memo(
     onPlayVideo,
     onBookmarkClick,
     movies,
+    selected,
+    isSelected,
   }) => (
     <div key={movie.id}>
       <div className="trending__btn-wrapper">
@@ -32,11 +34,14 @@ const MovieCard = React.memo(
           <FontAwesomeIcon
             icon={faBookmark}
             color={
-              Array.isArray(movies) && movies.some((m) => m.id === movie.id)
+              (Array.isArray(movies) &&
+                movies.some((m) => m.id === movie.id)) ||
+              isSelected
                 ? "yellow"
                 : "white"
             }
             size="1x"
+            onClick={selected}
           />
         </div>
       </div>
@@ -104,8 +109,15 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     handleBookmarkClick: originalHandleBookmarkClick,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
-  const { movies } = useBookmarks();
+  const { movies, loading: bookmarksLoading } = useBookmarks();
+  const [selectedMovies, setSelectedMovies] = useState({});
 
+  const selected = (movieId) => {
+    setSelectedMovies((prevState) => ({
+      ...prevState,
+      [movieId]: !prevState[movieId],
+    }));
+  };
   useEffect(() => {
     console.log("Movies from Redux:", movies);
   }, [movies]);
@@ -148,6 +160,10 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
       );
     }
   }, [trailers]);
+
+  if (bookmarksLoading) {
+    return <div>Loading bookmarks...</div>; // You can customize the loading indicator
+  }
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">
@@ -168,6 +184,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 onPlayVideo={() => handlePlayVideo(index)}
                 onBookmarkClick={handleBookmarkClick}
                 movies={movies}
+                selected={() => selected(item.movie.id)}
+                isSelected={!!selectedMovies[item.movie.id]}
               />
             ))
           : trailers
@@ -182,6 +200,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   onPlayVideo={() => handlePlayVideo(index)}
                   onBookmarkClick={handleBookmarkClick}
                   movies={movies}
+                  selected={() => selected(item.movie.id)}
+                  isSelected={!!selectedMovies[item.movie.id]}
                 />
               ))}
       </div>

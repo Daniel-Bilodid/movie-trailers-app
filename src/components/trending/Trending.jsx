@@ -16,6 +16,7 @@ import PopularMovies from "../moviePages/popularMovies/PopularMovies";
 import NowPlayingMovies from "../moviePages/nowPlayingMovies/NowPlayingMovies";
 import UpcomingMovies from "../moviePages/upcomingMovies/UpcomingMovies";
 import TopRatedMovies from "../moviePages/topRatedMovies/TopRatedMovies";
+import useBookmarks from "../../hooks/useBookmarks";
 
 import Search from "../search/Search";
 
@@ -163,7 +164,17 @@ const Trending = () => {
       console.error("Error handling bookmark click:", error);
     }
   };
-
+  const [selectedMovies, setSelectedMovies] = useState({});
+  const { movies, loading: bookmarksLoading } = useBookmarks();
+  const selected = (movieId) => {
+    setSelectedMovies((prevState) => ({
+      ...prevState,
+      [movieId]: !prevState[movieId],
+    }));
+  };
+  if (bookmarksLoading) {
+    return <div>Loading bookmarks...</div>;
+  }
   return (
     <>
       <div className="trending">
@@ -196,8 +207,15 @@ const Trending = () => {
                   >
                     <FontAwesomeIcon
                       icon={faBookmark}
-                      color="white"
+                      color={
+                        (Array.isArray(movies) &&
+                          movies.some((m) => m.id === movie.id)) ||
+                        selectedMovies
+                          ? "yellow"
+                          : "white"
+                      }
                       size="1x"
+                      onClick={selected}
                     />
                   </div>
                 </div>
