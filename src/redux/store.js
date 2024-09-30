@@ -6,6 +6,7 @@ const dataSlice = createSlice({
     value: "",
     selectedGenre: "",
     movies: [],
+    moviesByGenre: [],
   },
   reducers: {
     setData: (state, action) => {
@@ -16,10 +17,13 @@ const dataSlice = createSlice({
       state.selectedGenre = action.payload;
       console.log("genre");
     },
+    setMoviesByGenre: (state, action) => {
+      state.moviesByGenre = action.payload;
+    },
     setMovies: (state, action) => {
-      console.log("Previous movies:", state.movies); // Логируй предыдущее состояние
+      console.log("Previous movies:", state.movies);
       state.movies = action.payload;
-      console.log("Updated movies:", state.movies); // Логируй новое состояние
+      console.log("Updated movies:", state.movies);
     },
     addMovie: (state, action) => {
       state.movies.push(action.payload);
@@ -33,8 +37,14 @@ const dataSlice = createSlice({
   },
 });
 
-export const { setData, setSelectedGenre, setMovies, addMovie, removeMovie } =
-  dataSlice.actions;
+export const {
+  setData,
+  setSelectedGenre,
+  setMovies,
+  addMovie,
+  removeMovie,
+  setMoviesByGenre,
+} = dataSlice.actions;
 
 export const selectMovies = (state) => state.data.movies;
 
