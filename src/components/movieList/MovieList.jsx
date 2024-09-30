@@ -118,9 +118,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
       [movieId]: !prevState[movieId],
     }));
   };
-  useEffect(() => {
-    console.log("Movies from Redux:", movies);
-  }, [movies]);
+  useEffect(() => {}, [movies]);
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);

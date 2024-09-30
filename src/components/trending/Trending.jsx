@@ -166,6 +166,7 @@ const Trending = () => {
   };
   const [selectedMovies, setSelectedMovies] = useState({});
   const { movies, loading: bookmarksLoading } = useBookmarks();
+
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
       ...prevState,
@@ -210,12 +211,12 @@ const Trending = () => {
                       color={
                         (Array.isArray(movies) &&
                           movies.some((m) => m.id === movie.id)) ||
-                        selectedMovies
+                        selectedMovies[movie.id]
                           ? "yellow"
                           : "white"
                       }
+                      onClick={() => selected(movie.id)}
                       size="1x"
-                      onClick={selected}
                     />
                   </div>
                 </div>

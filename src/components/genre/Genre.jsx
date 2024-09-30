@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedGenre } from "../../redux/store";
-import { fetchMoviesWithGenres, fetchGenres } from "../../utils/fetchTrailers";
+import {
+  fetchMoviesWithGenres,
+  fetchGenres,
+  fetchMoviesByGenre,
+} from "../../utils/fetchTrailers";
 import "./genre.scss";
 
 const Genre = () => {
@@ -13,7 +17,7 @@ const Genre = () => {
   useEffect(() => {
     const loadMoviesAndGenres = async () => {
       try {
-        const moviesData = await fetchMoviesWithGenres();
+        const moviesData = await fetchMoviesByGenre();
         const genresData = await fetchGenres();
         setMovies(moviesData);
         setGenres(genresData);
@@ -24,10 +28,6 @@ const Genre = () => {
 
     loadMoviesAndGenres();
   }, []);
-
-  const filteredMovies = selectedGenre
-    ? movies.filter((movie) => movie.genres.includes(selectedGenre))
-    : movies;
 
   return (
     <div>
