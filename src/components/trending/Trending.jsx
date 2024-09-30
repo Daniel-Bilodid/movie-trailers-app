@@ -174,7 +174,7 @@ const Trending = () => {
     }));
   };
   if (bookmarksLoading) {
-    return <div>Loading bookmarks...</div>;
+    return <div>Loading movies...</div>;
   }
   return (
     <>

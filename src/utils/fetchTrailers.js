@@ -265,12 +265,33 @@ export const fetchMoviesWithGenres = async (selectedGenre = null, page = 1) => {
   }
 };
 
+const fetchTrailer = async (movieId) => {
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error("Ошибка при получении трейлеров", error);
+    return [];
+  }
+};
+
 export const fetchMoviesByGenre = async (genreId, page = 1) => {
   try {
     const response = await axios.get(
       `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`
     );
-    return response.data.results;
+    const movies = response.data.results;
+
+    const moviesWithTrailers = await Promise.all(
+      movies.map(async (movie) => {
+        const trailers = await fetchTrailer(movie.id);
+        return { ...movie, trailers };
+      })
+    );
+
+    return moviesWithTrailers;
   } catch (error) {
     console.error("Ошибка при получении фильмов по жанру", error);
     throw error;

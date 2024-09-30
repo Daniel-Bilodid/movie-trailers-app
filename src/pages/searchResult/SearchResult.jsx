@@ -9,7 +9,7 @@ const SearchResult = () => {
   const data = useSelector((state) => state.data.value);
   const [playVideo, setPlayVideo] = useState(null);
   const [currentTrailer, setCurrentTrailer] = useState(0);
-
+  console.log(data);
   const handlePlayVideo = (index) => {
     setPlayVideo(index);
     setCurrentTrailer(0); // Устанавливаем первый трейлер как текущий

@@ -31,7 +31,7 @@ const Genre = () => {
 
     loadMoviesAndGenres();
   }, [selectedGenre, dispatch]);
-  console.log("movies by genre ", moviesByGenre);
+
   return (
     <div>
       <div className="genre-filter">
