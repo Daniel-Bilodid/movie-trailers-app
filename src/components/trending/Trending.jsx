@@ -204,7 +204,10 @@ const Trending = () => {
                   </Link>
                   <div
                     className="trending__bookmark"
-                    onClick={() => handleBookmarkClick(movie.id)}
+                    onClick={() => {
+                      handleBookmarkClick(movie.id);
+                      selected(movie.id);
+                    }}
                   >
                     <FontAwesomeIcon
                       icon={faBookmark}
@@ -215,7 +218,6 @@ const Trending = () => {
                           ? "yellow"
                           : "white"
                       }
-                      onClick={() => selected(movie.id)}
                       size="1x"
                     />
                   </div>

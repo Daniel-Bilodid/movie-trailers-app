@@ -4,25 +4,34 @@ import Modal from "../../components/movieModal/MovieModal";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import useBookmarkHandle from "../../hooks/useBookmarkHandle";
 
 const SearchResult = () => {
   const data = useSelector((state) => state.data.value);
   const [playVideo, setPlayVideo] = useState(null);
   const [currentTrailer, setCurrentTrailer] = useState(0);
+  const {
+    movies,
+    loading: bookmarksLoading,
+    selected,
+    selectedMovies,
+    handleBookmarkClick,
+  } = useBookmarkHandle();
+
   console.log(data);
   const handlePlayVideo = (index) => {
     setPlayVideo(index);
-    setCurrentTrailer(0); // Устанавливаем первый трейлер как текущий
+    setCurrentTrailer(0);
   };
 
   const handleCloseModal = () => {
     setPlayVideo(null);
-    setCurrentTrailer(0); // Сбрасываем текущий трейлер
+    setCurrentTrailer(0);
   };
 
   const handleNextTrailer = () => {
     if (playVideo !== null) {
-      setCurrentTrailer((prev) => (prev + 1) % data[playVideo].trailers.length); // Циклический переход
+      setCurrentTrailer((prev) => (prev + 1) % data[playVideo].trailers.length);
     }
   };
 
@@ -32,9 +41,12 @@ const SearchResult = () => {
         (prev) =>
           (prev - 1 + data[playVideo].trailers.length) %
           data[playVideo].trailers.length
-      ); // Циклический переход
+      );
     }
   };
+  if (bookmarksLoading) {
+    return <div>Loading movies...</div>;
+  }
 
   return (
     <>
@@ -52,8 +64,24 @@ const SearchResult = () => {
                     size="1x"
                   />
                 </Link>
-                <div className="trending__bookmark">
-                  <FontAwesomeIcon icon={faBookmark} color="white" size="1x" />
+                <div
+                  className="trending__bookmark"
+                  onClick={() => {
+                    handleBookmarkClick(movie.id);
+                    selected(movie.id);
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faBookmark}
+                    color={
+                      (Array.isArray(movies) &&
+                        movies.some((m) => m.id === movie.id)) ||
+                      selectedMovies[movie.id]
+                        ? "yellow"
+                        : "white"
+                    }
+                    size="1x"
+                  />
                 </div>
               </div>
               <h3 className="trending__movie-title">{movie.title}</h3>

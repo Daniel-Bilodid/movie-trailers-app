@@ -7,27 +7,26 @@ const dataSlice = createSlice({
     selectedGenre: "",
     movies: [],
     moviesByGenre: [],
+    currentPage: 1,
   },
   reducers: {
     setData: (state, action) => {
       state.value = action.payload;
-      console.log("data");
     },
     setSelectedGenre: (state, action) => {
       state.selectedGenre = action.payload;
-      console.log("genre");
     },
     setMoviesByGenre: (state, action) => {
       state.moviesByGenre = action.payload;
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
     setMovies: (state, action) => {
-      console.log("Previous movies:", state.movies);
       state.movies = action.payload;
-      console.log("Updated movies:", state.movies);
     },
     addMovie: (state, action) => {
       state.movies.push(action.payload);
-      console.log("add");
     },
     removeMovie: (state, action) => {
       state.movies = state.movies.filter(
@@ -44,6 +43,7 @@ export const {
   addMovie,
   removeMovie,
   setMoviesByGenre,
+  setCurrentPage,
 } = dataSlice.actions;
 
 export const selectMovies = (state) => state.data.movies;

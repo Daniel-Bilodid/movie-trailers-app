@@ -15,16 +15,17 @@ import {
 import Genre from "../../components/genre/Genre";
 import Modal from "../../components/movieModal/MovieModal";
 import Search from "../../components/search/Search";
+import { setCurrentPage } from "../../redux/store";
 
 import "./allMovies.scss";
 
 const AllMovies = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
+  const currentPage = useSelector((state) => state.data.currentPage);
   const moviesByGenre = useSelector((state) => state.data.moviesByGenre);
   const [currentTrailer, setCurrentTrailer] = useState(0);
   const { user } = useContext(AuthContext);
   const {
-    trailers,
     playVideo,
     handlePlayVideo,
     handleCloseModal,
@@ -42,12 +43,20 @@ const AllMovies = () => {
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
+      dispatch(setCurrentPage(currentPage - 1));
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
   };
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    dispatch(setCurrentPage(currentPage + 1));
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const handleBookmarkClick = async (movieId) => {

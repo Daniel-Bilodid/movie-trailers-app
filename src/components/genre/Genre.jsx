@@ -12,13 +12,13 @@ import "./genre.scss";
 const Genre = () => {
   const dispatch = useDispatch();
   const selectedGenre = useSelector((state) => state.data.selectedGenre);
-  const moviesByGenre = useSelector((state) => state.data.moviesByGenre);
+  const currentPage = useSelector((state) => state.data.currentPage);
   const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     const loadMoviesAndGenres = async () => {
       try {
-        const moviesData = await fetchMoviesByGenre(selectedGenre);
+        const moviesData = await fetchMoviesByGenre(selectedGenre, currentPage);
 
         const genresData = await fetchGenres();
 
@@ -28,9 +28,9 @@ const Genre = () => {
         console.error("Ошибка при загрузке фильмов и жанров", error);
       }
     };
-
+    console.log(currentPage);
     loadMoviesAndGenres();
-  }, [selectedGenre, dispatch]);
+  }, [selectedGenre, dispatch, currentPage]);
 
   return (
     <div>
