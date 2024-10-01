@@ -23,12 +23,13 @@ const Genre = () => {
         const genresData = await fetchGenres();
 
         dispatch(setMoviesByGenre(moviesData));
+        console.log(moviesData);
         setGenres(genresData);
       } catch (error) {
         console.error("Ошибка при загрузке фильмов и жанров", error);
       }
     };
-    console.log(currentPage);
+
     loadMoviesAndGenres();
   }, [selectedGenre, dispatch, currentPage]);
 

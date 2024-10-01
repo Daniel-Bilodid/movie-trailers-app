@@ -6,12 +6,8 @@ import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import useBookmarks from "../../hooks/useBookmarks";
 import { AuthContext } from "../../components/context/AuthContext";
-import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../../firebase";
-import {
-  fetchMoviesByGenre,
-  fetchPopularMovies,
-} from "../../utils/fetchTrailers";
+import useBookmarkHandle from "../../hooks/useBookmarkHandle";
+
 import Genre from "../../components/genre/Genre";
 import Modal from "../../components/movieModal/MovieModal";
 import Search from "../../components/search/Search";
@@ -25,6 +21,13 @@ const AllMovies = () => {
   const moviesByGenre = useSelector((state) => state.data.moviesByGenre);
   const [currentTrailer, setCurrentTrailer] = useState(0);
   const { user } = useContext(AuthContext);
+  const {
+    movies,
+    loading: bookmarksLoading,
+    selected,
+    selectedMovies,
+    handleBookmarkClick,
+  } = useBookmarkHandle();
   const {
     playVideo,
     handlePlayVideo,
@@ -59,36 +62,6 @@ const AllMovies = () => {
     });
   };
 
-  const handleBookmarkClick = async (movieId) => {
-    if (!user) {
-      console.log("Please sign in to bookmark.");
-      return;
-    }
-
-    try {
-      const bookmarkRef = doc(db, `users/${user.uid}/bookmarks/${movieId}`);
-      const bookmarkDoc = await getDoc(bookmarkRef);
-
-      if (bookmarkDoc.exists()) {
-        // Если закладка уже существует, удаляем её
-        await deleteDoc(bookmarkRef);
-      } else {
-        // Если закладки нет, добавляем новую
-        await setDoc(bookmarkRef, { movieId });
-      }
-    } catch (error) {
-      console.error("Error handling bookmark click:", error);
-    }
-  };
-  const [selectedMovies, setSelectedMovies] = useState({});
-  const { movies, loading: bookmarksLoading } = useBookmarks();
-
-  const selected = (movieId) => {
-    setSelectedMovies((prevState) => ({
-      ...prevState,
-      [movieId]: !prevState[movieId],
-    }));
-  };
   if (bookmarksLoading) {
     return <div>Loading movies...</div>;
   }
@@ -110,6 +83,7 @@ const AllMovies = () => {
       ); // Циклический переход
     }
   };
+
   return (
     <div className="popular">
       <div className="popular__text-wrapper">
@@ -131,7 +105,10 @@ const AllMovies = () => {
                 </Link>
                 <div
                   className="trending__bookmark"
-                  onClick={() => handleBookmarkClick(movie.id)}
+                  onClick={() => {
+                    handleBookmarkClick(movie.id);
+                    selected(movie.id);
+                  }}
                 >
                   <FontAwesomeIcon
                     icon={faBookmark}
@@ -142,7 +119,6 @@ const AllMovies = () => {
                         ? "yellow"
                         : "white"
                     }
-                    onClick={() => selected(movie.id)}
                     size="1x"
                   />
                 </div>
@@ -200,7 +176,7 @@ const AllMovies = () => {
             <div className="trending__movie-info">
               <div className="trending__movie-wrapper">
                 <div className="trending__movie-year">
-                  {moviesByGenre[playVideo]?.release_year}
+                  {moviesByGenre[playVideo]?.release_date.slice(0, 4)}
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">Movie</div>

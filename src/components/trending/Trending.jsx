@@ -10,13 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AuthContext";
-import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+
 import PopularMovies from "../moviePages/popularMovies/PopularMovies";
 import NowPlayingMovies from "../moviePages/nowPlayingMovies/NowPlayingMovies";
 import UpcomingMovies from "../moviePages/upcomingMovies/UpcomingMovies";
 import TopRatedMovies from "../moviePages/topRatedMovies/TopRatedMovies";
-import useBookmarks from "../../hooks/useBookmarks";
+import useBookmarkHandle from "../../hooks/useBookmarkHandle";
 
 import Search from "../search/Search";
 
@@ -24,6 +23,13 @@ const Trending = () => {
   const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
+  const {
+    movies,
+    loading: bookmarksLoading,
+    selected,
+    selectedMovies,
+    handleBookmarkClick,
+  } = useBookmarkHandle();
 
   const NextArrow = (props) => {
     const { onClick } = props;
@@ -143,36 +149,6 @@ const Trending = () => {
     });
   };
 
-  const handleBookmarkClick = async (movieId) => {
-    if (!user) {
-      console.log("Please sign in to bookmark.");
-      return;
-    }
-
-    try {
-      const bookmarkRef = doc(db, `users/${user.uid}/bookmarks/${movieId}`);
-      const bookmarkDoc = await getDoc(bookmarkRef);
-
-      if (bookmarkDoc.exists()) {
-        // Если закладка уже существует, удаляем её
-        await deleteDoc(bookmarkRef);
-      } else {
-        // Если закладки нет, добавляем новую
-        await setDoc(bookmarkRef, { movieId });
-      }
-    } catch (error) {
-      console.error("Error handling bookmark click:", error);
-    }
-  };
-  const [selectedMovies, setSelectedMovies] = useState({});
-  const { movies, loading: bookmarksLoading } = useBookmarks();
-
-  const selected = (movieId) => {
-    setSelectedMovies((prevState) => ({
-      ...prevState,
-      [movieId]: !prevState[movieId],
-    }));
-  };
   if (bookmarksLoading) {
     return <div>Loading movies...</div>;
   }
