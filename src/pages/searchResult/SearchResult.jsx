@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import Modal from "../../components/movieModal/MovieModal";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
+import { AuthContext } from "../../components/context/AuthContext";
+import Search from "../../components/search/Search";
 
 const SearchResult = () => {
   const data = useSelector((state) => state.data.value);
   const [playVideo, setPlayVideo] = useState(null);
   const [currentTrailer, setCurrentTrailer] = useState(0);
+  const { user } = useContext(AuthContext);
   const {
     movies,
     loading: bookmarksLoading,
@@ -44,14 +47,14 @@ const SearchResult = () => {
       );
     }
   };
-  if (bookmarksLoading) {
+  if (bookmarksLoading && user) {
     return <div>Loading movies...</div>;
   }
 
   return (
     <>
       <h1>Search Results</h1>
-
+      {/* <Search /> */}
       <div className="popular">
         <div className="popular__wrapper">
           {data.map(({ movie, trailers, release_year }, index) => (

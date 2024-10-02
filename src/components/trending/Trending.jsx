@@ -149,9 +149,10 @@ const Trending = () => {
     });
   };
 
-  if (bookmarksLoading) {
+  if (bookmarksLoading && user) {
     return <div>Loading movies...</div>;
   }
+
   return (
     <>
       <div className="trending">

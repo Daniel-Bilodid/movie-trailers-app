@@ -62,7 +62,7 @@ const AllMovies = () => {
     });
   };
 
-  if (bookmarksLoading) {
+  if (bookmarksLoading && user) {
     return <div>Loading movies...</div>;
   }
 
@@ -70,7 +70,7 @@ const AllMovies = () => {
     if (playVideo !== null) {
       setCurrentTrailer(
         (prev) => (prev + 1) % moviesByGenre[playVideo].trailers.length
-      ); // Циклический переход
+      );
     }
   };
 
@@ -80,7 +80,7 @@ const AllMovies = () => {
         (prev) =>
           (prev - 1 + moviesByGenre[playVideo].trailers.length) %
           moviesByGenre[playVideo].trailers.length
-      ); // Циклический переход
+      );
     }
   };
 

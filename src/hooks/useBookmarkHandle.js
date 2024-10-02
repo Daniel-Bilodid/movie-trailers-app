@@ -34,7 +34,6 @@ const useBookmarkHandle = () => {
       [movieId]: !prevState[movieId],
     }));
   };
-  console.log("Loaded movies in hook: ", movies);
 
   return {
     movies,

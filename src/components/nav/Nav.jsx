@@ -9,29 +9,28 @@ import {
 } from "firebase/auth";
 import { auth, addUserToFirestore } from "../../firebase";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 const Nav = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showSignInOptions, setShowSignInOptions] = useState(false);
   const [showAuthWarning, setShowAuthWarning] = useState(false);
   const [activeIcon, setActiveIcon] = useState("home");
-
+  const location = useLocation();
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        await addUserToFirestore(currentUser); // Обновляем данные пользователя в Firestore
+        await addUserToFirestore(currentUser);
       }
       setUser(currentUser);
     });
     return () => unsubscribe();
   }, []);
-
   useEffect(() => {
-    if (!user) {
+    if (!user && location.pathname === "/bookmarks") {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user, location.pathname, navigate]);
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();

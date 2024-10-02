@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useContext, useState, useEffect } from "react";
 import Modal from "../movieModal/MovieModal";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
+import { AuthContext } from "../context/AuthContext";
 import useBookmarks from "../../hooks/useBookmarks";
 import "./movieList.scss";
 
@@ -111,6 +112,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const { movies, loading: bookmarksLoading } = useBookmarks();
   const [selectedMovies, setSelectedMovies] = useState({});
+  const { user } = useContext(AuthContext);
 
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
@@ -140,11 +142,19 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
   };
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
   const preloadImage = (src) => {
     const img = new Image();
@@ -159,8 +169,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [trailers]);
 
-  if (bookmarksLoading) {
-    return <div>Loading bookmarks...</div>; // You can customize the loading indicator
+  if (bookmarksLoading && user) {
+    return <div>Loading bookmarks...</div>;
   }
   return (
     <div className="popular-list">
