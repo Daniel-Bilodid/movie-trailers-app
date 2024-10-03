@@ -8,6 +8,7 @@ const dataSlice = createSlice({
     movies: [],
     moviesByGenre: [],
     currentPage: 1,
+    contentType: "Movie",
   },
   reducers: {
     setData: (state, action) => {
@@ -33,6 +34,9 @@ const dataSlice = createSlice({
         (movie) => movie.id !== action.payload
       );
     },
+    setContentType: (state, action) => {
+      state.contentType = action.payload;
+    },
   },
 });
 
@@ -44,6 +48,7 @@ export const {
   removeMovie,
   setMoviesByGenre,
   setCurrentPage,
+  setContentType,
 } = dataSlice.actions;
 
 export const selectMovies = (state) => state.data.movies;

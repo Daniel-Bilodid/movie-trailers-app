@@ -1,6 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import Slider from "react-slick";
-import { fetchTrendingMovies } from "../../utils/fetchTrailers";
+import {
+  fetchTrendingMovies,
+  fetchTrendingTVShows,
+} from "../../utils/fetchTrailers";
 import { Link } from "react-router-dom";
 import Modal from "../movieModal/MovieModal";
 import "./trending.scss";
@@ -10,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AuthContext";
-
+import { useSelector } from "react-redux";
 import PopularMovies from "../moviePages/popularMovies/PopularMovies";
 import NowPlayingMovies from "../moviePages/nowPlayingMovies/NowPlayingMovies";
 import UpcomingMovies from "../moviePages/upcomingMovies/UpcomingMovies";
@@ -32,6 +35,10 @@ const Trending = () => {
     handleBookmarkClick,
   } = useBookmarkHandle();
 
+  const contentType = useSelector((state) => state.data.contentType);
+
+  const fetchContent =
+    contentType === "Movie" ? fetchTrendingMovies : fetchTrendingTVShows;
   const NextArrow = (props) => {
     const { onClick } = props;
     return (
@@ -100,7 +107,8 @@ const Trending = () => {
   useEffect(() => {
     const loadTrailers = async () => {
       try {
-        const trailersData = await fetchTrendingMovies(1);
+        const trailersData = await fetchContent(1);
+        console.log(trailersData);
         setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);
@@ -108,7 +116,7 @@ const Trending = () => {
     };
 
     loadTrailers();
-  }, []);
+  }, [fetchContent]);
 
   const handlePlayVideo = (index) => {
     setPlayVideo(index);
@@ -189,6 +197,7 @@ const Trending = () => {
                     onClick={() => {
                       handleBookmarkClick(movie.id);
                       selected(movie.id);
+                      console.log(movie.id);
                     }}
                   >
                     <FontAwesomeIcon
@@ -204,7 +213,9 @@ const Trending = () => {
                     />
                   </div>
                 </div>
-                <h3 className="trending__movie-title">{movie.title}</h3>
+                <h3 className="trending__movie-title">
+                  {contentType === "Movie" ? movie.title : movie.name}
+                </h3>
                 {trailers.length > 0 ? (
                   <div className="trending__movie-thumbnail-container">
                     <img

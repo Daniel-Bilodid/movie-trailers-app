@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchMovieById = async (id) => {
+export const fetchMovieById = async (id, type) => {
   try {
     const movieResponse = await axios.get(
       `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&append_to_response=videos`
@@ -294,6 +294,39 @@ export const fetchMoviesByGenre = async (genreId, page = 1) => {
     return moviesWithTrailers;
   } catch (error) {
     console.error("Ошибка при получении фильмов по жанру", error);
+    throw error;
+  }
+};
+export const fetchTrendingTVShows = async (page = 1) => {
+  try {
+    const trendingResponse = await axios.get(
+      `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+    );
+    const trendingTVShows = trendingResponse.data.results;
+
+    const trailersPromises = trendingTVShows.map(async (movie) => {
+      const videoResponse = await axios.get(
+        `https://api.themoviedb.org/3/tv/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+      );
+      const videos = videoResponse.data.results.filter(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+      const releaseYear = movie.first_air_date
+        ? new Date(movie.first_air_date).getFullYear()
+        : "Unknown";
+
+      return {
+        movie,
+        trailers: videos,
+        currentTrailerIndex: 0,
+        poster_path: movie.poster_path,
+        release_year: releaseYear,
+      };
+    });
+
+    return await Promise.all(trailersPromises);
+  } catch (error) {
+    console.error("Error fetching TV show trailers", error);
     throw error;
   }
 };

@@ -3,21 +3,25 @@ import { useParams } from "react-router-dom";
 import "./movieInfo.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-
+import { useSelector } from "react-redux";
 const MovieInfo = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
 
+  const contentType = useSelector((state) => state.data.contentType);
+  console.log(contentType);
+
+  let type = contentType === "Movie" ? "movie" : "tv";
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
         const [movieResponse, castResponse] = await Promise.all([
           fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&language=en-US`
+            `https://api.themoviedb.org/3/${type}/${movieId}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&language=en-US`
           ),
           fetch(
-            `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${process.env.REACT_APP_TMDB_APIKEY}&language=en-US`
+            `https://api.themoviedb.org/3/${type}/${movieId}/credits?api_key=${process.env.REACT_APP_TMDB_APIKEY}&language=en-US`
           ),
         ]);
 
