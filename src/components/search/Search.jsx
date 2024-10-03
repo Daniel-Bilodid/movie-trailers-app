@@ -4,6 +4,7 @@ import { searchMovies } from "../../utils/fetchTrailers";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setData } from "../../redux/store";
+import { FaSearch } from "react-icons/fa";
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -46,6 +47,7 @@ const Search = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+
         {loading && <p>Loading...</p>}
         <div className="search__results">
           {results.length > 0
@@ -57,8 +59,11 @@ const Search = () => {
             : !loading && query && <p>No results found</p>}
         </div>
       </div>
+
       <Link to="/search-result">
-        <button disabled={!query}>Search</button>
+        <button disabled={!query}>
+          <FaSearch className="search__icon" />
+        </button>
       </Link>
     </div>
   );

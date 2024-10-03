@@ -17,6 +17,7 @@ import UpcomingMovies from "../moviePages/upcomingMovies/UpcomingMovies";
 import TopRatedMovies from "../moviePages/topRatedMovies/TopRatedMovies";
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
 
+import Toggle from "../toggle/Toggle";
 import Search from "../search/Search";
 
 const Trending = () => {
@@ -50,7 +51,7 @@ const Trending = () => {
   };
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 5,
@@ -155,8 +156,12 @@ const Trending = () => {
 
   return (
     <>
-      <div className="trending">
+      <div className="wrapper">
+        <Toggle />
         <Search />
+      </div>
+
+      <div className="trending">
         <div className="trending__wrapper">
           <h2 className="trending__title">Trending</h2>
 
