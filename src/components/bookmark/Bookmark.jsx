@@ -119,7 +119,6 @@ const Bookmarks = () => {
             );
             return null;
           });
-          console.log("Fetching movie with ID:", bookmark.id);
 
           return {
             ...movie,

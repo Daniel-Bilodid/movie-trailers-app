@@ -1,103 +1,87 @@
-import { useState, useContext, useEffect, useCallback } from "react";
-import { AuthContext } from "../components/context/AuthContext";
-import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import { useSelector } from "react-redux";
-const useMovieTrailers = (fetchMovies) => {
-  const [trailers, setTrailers] = useState([]);
-  const [playVideo, setPlayVideo] = useState(null);
-  const { user } = useContext(AuthContext);
-  const [currentPage, setCurrentPage] = useState(1);
-  const contentType = useSelector((state) => state.data.contentType);
+import { useState, useEffect } from "react";
+import { getDocs, collection } from "firebase/firestore";
+import { fetchMovieById } from "../utils/fetchTrailers";
+import { db, auth } from "../firebase";
+import { useDispatch } from "react-redux";
+import { setMovies } from "../redux/store";
+import { onAuthStateChanged } from "firebase/auth";
+import { MdLocalMovies } from "react-icons/md";
 
-  const loadTrailers = useCallback(
-    async (page) => {
-      try {
-        const trailersData = await fetchMovies(contentType, page);
-        setTrailers(trailersData);
-      } catch (error) {
-        console.error("Error loading trailers", error);
+const useBookmarks = () => {
+  const dispatch = useDispatch();
+  const [movies, setMoviesList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fetchBookmarks = async (userId) => {
+    try {
+      const bookmarksCollection = collection(db, `users/${userId}/bookmarks`);
+      const bookmarksSnapshot = await getDocs(bookmarksCollection);
+      const bookmarksList = bookmarksSnapshot.docs.map((doc) => ({
+        id: doc.data().movieId,
+      }));
+
+      return bookmarksList;
+    } catch (error) {
+      console.error("Ошибка при получении закладок: ", error);
+      return [];
+    }
+  };
+
+  const loadMovies = async (bookmarksList) => {
+    try {
+      if (!Array.isArray(bookmarksList)) {
+        console.error("Bookmarks List is not an array:", bookmarksList);
+        return;
       }
-    },
-    [fetchMovies, contentType]
-  );
+
+      const moviePromises = bookmarksList.map(async (bookmark) => {
+        if (
+          typeof bookmark === "object" &&
+          bookmark !== null &&
+          "id" in bookmark
+        ) {
+          if (Array.isArray(bookmark.id)) {
+            console.warn("Bookmark id is an array, skipping:", bookmark);
+            return null;
+          }
+
+          const movie = await fetchMovieById(bookmark.id);
+          return {
+            ...movie,
+            currentTrailerIndex: 0,
+          };
+        } else {
+          console.warn("Invalid bookmark structure:", bookmark);
+          return null;
+        }
+      });
+
+      const moviesData = await Promise.all(moviePromises);
+
+      const validMoviesData = moviesData.filter((movie) => movie !== null);
+
+      dispatch(setMovies(validMoviesData));
+      setMoviesList(validMoviesData);
+    } catch (error) {
+      console.error("Ошибка при загрузке фильмов", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    loadTrailers(currentPage);
-  }, [loadTrailers, currentPage]);
-
-  const handlePlayVideo = (index) => {
-    setPlayVideo(index);
-  };
-
-  const handleCloseModal = () => {
-    setPlayVideo(null);
-  };
-
-  const handleNextTrailer = (index) => {
-    setTrailers((prevTrailers) => {
-      const updatedTrailers = [...prevTrailers];
-      const currentTrailer = updatedTrailers[index];
-      const nextIndex =
-        (currentTrailer.currentTrailerIndex + 1) %
-        currentTrailer.trailers.length;
-      updatedTrailers[index] = {
-        ...currentTrailer,
-        currentTrailerIndex: nextIndex,
-      };
-      return updatedTrailers;
-    });
-  };
-
-  const handlePrevTrailer = (index) => {
-    setTrailers((prevTrailers) => {
-      const updatedTrailers = [...prevTrailers];
-      const currentTrailer = updatedTrailers[index];
-      const prevIndex =
-        (currentTrailer.currentTrailerIndex -
-          1 +
-          currentTrailer.trailers.length) %
-        currentTrailer.trailers.length;
-      updatedTrailers[index] = {
-        ...currentTrailer,
-        currentTrailerIndex: prevIndex,
-      };
-      return updatedTrailers;
-    });
-  };
-
-  const handleBookmarkClick = async (movieId) => {
-    if (!user) {
-      console.log("Please sign in to bookmark.");
-      return;
-    }
-
-    try {
-      const bookmarkRef = doc(db, `users/${user.uid}/bookmarks/${movieId}`);
-      const bookmarkDoc = await getDoc(bookmarkRef);
-
-      if (bookmarkDoc.exists()) {
-        await deleteDoc(bookmarkRef);
-      } else {
-        await setDoc(bookmarkRef, { movieId });
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const bookmarksList = await fetchBookmarks(user.uid);
+        if (bookmarksList.length > 0) {
+          await loadMovies(bookmarksList);
+        }
       }
-    } catch (error) {
-      console.error("Error handling bookmark click:", error);
-    }
-  };
+    });
 
-  return {
-    trailers,
-    setTrailers,
-    playVideo,
-    setPlayVideo,
-    handlePlayVideo,
-    handleCloseModal,
-    handleNextTrailer,
-    handlePrevTrailer,
-    handleBookmarkClick,
-    loadTrailers,
-  };
+    return () => unsubscribe();
+  }, [dispatch]);
+
+  return { movies, loadMovies, fetchBookmarks, loading };
 };
 
-export default useMovieTrailers;
+export default useBookmarks;

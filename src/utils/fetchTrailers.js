@@ -25,12 +25,11 @@ const getFetchUrl = (contentType, type, page) => {
 
 export const fetchMovieById = async (id) => {
   try {
-    console.log(`Запрос фильма с ID: ${id}`); // Логирование ID
     const movieResponse = await axios.get(
       `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&append_to_response=videos`
     );
     const movie = movieResponse.data;
-    console.log(movie); // Логирование ответа
+
     return movie;
   } catch (error) {
     console.error(
