@@ -2,23 +2,24 @@ import { useState, useContext, useEffect, useCallback } from "react";
 import { AuthContext } from "../components/context/AuthContext";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
-
+import { useSelector } from "react-redux";
 const useMovieTrailers = (fetchMovies) => {
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
   const { user } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
+  const contentType = useSelector((state) => state.data.contentType);
 
   const loadTrailers = useCallback(
     async (page) => {
       try {
-        const trailersData = await fetchMovies(page);
+        const trailersData = await fetchMovies(contentType, page);
         setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);
       }
     },
-    [fetchMovies]
+    [fetchMovies, contentType]
   );
 
   useEffect(() => {

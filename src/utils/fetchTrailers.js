@@ -1,5 +1,28 @@
 import axios from "axios";
 
+import { useSelector } from "react-redux"; // для использования состояния из Redux
+
+// Общая функция для построения URL на основе contentType
+const getFetchUrl = (contentType, type, page) => {
+  const baseUrl = "https://api.themoviedb.org/3";
+  const movieEndpoints = {
+    popular: "/movie/popular",
+    nowPlaying: "/movie/now_playing",
+    upcoming: "/movie/upcoming",
+    topRated: "/movie/top_rated",
+  };
+
+  const tvEndpoints = {
+    popular: "/tv/popular",
+    nowPlaying: "/tv/on_the_air",
+    upcoming: "/tv/airing_today",
+    topRated: "/tv/top_rated",
+  };
+
+  const endpoints = contentType === "TV" ? tvEndpoints : movieEndpoints;
+  return `${baseUrl}${endpoints[type]}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`;
+};
+
 export const fetchMovieById = async (id, type) => {
   try {
     const movieResponse = await axios.get(
@@ -47,16 +70,18 @@ export const fetchTrendingMovies = async (page = 1) => {
   }
 };
 
-export const fetchPopularMovies = async (page = 1) => {
+export const fetchPopularMovies = async (contentType, page = 1) => {
   try {
     const popularResponse = await axios.get(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      getFetchUrl(contentType, "popular", page)
     );
     const popularMovies = popularResponse.data.results;
 
     const trailersPromises = popularMovies.map(async (movie) => {
       const videoResponse = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+        `https://api.themoviedb.org/3/${contentType.toLowerCase()}/${
+          movie.id
+        }/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
       );
       const videos = videoResponse.data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"
@@ -81,16 +106,18 @@ export const fetchPopularMovies = async (page = 1) => {
   }
 };
 
-export const fetchNowPlayingMovies = async (page = 1) => {
+export const fetchNowPlayingMovies = async (contentType, page = 1) => {
   try {
     const nowPlayingResponse = await axios.get(
-      `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      getFetchUrl(contentType, "nowPlaying", page)
     );
     const nowPlayingMovies = nowPlayingResponse.data.results;
 
     const trailersPromises = nowPlayingMovies.map(async (movie) => {
       const videoResponse = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+        `https://api.themoviedb.org/3/${contentType.toLowerCase()}/${
+          movie.id
+        }/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
       );
       const videos = videoResponse.data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"
@@ -115,16 +142,18 @@ export const fetchNowPlayingMovies = async (page = 1) => {
   }
 };
 
-export const fetchUpcomingMovies = async (page = 1) => {
+export const fetchUpcomingMovies = async (contentType, page = 1) => {
   try {
     const upcomingResponse = await axios.get(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      getFetchUrl(contentType, "upcoming", page)
     );
     const upcomingMovies = upcomingResponse.data.results;
 
     const trailersPromises = upcomingMovies.map(async (movie) => {
       const videoResponse = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+        `https://api.themoviedb.org/3/${contentType.toLowerCase()}/${
+          movie.id
+        }/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
       );
       const videos = videoResponse.data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"
@@ -149,16 +178,18 @@ export const fetchUpcomingMovies = async (page = 1) => {
   }
 };
 
-export const fetchTopRatedMovies = async (page = 1) => {
+export const fetchTopRatedMovies = async (contentType, page = 1) => {
   try {
     const topRatedResponse = await axios.get(
-      `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      getFetchUrl(contentType, "topRated", page)
     );
     const topRatedMovies = topRatedResponse.data.results;
 
     const trailersPromises = topRatedMovies.map(async (movie) => {
       const videoResponse = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+        `https://api.themoviedb.org/3/${contentType.toLowerCase()}/${
+          movie.id
+        }/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
       );
       const videos = videoResponse.data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"

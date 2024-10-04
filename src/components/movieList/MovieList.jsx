@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
 import { AuthContext } from "../context/AuthContext";
 import useBookmarks from "../../hooks/useBookmarks";
+
 import "./movieList.scss";
 
 const MovieCard = React.memo(
@@ -21,6 +22,7 @@ const MovieCard = React.memo(
     movies,
     selected,
     isSelected,
+    contentType,
   }) => (
     <div key={movie.id}>
       <div className="trending__btn-wrapper">
@@ -46,7 +48,10 @@ const MovieCard = React.memo(
           />
         </div>
       </div>
-      <h3 className="trending__movie-title">{movie.title}</h3>
+      <h3 className="trending__movie-title">
+        {contentType === "Movie" ? movie.title : movie.name}
+        {console.log("this", contentType)}
+      </h3>
       {trailers.length > 0 ? (
         <div className="trending__movie-thumbnail-container">
           <img
@@ -92,7 +97,14 @@ const MovieCard = React.memo(
           </div>
         </div>
       ) : (
-        <p>No trailer</p>
+        <img
+          className="trending__movie-thumbnail"
+          src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
+          alt={`${movie.title} thumbnail`}
+          loading="lazy"
+          width="342"
+          height="513"
+        />
       )}
     </div>
   )
@@ -113,6 +125,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const { movies, loading: bookmarksLoading } = useBookmarks();
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
+  const contentType = useSelector((state) => state.data.contentType);
 
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
@@ -172,6 +185,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   if (bookmarksLoading && user) {
     return <div>Loading bookmarks...</div>;
   }
+
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">
@@ -194,6 +208,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 movies={movies}
                 selected={() => selected(item.movie.id)}
                 isSelected={!!selectedMovies[item.movie.id]}
+                contentType={contentType}
               />
             ))
           : trailers
@@ -210,6 +225,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   movies={movies}
                   selected={() => selected(item.movie.id)}
                   isSelected={!!selectedMovies[item.movie.id]}
+                  contentType={contentType}
                 />
               ))}
       </div>
