@@ -50,7 +50,6 @@ const MovieCard = React.memo(
       </div>
       <h3 className="trending__movie-title">
         {contentType === "Movie" ? movie.title : movie.name}
-        {console.log("this", contentType)}
       </h3>
       {trailers.length > 0 ? (
         <div className="trending__movie-thumbnail-container">

@@ -112,7 +112,15 @@ const Bookmarks = () => {
             return null;
           }
 
-          const movie = await fetchMovieById(bookmark.id);
+          const movie = await fetchMovieById(bookmark.id).catch((error) => {
+            console.error(
+              `Error fetching movie with ID ${bookmark.id}:`,
+              error
+            );
+            return null;
+          });
+          console.log("Fetching movie with ID:", bookmark.id);
+
           return {
             ...movie,
             currentTrailerIndex: 0,
