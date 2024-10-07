@@ -158,9 +158,9 @@ const Trending = () => {
     });
   };
 
-  if (bookmarksLoading && user) {
-    return <div>Loading movies...</div>;
-  }
+  // if (bookmarksLoading && user) {
+  //   return <div>Loading movies...</div>;
+  // }
 
   return (
     <>
