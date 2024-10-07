@@ -132,9 +132,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
       [movieId]: !prevState[movieId],
     }));
   };
-  useEffect(() => {
-    console.log("movies", movies);
-  }, [movies]);
+  useEffect(() => {}, [movies]);
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
@@ -183,9 +181,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [trailers]);
 
-  if (bookmarksLoading && user) {
-    return <div>Loading bookmarks...</div>;
-  }
+  // if (bookmarksLoading && user) {
+  //   return <div>Loading bookmarks...</div>;
+  // }
 
   return (
     <div className="popular-list">

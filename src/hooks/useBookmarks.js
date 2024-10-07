@@ -62,7 +62,7 @@ const useBookmarks = () => {
       });
 
       const moviesData = await Promise.all(moviePromises);
-      console.log(moviesData);
+
       const validMoviesData = moviesData.filter((movie) => movie !== null);
 
       dispatch(setMovies(validMoviesData));
