@@ -121,11 +121,10 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     handleBookmarkClick: originalHandleBookmarkClick,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
-  const { loading: bookmarksLoading } = useBookmarks();
+  const { movies, loading: bookmarksLoading } = useBookmarks();
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
-  const movies = useSelector((state) => state.data.movies);
 
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
@@ -133,6 +132,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
       [movieId]: !prevState[movieId],
     }));
   };
+  useEffect(() => {
+    console.log("movies", movies);
+  }, [movies]);
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
@@ -184,7 +186,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   if (bookmarksLoading && user) {
     return <div>Loading bookmarks...</div>;
   }
-  console.log(movies);
+
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">

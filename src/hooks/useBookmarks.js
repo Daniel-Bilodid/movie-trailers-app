@@ -44,11 +44,17 @@ const useBookmarks = () => {
             return null;
           }
 
-          const movie = await fetchMovieById(bookmark.id);
-          return {
-            ...movie,
-            currentTrailerIndex: 0,
-          };
+          try {
+            const movie = await fetchMovieById(bookmark.id);
+
+            return {
+              ...movie,
+              currentTrailerIndex: 0,
+            };
+          } catch (error) {
+            console.error("Error fetching movie by ID:", bookmark.id, error);
+            return null;
+          }
         } else {
           console.warn("Invalid bookmark structure:", bookmark);
           return null;
@@ -56,7 +62,7 @@ const useBookmarks = () => {
       });
 
       const moviesData = await Promise.all(moviePromises);
-
+      console.log(moviesData);
       const validMoviesData = moviesData.filter((movie) => movie !== null);
 
       dispatch(setMovies(validMoviesData));
