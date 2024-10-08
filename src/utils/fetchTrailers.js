@@ -232,36 +232,53 @@ export const fetchTopRatedMovies = async (contentType, page = 1) => {
   }
 };
 
-export const searchMovies = async (query, page = 1) => {
+export const searchMoviesAndTVShows = async (query, page = 1) => {
   try {
-    const searchResponse = await axios.get(
+    const movieSearchResponse = await axios.get(
       `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_TMDB_APIKEY}&query=${query}&page=${page}`
     );
-    const searchResults = searchResponse.data.results;
+    const tvSearchResponse = await axios.get(
+      `https://api.themoviedb.org/3/search/tv?api_key=${process.env.REACT_APP_TMDB_APIKEY}&query=${query}&page=${page}`
+    );
 
-    const trailersPromises = searchResults.map(async (movie) => {
+    const movieResults = movieSearchResponse.data.results.map((movie) => ({
+      ...movie,
+      type: "Movie",
+    }));
+
+    const tvResults = tvSearchResponse.data.results.map((tv) => ({
+      ...tv,
+      type: "TV",
+    }));
+
+    const combinedResults = [...movieResults, ...tvResults];
+
+    const trailersPromises = combinedResults.map(async (item) => {
       const videoResponse = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+        `https://api.themoviedb.org/3/${item.type.toLowerCase()}/${
+          item.id
+        }/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
       );
       const videos = videoResponse.data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"
       );
-      const releaseYear = movie.release_date
-        ? new Date(movie.release_date).getFullYear()
-        : "Unknown";
+      const releaseYear =
+        item.release_date || item.first_air_date
+          ? new Date(item.release_date || item.first_air_date).getFullYear()
+          : "Unknown";
 
       return {
-        movie,
+        item,
         trailers: videos,
         currentTrailerIndex: 0,
-        poster_path: movie.poster_path,
+        poster_path: item.poster_path,
         release_year: releaseYear,
       };
     });
 
     return await Promise.all(trailersPromises);
   } catch (error) {
-    console.error("Error searching movies", error);
+    console.error("Error searching movies and TV shows", error);
     throw error;
   }
 };

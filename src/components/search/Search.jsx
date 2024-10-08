@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./search.scss";
-import { searchMovies } from "../../utils/fetchTrailers";
+import { searchMoviesAndTVShows } from "../../utils/fetchTrailers";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setData } from "../../redux/store";
@@ -27,11 +27,11 @@ const Search = () => {
   const searchTrailers = async () => {
     setLoading(true);
     try {
-      const movies = await searchMovies(query);
-      setResults(movies);
-      dispatch(setData(movies));
+      const moviesAndTVShows = await searchMoviesAndTVShows(query);
+      setResults(moviesAndTVShows);
+      dispatch(setData(moviesAndTVShows));
     } catch (error) {
-      console.error("Error searching movies", error);
+      console.error("Error searching movies and TV shows", error);
     } finally {
       setLoading(false);
     }
@@ -52,8 +52,9 @@ const Search = () => {
         <div className="search__results">
           {results.length > 0
             ? results.map((result) => (
-                <div key={result.movie.id} className="search__result-item">
-                  <p>{result.movie.title || result.movie.name}</p>
+                <div key={result.item.id} className="search__result-item">
+                  <p>{result.item.title || result.item.name}</p>
+                  <p>{result.item.type === "Movie" ? "Movie" : "TV Show"}</p>
                 </div>
               ))
             : !loading && query && <p>No results found</p>}
