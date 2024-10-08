@@ -181,9 +181,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [trailers]);
 
-  // if (bookmarksLoading && user) {
-  //   return <div>Loading bookmarks...</div>;
-  // }
+  if (bookmarksLoading) {
+    return <div>Loading bookmarks...</div>;
+  }
 
   return (
     <div className="popular-list">

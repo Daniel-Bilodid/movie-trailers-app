@@ -13,14 +13,28 @@ const getFetchUrl = (contentType, type, page) => {
   };
 
   const tvEndpoints = {
-    popular: "/tv/popular",
+    popular: "/tv/top_rated",
     nowPlaying: "/tv/on_the_air",
     upcoming: "/tv/airing_today",
-    topRated: "/tv/top_rated",
+    topRated: "/tv/popular",
   };
 
   const endpoints = contentType === "TV" ? tvEndpoints : movieEndpoints;
   return `${baseUrl}${endpoints[type]}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`;
+};
+
+const getGenreUrl = (contentType) => {
+  const baseUrl = "https://api.themoviedb.org/3/genre/";
+  const endpoints = contentType === "Movie" ? "movie" : "tv";
+
+  return `${baseUrl}${endpoints}/list?api_key=${process.env.REACT_APP_TMDB_APIKEY}`;
+};
+
+const getAllMovieUrl = (contentType, genreId, page) => {
+  const baseUrl = "https://api.themoviedb.org/3/discover/";
+  const endpoints = contentType === "Movie" ? "movie" : "tv";
+
+  return `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`;
 };
 
 export const fetchMovieById = async (id) => {
@@ -252,11 +266,9 @@ export const searchMovies = async (query, page = 1) => {
   }
 };
 
-export const fetchGenres = async () => {
+export const fetchGenres = async (contentType) => {
   try {
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
-    );
+    const response = await axios.get(getGenreUrl(contentType));
     return response.data.genres;
   } catch (error) {
     console.error("Ошибка при получении жанров", error);
@@ -312,10 +324,10 @@ const fetchTrailer = async (movieId) => {
   }
 };
 
-export const fetchMoviesByGenre = async (genreId, page = 1) => {
+export const fetchMoviesByGenre = async (contentType, genreId, page = 1) => {
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`
+      getAllMovieUrl(contentType, genreId, page)
     );
     const movies = response.data.results;
 

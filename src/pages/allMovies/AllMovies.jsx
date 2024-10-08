@@ -7,7 +7,7 @@ import useMovieTrailers from "../../hooks/useMovieTrailers";
 import useBookmarks from "../../hooks/useBookmarks";
 import { AuthContext } from "../../components/context/AuthContext";
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
-
+import Toggle from "../../components/toggle/Toggle";
 import Genre from "../../components/genre/Genre";
 import Modal from "../../components/movieModal/MovieModal";
 import Search from "../../components/search/Search";
@@ -62,7 +62,7 @@ const AllMovies = () => {
     });
   };
 
-  if (bookmarksLoading && user) {
+  if (bookmarksLoading) {
     return <div>Loading movies...</div>;
   }
 
@@ -86,6 +86,7 @@ const AllMovies = () => {
 
   return (
     <div className="popular">
+      <Toggle />
       <div className="popular__text-wrapper">
         <div className="popular__title">All Movies</div>
         <Genre />

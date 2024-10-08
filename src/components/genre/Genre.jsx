@@ -14,13 +14,18 @@ const Genre = () => {
   const selectedGenre = useSelector((state) => state.data.selectedGenre);
   const currentPage = useSelector((state) => state.data.currentPage);
   const [genres, setGenres] = useState([]);
+  const contentType = useSelector((state) => state.data.contentType);
 
   useEffect(() => {
     const loadMoviesAndGenres = async () => {
       try {
-        const moviesData = await fetchMoviesByGenre(selectedGenre, currentPage);
+        const moviesData = await fetchMoviesByGenre(
+          contentType,
+          selectedGenre,
+          currentPage
+        );
 
-        const genresData = await fetchGenres();
+        const genresData = await fetchGenres(contentType);
 
         dispatch(setMoviesByGenre(moviesData));
         console.log(moviesData);
@@ -31,8 +36,9 @@ const Genre = () => {
     };
 
     loadMoviesAndGenres();
-  }, [selectedGenre, dispatch, currentPage]);
+  }, [selectedGenre, dispatch, currentPage, contentType]);
 
+  console.log(genres);
   return (
     <div>
       <div className="genre-filter">

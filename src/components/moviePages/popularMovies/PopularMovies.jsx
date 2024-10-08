@@ -2,14 +2,19 @@ import "./popularMovies.scss";
 import React from "react";
 import { fetchPopularMovies } from "../../../utils/fetchTrailers";
 import MovieList from "../../movieList/MovieList";
+import { useSelector } from "react-redux";
 
-const PopularMovies = () => (
-  <MovieList
-    fetchMovies={fetchPopularMovies}
-    title="Popular Movies"
-    moreLink="/more-popular"
-    enablePagination={false}
-  />
-);
+const PopularMovies = () => {
+  const contentType = useSelector((state) => state.data.contentType);
+
+  return (
+    <MovieList
+      fetchMovies={fetchPopularMovies}
+      title={contentType === "Movie" ? "Popular Movies" : "Top Rated"}
+      moreLink="/more-popular"
+      enablePagination={false}
+    />
+  );
+};
 
 export default PopularMovies;
