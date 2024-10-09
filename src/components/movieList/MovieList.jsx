@@ -26,7 +26,12 @@ const MovieCard = React.memo(
   }) => (
     <div key={movie.id}>
       <div className="trending__btn-wrapper">
-        <Link className="trending__info" to={`/movie-info/${movie.id}`}>
+        <Link
+          className="trending__info"
+          to={`/${movie.type === "Movie" ? "movie-info" : "tv-info"}/${
+            movie.id
+          }`}
+        >
           <FontAwesomeIcon icon={faInfoCircle} color="white" size="1x" />
         </Link>
 

@@ -184,7 +184,9 @@ const Trending = () => {
                 <div className="trending__btn-wrapper ">
                   <Link
                     className="trending__info"
-                    to={`/movie-info/${movie.id}`}
+                    to={`/${
+                      movie.type === "Movie" ? "movie-info" : "tv-info"
+                    }/${movie.id}`}
                   >
                     <FontAwesomeIcon
                       icon={faInfoCircle}

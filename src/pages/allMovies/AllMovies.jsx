@@ -21,6 +21,7 @@ const AllMovies = () => {
   const moviesByGenre = useSelector((state) => state.data.moviesByGenre);
   const [currentTrailer, setCurrentTrailer] = useState(0);
   const { user } = useContext(AuthContext);
+  const contentType = useSelector((state) => state.data.contentType);
   const {
     movies,
     loading: bookmarksLoading,
@@ -97,7 +98,12 @@ const AllMovies = () => {
           moviesByGenre.map((movie, index, trailers) => (
             <div key={movie.id}>
               <div className="trending__btn-wrapper">
-                <Link className="trending__info" to={`/movie-info/${movie.id}`}>
+                <Link
+                  className="trending__info"
+                  to={`/${movie.type === "Movie" ? "movie-info" : "tv-info"}/${
+                    movie.id
+                  }`}
+                >
                   <FontAwesomeIcon
                     icon={faInfoCircle}
                     color="white"
@@ -124,7 +130,9 @@ const AllMovies = () => {
                   />
                 </div>
               </div>
-              <h3 className="trending__movie-title">{movie.title}</h3>
+              <h3 className="trending__movie-title">
+                {contentType === "Movie" ? movie.title : movie.name}
+              </h3>
               {trailers.length > 0 ? (
                 <div className="trending__movie-thumbnail-container">
                   <img
@@ -157,6 +165,7 @@ const AllMovies = () => {
       <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
         {moviesByGenre?.[playVideo]?.trailers && (
           <>
+            {console.log("Trailers:", moviesByGenre)}
             <iframe
               className="trending__movie-frame"
               width="560"
@@ -177,7 +186,7 @@ const AllMovies = () => {
             <div className="trending__movie-info">
               <div className="trending__movie-wrapper">
                 <div className="trending__movie-year">
-                  {moviesByGenre[playVideo]?.release_date.slice(0, 4)}
+                  {/* {moviesByGenre[playVideo]?.release_date.slice(0, 4)} */}
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">Movie</div>
