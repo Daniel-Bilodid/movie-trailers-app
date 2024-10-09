@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import "./movieInfo.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
+
 const MovieInfo = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
+  const location = useLocation();
 
-  const contentType = useSelector((state) => state.data.contentType);
-  console.log(contentType);
-
-  let type = contentType === "Movie" ? "movie" : "tv";
+  const type = location.pathname.includes("movie-info") ? "movie" : "tv";
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
@@ -36,7 +34,7 @@ const MovieInfo = () => {
     };
 
     fetchMovieData();
-  }, [movieId]);
+  }, [movieId, type]);
 
   if (!movie) return <p>Loading...</p>;
 

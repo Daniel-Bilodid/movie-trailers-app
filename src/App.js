@@ -25,6 +25,7 @@ function App() {
               <Route path="/" element={<Trending />} />
               <Route path="/more-trailers" element={<MoreTrailers />} />
               <Route path="/movie-info/:movieId" element={<MovieInfo />} />
+              <Route path="/tv-info/:movieId" element={<MovieInfo />} />
               <Route path="/bookmarks" element={<Bookmark />} />
               <Route path="/more-popular" element={<MorePopularMovies />} />
               <Route path="/more-now-playing" element={<MoreNowPlaying />} />

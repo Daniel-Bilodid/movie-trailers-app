@@ -69,7 +69,9 @@ const SearchResult = () => {
                 <div className="trending__btn-wrapper">
                   <Link
                     className="trending__info"
-                    to={`/movie-info/${item.id}`}
+                    to={`/${item.type === "Movie" ? "movie-info" : "tv-info"}/${
+                      item.id
+                    }`}
                   >
                     <FontAwesomeIcon
                       icon={faInfoCircle}
