@@ -11,6 +11,7 @@ import MoreNowPlaying from "./components/moviePages/moreNowPlaying/MoreNowPlayin
 import MoreTopRated from "./components/moviePages/moreTopRated/MoreTopRated";
 import MoreUpcoming from "./components/moviePages/moreUpcoming/MoreUpcoming";
 import AllMovies from "./pages/allMovies/AllMovies";
+import AllTv from "./pages/allTv/AllTv";
 import SearchResult from "./pages/searchResult/SearchResult";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -32,6 +33,7 @@ function App() {
               <Route path="/more-top-rated" element={<MoreTopRated />} />
               <Route path="/more-upcoming" element={<MoreUpcoming />} />
               <Route path="/all-movies" element={<AllMovies />} />
+              <Route path="/all-tv" element={<AllTv />} />
               <Route path="/search-result" element={<SearchResult />} />
             </Routes>
           </div>

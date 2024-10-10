@@ -17,6 +17,7 @@ const MovieCard = React.memo(
     trailers,
     currentTrailerIndex,
     release_year,
+    first_air_date,
     onPlayVideo,
     onBookmarkClick,
     movies,
@@ -76,7 +77,9 @@ const MovieCard = React.memo(
             <div className="trending__movie-thumbnail-wrapper">
               <div className="trending__movie-thumbnail-info">
                 <div className="trending__thumbnail-movie-year">
-                  {release_year}
+                  {contentType === "Movie"
+                    ? release_year
+                    : movie.first_air_date.slice(0, 4)}
                 </div>
                 <div className="trending__movie-thumbnail-dot">·</div>
                 <div className="trending__movie-thumbnail-svg">
@@ -207,6 +210,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 trailers={item.trailers}
                 currentTrailerIndex={item.currentTrailerIndex}
                 release_year={item.release_year}
+                first_air_date={
+                  contentType !== "Movie" ? item.first_air_date : ""
+                }
                 onPlayVideo={() => handlePlayVideo(index)}
                 onBookmarkClick={handleBookmarkClick}
                 movies={movies}
@@ -224,6 +230,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   trailers={item.trailers}
                   currentTrailerIndex={item.currentTrailerIndex}
                   release_year={item.release_year}
+                  first_air_date={
+                    contentType !== "Movie" ? item.first_air_date : ""
+                  }
                   onPlayVideo={() => handlePlayVideo(index)}
                   onBookmarkClick={handleBookmarkClick}
                   movies={movies}
@@ -271,7 +280,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
             <div className="trending__movie-info">
               <div className="trending__movie-wrapper">
                 <div className="trending__movie-year">
-                  {trailers[playVideo].release_year}
+                  {contentType === "Movie"
+                    ? trailers[playVideo].release_year
+                    : trailers[playVideo].movie.first_air_date.slice(0, 4)}
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-svg">

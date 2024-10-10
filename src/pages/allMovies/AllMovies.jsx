@@ -84,7 +84,7 @@ const AllMovies = () => {
       );
     }
   };
-
+  console.log(moviesByGenre);
   return (
     <div className="popular">
       <Toggle />
