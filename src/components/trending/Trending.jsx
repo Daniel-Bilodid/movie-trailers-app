@@ -108,7 +108,7 @@ const Trending = () => {
     const loadTrailers = async () => {
       try {
         const trailersData = await fetchContent(1);
-        console.log(trailersData);
+
         setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);

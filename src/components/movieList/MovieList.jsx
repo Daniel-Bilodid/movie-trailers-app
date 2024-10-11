@@ -29,7 +29,7 @@ const MovieCard = React.memo(
       <div className="trending__btn-wrapper">
         <Link
           className="trending__info"
-          to={`/${movie.type === "Movie" ? "movie-info" : "tv-info"}/${
+          to={`/${contentType === "Movie" ? "movie-info" : "tv-info"}/${
             movie.id
           }`}
         >
@@ -79,7 +79,9 @@ const MovieCard = React.memo(
                 <div className="trending__thumbnail-movie-year">
                   {contentType === "Movie"
                     ? release_year
-                    : movie.first_air_date.slice(0, 4)}
+                    : movie.first_air_date
+                    ? movie.first_air_date.slice(0, 4)
+                    : ""}
                 </div>
                 <div className="trending__movie-thumbnail-dot">·</div>
                 <div className="trending__movie-thumbnail-svg">
@@ -282,7 +284,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 <div className="trending__movie-year">
                   {contentType === "Movie"
                     ? trailers[playVideo].release_year
-                    : trailers[playVideo].movie.first_air_date.slice(0, 4)}
+                    : trailers.first_air_date
+                    ? trailers.first_air_date.slice(0, 4)
+                    : ""}
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-svg">

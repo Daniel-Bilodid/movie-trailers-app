@@ -1,12 +1,13 @@
 import React from "react";
 
-import { fetchTrendingMovies } from "../../../utils/fetchTrailers";
+import { fetchMoreTrendingMovies } from "../../../utils/fetchTrailers";
+
 import MovieList from "../../movieList/MovieList";
 const MoreTrailers = () => {
   return (
     <>
       <MovieList
-        fetchMovies={fetchTrendingMovies}
+        fetchMovies={fetchMoreTrendingMovies}
         title="Trending Movies"
         enablePagination={true}
       />

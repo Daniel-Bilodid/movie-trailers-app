@@ -100,7 +100,7 @@ const AllMovies = () => {
               <div className="trending__btn-wrapper">
                 <Link
                   className="trending__info"
-                  to={`/${movie.type === "Movie" ? "movie-info" : "tv-info"}/${
+                  to={`/${contentType === "Movie" ? "movie-info" : "tv-info"}/${
                     movie.id
                   }`}
                 >

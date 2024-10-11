@@ -36,6 +36,46 @@ const getAllMovieUrl = (contentType, genreId, page) => {
 
   return `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`;
 };
+const getTrendingFetchUrl = (contentType, page) => {
+  const baseUrl = "https://api.themoviedb.org/3/trending";
+  const endpoints = contentType === "TV" ? "/tv/day" : "/movie/day";
+  return `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`;
+};
+export const fetchMoreTrendingMovies = async (contentType, page = 1) => {
+  try {
+    const trendingResponse = await axios.get(
+      getTrendingFetchUrl(contentType, page)
+    );
+    const trendingMovies = trendingResponse.data.results;
+
+    const trailersPromises = trendingMovies.map(async (movie) => {
+      const videoResponse = await axios.get(
+        `https://api.themoviedb.org/3/${contentType.toLowerCase()}/${
+          movie.id
+        }/videos?api_key=${process.env.REACT_APP_TMDB_APIKEY}`
+      );
+      const videos = videoResponse.data.results.filter(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+      const releaseYear = movie.release_date
+        ? new Date(movie.release_date).getFullYear()
+        : "Unknown";
+
+      return {
+        movie,
+        trailers: videos,
+        currentTrailerIndex: 0,
+        poster_path: movie.poster_path,
+        release_year: releaseYear,
+      };
+    });
+
+    return await Promise.all(trailersPromises);
+  } catch (error) {
+    console.error("Error fetching trending movies", error);
+    throw error;
+  }
+};
 
 export const fetchMovieById = async (id) => {
   try {
@@ -48,6 +88,22 @@ export const fetchMovieById = async (id) => {
   } catch (error) {
     console.error(
       `Ошибка при получении фильма с ID ${id}:`,
+      error.response ? error.response.data : error
+    );
+    throw error;
+  }
+};
+export const fetchTVShowById = async (id) => {
+  try {
+    const tvShowResponse = await axios.get(
+      `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&append_to_response=videos`
+    );
+    const tvShow = tvShowResponse.data;
+
+    return tvShow;
+  } catch (error) {
+    console.error(
+      `Ошибка при получении ТВ-шоу с ID ${id}:`,
       error.response ? error.response.data : error
     );
     throw error;
