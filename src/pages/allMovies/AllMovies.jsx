@@ -12,6 +12,7 @@ import Genre from "../../components/genre/Genre";
 import Modal from "../../components/movieModal/MovieModal";
 import Search from "../../components/search/Search";
 import { setCurrentPage } from "../../redux/store";
+import { setContentType } from "../../redux/store";
 
 import "./allMovies.scss";
 
@@ -22,6 +23,13 @@ const AllMovies = () => {
   const [currentTrailer, setCurrentTrailer] = useState(0);
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
+  console.log(contentType);
+  useEffect(() => {
+    if (contentType !== "Movie") {
+      dispatch(setContentType("Movie"));
+    }
+  }, [contentType]);
+
   const {
     movies,
     loading: bookmarksLoading,
@@ -87,7 +95,6 @@ const AllMovies = () => {
   console.log(moviesByGenre);
   return (
     <div className="popular">
-      <Toggle />
       <div className="popular__text-wrapper">
         <div className="popular__title">All Movies</div>
         <Genre />
@@ -98,12 +105,7 @@ const AllMovies = () => {
           moviesByGenre.map((movie, index, trailers) => (
             <div key={movie.id}>
               <div className="trending__btn-wrapper">
-                <Link
-                  className="trending__info"
-                  to={`/${contentType === "Movie" ? "movie-info" : "tv-info"}/${
-                    movie.id
-                  }`}
-                >
+                <Link className="trending__info" to={`/movie-info/${movie.id}`}>
                   <FontAwesomeIcon
                     icon={faInfoCircle}
                     color="white"
@@ -130,9 +132,7 @@ const AllMovies = () => {
                   />
                 </div>
               </div>
-              <h3 className="trending__movie-title">
-                {contentType === "Movie" ? movie.title : movie.name}
-              </h3>
+              <h3 className="trending__movie-title">{movie.title}</h3>
               {trailers.length > 0 ? (
                 <div className="trending__movie-thumbnail-container">
                   <img
@@ -186,7 +186,7 @@ const AllMovies = () => {
             <div className="trending__movie-info">
               <div className="trending__movie-wrapper">
                 <div className="trending__movie-year">
-                  {/* {moviesByGenre[playVideo]?.release_date.slice(0, 4)} */}
+                  {moviesByGenre[playVideo]?.release_date.slice(0, 4)}
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">Movie</div>

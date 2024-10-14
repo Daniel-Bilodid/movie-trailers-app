@@ -6,6 +6,7 @@ import {
   fetchMoviesWithGenres,
   fetchGenres,
   fetchMoviesByGenre,
+  fetchTvShowsByGenre,
 } from "../../utils/fetchTrailers";
 import "./genre.scss";
 
@@ -15,15 +16,21 @@ const Genre = () => {
   const currentPage = useSelector((state) => state.data.currentPage);
   const [genres, setGenres] = useState([]);
   const contentType = useSelector((state) => state.data.contentType);
-
   useEffect(() => {
     const loadMoviesAndGenres = async () => {
       try {
-        const moviesData = await fetchMoviesByGenre(
-          contentType,
-          selectedGenre,
-          currentPage
-        );
+        let moviesData;
+        if (contentType === "TV") {
+          moviesData = await fetchTvShowsByGenre(selectedGenre, currentPage);
+          console.log("check", moviesData);
+        } else {
+          moviesData = await fetchMoviesByGenre(
+            contentType,
+            selectedGenre,
+            currentPage
+          );
+          console.log("check", moviesData);
+        }
 
         const genresData = await fetchGenres(contentType);
 

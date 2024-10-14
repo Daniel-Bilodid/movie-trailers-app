@@ -32,7 +32,7 @@ const getGenreUrl = (contentType) => {
 
 const getAllMovieUrl = (contentType, genreId, page) => {
   const baseUrl = "https://api.themoviedb.org/3/discover/";
-  const endpoints = contentType === "Movie" ? "movie" : "tv";
+  const endpoints = "movie";
 
   return `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`;
 };
@@ -447,6 +447,60 @@ export const fetchTrendingTVShows = async (page = 1) => {
     return await Promise.all(trailersPromises);
   } catch (error) {
     console.error("Error fetching TV show trailers", error);
+    throw error;
+  }
+};
+
+const fetchTvShowTrailer = async (tvShowId) => {
+  const API_KEY = process.env.REACT_APP_TMDB_APIKEY;
+  const BASE_URL = "https://api.themoviedb.org/3";
+
+  try {
+    const response = await axios.get(`${BASE_URL}/tv/${tvShowId}/videos`, {
+      params: {
+        api_key: API_KEY,
+      },
+    });
+
+    if (response.data.results.length === 0) {
+      return [];
+    }
+
+    return response.data.results;
+  } catch (error) {
+    console.error(
+      `Ошибка при получении трейлеров для ТВ-шоу с ID ${tvShowId}:`,
+      error
+    );
+    return [];
+  }
+};
+
+const getAllTvShowsUrl = (contentType, genreId, page) => {
+  const baseUrl = "https://api.themoviedb.org/3/discover/";
+  const endpoints = "tv";
+
+  return `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`;
+};
+
+export const fetchTvShowsByGenre = async (contentType, genreId, page = 1) => {
+  try {
+    const response = await axios.get(
+      getAllTvShowsUrl(contentType, genreId, page)
+    );
+    const tvShows = response.data.results;
+
+    // Для каждого ТВ-шоу получаем его трейлеры
+    const tvShowsWithTrailers = await Promise.all(
+      tvShows.map(async (tvShow) => {
+        const trailers = await fetchTvShowTrailer(tvShow.id);
+        return { ...tvShow, trailers };
+      })
+    );
+
+    return tvShowsWithTrailers;
+  } catch (error) {
+    console.error("Ошибка при получении ТВ-шоу по жанру", error);
     throw error;
   }
 };
