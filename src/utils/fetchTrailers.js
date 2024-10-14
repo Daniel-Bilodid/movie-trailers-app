@@ -456,13 +456,17 @@ const fetchTvShowTrailer = async (tvShowId) => {
   const BASE_URL = "https://api.themoviedb.org/3";
 
   try {
+    console.log(`Fetching trailers for TV Show ID: ${tvShowId}`); // Логируем ID шоу
     const response = await axios.get(`${BASE_URL}/tv/${tvShowId}/videos`, {
       params: {
         api_key: API_KEY,
       },
     });
 
+    console.log(`Trailer response for TV Show ID ${tvShowId}:`, response.data); // Логируем ответ от API
+
     if (response.data.results.length === 0) {
+      console.warn(`No trailers found for TV Show ID ${tvShowId}.`); // Логируем предупреждение
       return [];
     }
 
@@ -480,15 +484,27 @@ const getAllTvShowsUrl = (contentType, genreId, page) => {
   const baseUrl = "https://api.themoviedb.org/3/discover/";
   const endpoints = "tv";
 
-  return `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`;
+  const url = `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&with_genres=${genreId}&page=${page}`;
+  console.log("Generated TV Shows URL:", url);
+
+  return url;
 };
 
 export const fetchTvShowsByGenre = async (contentType, genreId, page = 1) => {
   try {
+    console.log(`Fetching TV shows for Genre ID: ${genreId} on page: ${page}`);
     const response = await axios.get(
       getAllTvShowsUrl(contentType, genreId, page)
     );
+
+    console.log(`TV shows response for Genre ID ${genreId}:`, response.data);
+
     const tvShows = response.data.results;
+
+    if (!tvShows || tvShows.length === 0) {
+      console.warn(`No TV shows found for Genre ID ${genreId}.`);
+      return [];
+    }
 
     // Для каждого ТВ-шоу получаем его трейлеры
     const tvShowsWithTrailers = await Promise.all(

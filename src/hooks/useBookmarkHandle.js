@@ -10,7 +10,6 @@ const useBookmarkHandle = () => {
   const contentType = useSelector((state) => state.data.contentType);
   let tvId = [];
 
-  console.log("typpeeee", contentType);
   const { user } = useContext(AuthContext);
   const handleBookmarkClick = async (movieId) => {
     if (contentType === "TV") {

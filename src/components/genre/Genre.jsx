@@ -21,21 +21,24 @@ const Genre = () => {
       try {
         let moviesData;
         if (contentType === "TV") {
-          moviesData = await fetchTvShowsByGenre(selectedGenre, currentPage);
-          console.log("check", moviesData);
+          console.log("selectedGenre", selectedGenre);
+          moviesData = await fetchTvShowsByGenre(
+            contentType,
+            selectedGenre,
+            currentPage
+          );
         } else {
           moviesData = await fetchMoviesByGenre(
             contentType,
             selectedGenre,
             currentPage
           );
-          console.log("check", moviesData);
         }
 
         const genresData = await fetchGenres(contentType);
 
         dispatch(setMoviesByGenre(moviesData));
-        console.log(moviesData);
+
         setGenres(genresData);
       } catch (error) {
         console.error("Ошибка при загрузке фильмов и жанров", error);
@@ -45,7 +48,6 @@ const Genre = () => {
     loadMoviesAndGenres();
   }, [selectedGenre, dispatch, currentPage, contentType]);
 
-  console.log(genres);
   return (
     <div>
       <div className="genre-filter">
