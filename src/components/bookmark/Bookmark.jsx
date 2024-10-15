@@ -3,6 +3,7 @@ import { db, auth } from "../../firebase";
 import { getDocs, collection } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { fetchMovieById } from "../../utils/fetchTrailers";
+import { fetchTVShowById } from "../../utils/fetchTrailers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,8 +86,8 @@ const Bookmarks = () => {
       const bookmarksSnapshot = await getDocs(bookmarksCollection);
       const bookmarksList = bookmarksSnapshot.docs.map((doc) => ({
         id: doc.data().movieId,
+        movieType: doc.data().movieType || "Movie",
       }));
-
       return bookmarksList;
     } catch (error) {
       console.error("Ошибка при получении закладок: ", error);
@@ -112,18 +113,35 @@ const Bookmarks = () => {
             return null;
           }
 
-          const movie = await fetchMovieById(bookmark.id).catch((error) => {
-            console.error(
-              `Error fetching movie with ID ${bookmark.id}:`,
-              error
-            );
-            return null;
-          });
+          let content = null;
 
-          return {
-            ...movie,
-            currentTrailerIndex: 0,
-          };
+          if (bookmark.movieType === "Movie") {
+            content = await fetchMovieById(bookmark.id).catch((error) => {
+              console.error(
+                `Error fetching movie with ID ${bookmark.id}:`,
+                error
+              );
+              return null;
+            });
+          } else if (bookmark.movieType === "TV") {
+            content = await fetchTVShowById(bookmark.id).catch((error) => {
+              console.error(
+                `Error fetching TV show with ID ${bookmark.id}:`,
+                error
+              );
+              return null;
+            });
+          }
+
+          if (content) {
+            return {
+              ...content,
+              currentTrailerIndex: 0,
+              movieType: bookmark.movieType,
+            };
+          } else {
+            return null;
+          }
         } else {
           console.warn("Invalid bookmark structure:", bookmark);
           return null;
@@ -177,8 +195,14 @@ const Bookmarks = () => {
         {localMovies.length > 0 ? (
           localMovies.map((movie, index) => (
             <div key={movie.id}>
+              {console.log(movie)}
               <div className="trending__btn-wrapper">
-                <Link className="trending__info" to={`/movie-info/${movie.id}`}>
+                <Link
+                  className="trending__info"
+                  to={`/${
+                    movie.movieType === "Movie" ? "movie-info" : "tv-info"
+                  }/${movie.id}`}
+                >
                   <FontAwesomeIcon
                     icon={faInfoCircle}
                     color="white"
@@ -189,7 +213,9 @@ const Bookmarks = () => {
                   <FontAwesomeIcon icon={faBookmark} color="white" size="1x" />
                 </div>
               </div>
-              <h3 className="trending__movie-title">{movie.title}</h3>
+              <h3 className="trending__movie-title">
+                {movie.movieType === "Movie" ? movie.title : movie.name}
+              </h3>
               <div className="trending__movie-thumbnail-container">
                 <img
                   className="trending__movie-thumbnail"
@@ -211,15 +237,19 @@ const Bookmarks = () => {
                   <div className="trending__movie-thumbnail-wrapper">
                     <div className="trending__movie-thumbnail-info">
                       <div className="trending__thumbnail-movie-year">
-                        {new Date(movie.release_date).getFullYear()}
+                        {movie.movieType === "Movie"
+                          ? new Date(movie.release_date).getFullYear()
+                          : movie.first_air_date
+                          ? movie.first_air_date.slice(0, 4)
+                          : "Unknown Year"}
                       </div>
                       <div className="trending__movie-thumbnail-dot">·</div>
                       <div className="trending__movie-thumbnail-type">
-                        Movie
+                        {movie.movieType}
                       </div>
                     </div>
                     <div className="trending__movie-thumbnail-overlay-name">
-                      {movie.title}
+                      {movie.movieType === "Movie" ? movie.title : movie.name}
                     </div>
                   </div>
                 </div>
@@ -256,8 +286,11 @@ const Bookmarks = () => {
             <div className="trending__movie-info">
               <div className="trending__movie-wrapper">
                 <div className="trending__movie-year">
-                  {localMovies[playVideo]?.release_date.slice(0, 4) ||
-                    "Unknown Year"}
+                  {localMovies[playVideo]?.release_date
+                    ? localMovies[playVideo]?.release_date.slice(0, 4)
+                    : "Unknown Year" || localMovies[playVideo]?.first_air_date
+                    ? localMovies[playVideo]?.first_air_date.slice(0, 4)
+                    : "Unknown Year"}
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">Movie</div>

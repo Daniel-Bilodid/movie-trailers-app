@@ -79,7 +79,10 @@ const useMovieTrailers = (fetchMovies) => {
       if (bookmarkDoc.exists()) {
         await deleteDoc(bookmarkRef);
       } else {
-        await setDoc(bookmarkRef, { movieId });
+        await setDoc(bookmarkRef, {
+          movieId,
+          movieType: contentType === "Movie" ? "Movie" : "TV",
+        });
       }
     } catch (error) {
       console.error("Error handling bookmark click:", error);
