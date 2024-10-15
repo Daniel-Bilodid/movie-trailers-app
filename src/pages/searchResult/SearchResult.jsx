@@ -144,6 +144,7 @@ const SearchResult = () => {
         <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
           {data?.[playVideo]?.trailers && (
             <>
+              {console.log(data)}
               <iframe
                 className="trending__movie-frame"
                 width="560"
@@ -166,7 +167,9 @@ const SearchResult = () => {
                     {data[playVideo]?.release_year}
                   </div>
                   <div className="trending__movie-dot">·</div>
-                  <div className="trending__movie-type">Movie</div>
+                  <div className="trending__movie-type">
+                    {data[playVideo].item.type === "Movie" ? "Movie" : "TV"}
+                  </div>
                 </div>
 
                 <div>

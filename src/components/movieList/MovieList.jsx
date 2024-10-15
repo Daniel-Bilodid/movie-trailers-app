@@ -97,7 +97,9 @@ const MovieCard = React.memo(
                   </svg>
                 </div>
                 <div className="trending__movie-thumbnail-dot">·</div>
-                <div className="trending__movie-thumbnail-type">Movie</div>
+                <div className="trending__movie-thumbnail-type">
+                  {contentType === "Movie" ? "Movie" : "TV Show"}
+                </div>
               </div>
               <div className="trending__movie-thumbnail-overlay-name">
                 {movie.title}
@@ -284,8 +286,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 <div className="trending__movie-year">
                   {contentType === "Movie"
                     ? trailers[playVideo].release_year
-                    : trailers.first_air_date
-                    ? trailers.first_air_date.slice(0, 4)
+                    : trailers[playVideo].first_air_date
+                    ? trailers[playVideo].first_air_date.slice(0, 4)
                     : ""}
                 </div>
                 <div className="trending__movie-dot">·</div>
@@ -302,7 +304,10 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   </svg>
                 </div>
                 <div className="trending__movie-dot">·</div>
-                <div className="trending__movie-type">Movie</div>
+                <div className="trending__movie-type">
+                  {" "}
+                  {contentType === "Movie" ? "Movie" : "TV Show"}
+                </div>
               </div>
               <div>
                 <button onClick={() => handlePrevTrailer(playVideo)}>

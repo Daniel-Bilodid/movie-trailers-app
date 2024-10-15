@@ -185,7 +185,7 @@ const Trending = () => {
                   <Link
                     className="trending__info"
                     to={`/${
-                      movie.type === "Movie" ? "movie-info" : "tv-info"
+                      contentType === "Movie" ? "movie-info" : "tv-info"
                     }/${movie.id}`}
                   >
                     <FontAwesomeIcon
