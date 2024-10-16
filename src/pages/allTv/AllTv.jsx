@@ -27,7 +27,7 @@ const AllTv = () => {
   }, [contentType]);
 
   const {
-    movies: tvShows, // Переименуем для логики ТВ-шоу
+    movies: tvShows,
     loading: bookmarksLoading,
     selected,
     selectedMovies,
@@ -36,9 +36,9 @@ const AllTv = () => {
 
   const { playVideo, handlePlayVideo, handleCloseModal, loadTrailers } =
     useMovieTrailers();
-
+  console.log(tvShows);
   const fetchPageData = useCallback(() => {
-    loadTrailers(currentPage); // Загружаем трейлеры для ТВ-шоу
+    loadTrailers(currentPage);
   }, [currentPage, loadTrailers]);
 
   useEffect(() => {
@@ -95,6 +95,7 @@ const AllTv = () => {
         {tvShowsByGenre.length > 0 ? (
           tvShowsByGenre.map((tvShow, index) => (
             <div key={tvShow.id}>
+              {console.log(tvShow)}
               <div className="trending__btn-wrapper">
                 <Link className="trending__info" to={`/tv-info/${tvShow.id}`}>
                   <FontAwesomeIcon

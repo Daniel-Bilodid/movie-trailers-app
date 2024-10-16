@@ -8,38 +8,29 @@ import useBookmarks from "../hooks/useBookmarks";
 
 const useBookmarkHandle = () => {
   const contentType = useSelector((state) => state.data.contentType);
-  let tvId = [];
-
   const { user } = useContext(AuthContext);
+  const [selectedMovies, setSelectedMovies] = useState({});
+  const { movies, loading: bookmarksLoading } = useBookmarks();
+
   const handleBookmarkClick = async (movieId) => {
-    if (contentType === "TV") {
-      tvId.push(movieId);
-    }
     if (!user) {
       console.log("Please sign in to bookmark.");
       return;
     }
 
     try {
-      const bookmarkRef = doc(
-        db,
-        `users/${user.uid}/bookmarks/${
-          contentType === "Movie" ? movieId : tvId
-        }`
-      );
+      const bookmarkRef = doc(db, `users/${user.uid}/bookmarks/${movieId}`);
       const bookmarkDoc = await getDoc(bookmarkRef);
 
       if (bookmarkDoc.exists()) {
         await deleteDoc(bookmarkRef);
       } else {
-        await setDoc(bookmarkRef, { movieId });
+        await setDoc(bookmarkRef, { movieId, movieType: contentType });
       }
     } catch (error) {
       console.error("Error handling bookmark click:", error);
     }
   };
-  const [selectedMovies, setSelectedMovies] = useState({});
-  const { movies, loading: bookmarksLoading } = useBookmarks();
 
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
