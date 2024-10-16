@@ -88,6 +88,7 @@ const Bookmarks = () => {
         id: doc.data().movieId,
         movieType: doc.data().movieType || "Movie",
       }));
+
       return bookmarksList;
     } catch (error) {
       console.error("Ошибка при получении закладок: ", error);
@@ -149,9 +150,8 @@ const Bookmarks = () => {
       });
 
       const moviesData = await Promise.all(moviePromises);
-
+      console.log(moviesData);
       const validMoviesData = moviesData.filter((movie) => movie !== null);
-
       dispatch(setMovies(validMoviesData));
       setLocalMovies(validMoviesData);
     } catch (error) {
@@ -195,7 +195,6 @@ const Bookmarks = () => {
         {localMovies.length > 0 ? (
           localMovies.map((movie, index) => (
             <div key={movie.id}>
-              {console.log(movie)}
               <div className="trending__btn-wrapper">
                 <Link
                   className="trending__info"

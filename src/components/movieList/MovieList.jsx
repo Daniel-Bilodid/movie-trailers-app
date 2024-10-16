@@ -137,7 +137,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
-
+  console.log(movies);
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
       ...prevState,

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getDocs, collection } from "firebase/firestore";
 import { fetchMovieById } from "../utils/fetchTrailers";
+import { fetchTVShowById } from "../utils/fetchTrailers";
 import { db, auth } from "../firebase";
 import { useDispatch } from "react-redux";
 import { setMovies } from "../redux/store";
@@ -11,12 +12,14 @@ const useBookmarks = () => {
   const dispatch = useDispatch();
   const [movies, setMoviesList] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const fetchBookmarks = async (userId) => {
     try {
       const bookmarksCollection = collection(db, `users/${userId}/bookmarks`);
       const bookmarksSnapshot = await getDocs(bookmarksCollection);
       const bookmarksList = bookmarksSnapshot.docs.map((doc) => ({
         id: doc.data().movieId,
+        movieType: doc.data().movieType || "Movie",
       }));
 
       return bookmarksList;
@@ -34,35 +37,30 @@ const useBookmarks = () => {
       }
 
       const moviePromises = bookmarksList.map(async (bookmark) => {
-        if (
-          typeof bookmark === "object" &&
-          bookmark !== null &&
-          "id" in bookmark
-        ) {
-          if (Array.isArray(bookmark.id)) {
-            console.warn("Bookmark id is an array, skipping:", bookmark);
-            return null;
-          }
-
+        if (bookmark && bookmark.id) {
           try {
-            const movie = await fetchMovieById(bookmark.id);
+            let content = null;
+            if (bookmark.movieType === "Movie") {
+              content = await fetchMovieById(bookmark.id);
+            } else if (bookmark.movieType === "TV") {
+              content = await fetchTVShowById(bookmark.id);
+            }
 
-            return {
-              ...movie,
-              currentTrailerIndex: 0,
-            };
+            if (content) {
+              return {
+                ...content,
+                currentTrailerIndex: 0,
+                movieType: bookmark.movieType,
+              };
+            }
           } catch (error) {
-            console.error("Error fetching movie by ID:", bookmark.id, error);
-            return null;
+            console.error("Error fetching movie/TV show by ID:", error);
           }
-        } else {
-          console.warn("Invalid bookmark structure:", bookmark);
-          return null;
         }
+        return null;
       });
 
       const moviesData = await Promise.all(moviePromises);
-
       const validMoviesData = moviesData.filter((movie) => movie !== null);
 
       dispatch(setMovies(validMoviesData));
