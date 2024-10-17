@@ -5,18 +5,32 @@ import "./toggle.scss";
 
 const Toggle = () => {
   const dispatch = useDispatch();
+  const [active, setActive] = useState("Movie");
 
-  const onToggle = useCallback((type) => {
-    dispatch(setContentType(type));
-  }, []);
+  const onToggle = useCallback(
+    (type) => {
+      setActive(type);
+      dispatch(setContentType(type));
+    },
+    [dispatch]
+  );
+
   return (
     <div className="toggle">
       <div className="toggle__wrapper">
-        <button className="toggle__movie" onClick={() => onToggle("Movie")}>
-          Movie
+        <div
+          className={`toggle__slider ${active === "Movie" ? "movie" : "tv"}`}
+        />
+        <button
+          className={`toggle__button ${active === "Movie" ? "active" : ""}`}
+          onClick={() => onToggle("Movie")}
+        >
+          Movies
         </button>
-        |
-        <button className="toggle__tv" onClick={() => onToggle("TV")}>
+        <button
+          className={`toggle__button ${active === "TV" ? "active" : ""}`}
+          onClick={() => onToggle("TV")}
+        >
           TV Shows
         </button>
       </div>

@@ -137,14 +137,13 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
-  console.log(movies);
+
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
       ...prevState,
       [movieId]: !prevState[movieId],
     }));
   };
-  useEffect(() => {}, [movies]);
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
@@ -152,7 +151,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
 
   useEffect(() => {
     fetchPageData();
-  }, [fetchPageData]);
+  }, [fetchPageData, selectedMovies, movies]);
 
   const handlePlayVideo = useCallback(
     (index) => originalHandlePlayVideo(index),
