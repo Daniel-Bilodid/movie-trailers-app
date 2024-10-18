@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
 import { AuthContext } from "../context/AuthContext";
 import useBookmarks from "../../hooks/useBookmarks";
-
 import "./movieList.scss";
 
 const MovieCard = React.memo(
@@ -137,13 +136,24 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
+  const dispatch = useDispatch();
 
+  // Логика синхронизации закладок
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
       ...prevState,
       [movieId]: !prevState[movieId],
     }));
   };
+
+  const handleBookmarkClick = useCallback(
+    (movieId) => {
+      originalHandleBookmarkClick(movieId);
+      // После добавления или удаления закладки, обновляем состояние всех фильмов
+      dispatch(setMovies(movies));
+    },
+    [originalHandleBookmarkClick, dispatch, movies]
+  );
 
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
@@ -156,10 +166,6 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const handlePlayVideo = useCallback(
     (index) => originalHandlePlayVideo(index),
     [originalHandlePlayVideo]
-  );
-  const handleBookmarkClick = useCallback(
-    (movieId) => originalHandleBookmarkClick(movieId),
-    [originalHandleBookmarkClick]
   );
 
   const handlePreviousPage = () => {
@@ -246,17 +252,20 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
               ))}
       </div>
       {enablePagination && (
-        <div className="pagination">
-          <button
-            className="pagination__button"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            Previous Page
-          </button>
-          <button className="pagination__button" onClick={handleNextPage}>
-            Next Page
-          </button>
+        <div className="popular__pagination">
+          {currentPage > 1 && (
+            <button
+              className="pagination__previous"
+              onClick={handlePreviousPage}
+            >
+              Previous Page
+            </button>
+          )}
+          {trailers.length > 0 && (
+            <button className="pagination__next" onClick={handleNextPage}>
+              Next Page
+            </button>
+          )}
         </div>
       )}
       <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>

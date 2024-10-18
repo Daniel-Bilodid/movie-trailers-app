@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, onSnapshot } from "firebase/firestore";
 import { fetchMovieById } from "../utils/fetchTrailers";
 import { fetchTVShowById } from "../utils/fetchTrailers";
 import { db, auth } from "../firebase";
 import { useDispatch } from "react-redux";
 import { setMovies } from "../redux/store";
 import { onAuthStateChanged } from "firebase/auth";
-import { MdLocalMovies } from "react-icons/md";
 
 const useBookmarks = () => {
   const dispatch = useDispatch();
@@ -75,10 +74,21 @@ const useBookmarks = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const bookmarksList = await fetchBookmarks(user.uid);
-        if (bookmarksList.length > 0) {
-          await loadMovies(bookmarksList);
-        }
+        const bookmarksRef = collection(db, `users/${user.uid}/bookmarks`);
+
+        // Реальное время с onSnapshot
+        const unsubscribeBookmarks = onSnapshot(
+          bookmarksRef,
+          async (snapshot) => {
+            const bookmarksList = snapshot.docs.map((doc) => ({
+              id: doc.data().movieId,
+              movieType: doc.data().movieType || "Movie",
+            }));
+            await loadMovies(bookmarksList);
+          }
+        );
+
+        return () => unsubscribeBookmarks();
       }
     });
 

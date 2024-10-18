@@ -174,7 +174,7 @@ const Trending = () => {
           <h2 className="trending__title">Trending</h2>
 
           <Link className="trending__more" to="/more-trailers">
-            More Trailers
+            See more
           </Link>
         </div>
         <Slider {...settings} className="trending__slider">
