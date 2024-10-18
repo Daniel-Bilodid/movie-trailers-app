@@ -49,7 +49,6 @@ const MovieCard = React.memo(
                 : "white"
             }
             size="1x"
-            onClick={selected}
           />
         </div>
       </div>
