@@ -95,10 +95,14 @@ const AllMovies = () => {
   console.log(moviesByGenre);
   return (
     <div className="popular">
+      <div className="popular__btn-wrapper">
+        <Genre />
+        <div className="search__wrapper">
+          <Search />
+        </div>
+      </div>
       <div className="popular__text-wrapper">
         <div className="popular__title">All Movies</div>
-        <Genre />
-        <Search />
       </div>
       <div className="popular__wrapper">
         {moviesByGenre.length > 0 ? (
