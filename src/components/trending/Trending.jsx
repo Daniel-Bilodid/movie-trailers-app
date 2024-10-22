@@ -27,6 +27,7 @@ const Trending = () => {
   const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
+
   const {
     movies,
     loading: bookmarksLoading,
@@ -158,17 +159,19 @@ const Trending = () => {
     });
   };
 
-  if (bookmarksLoading) {
-    return <div>Loading movies...</div>;
-  }
+  // if (bookmarksLoading ) {
+  //   return <div>Loading movies...</div>;
+  // }
 
   return (
     <>
+      <div className="welcome__message">
+        <span>Welcome: {user ? user.displayName : "Not signed in"}</span>
+      </div>
       <div className="wrapper">
         <Toggle />
         <Search />
       </div>
-
       <div className="trending">
         <div className="trending__wrapper">
           <h2 className="trending__title">Trending</h2>
@@ -338,13 +341,9 @@ const Trending = () => {
           )}
         </Modal>
       </div>
-
       <PopularMovies />
-
       <NowPlayingMovies />
-
       <UpcomingMovies />
-
       <TopRatedMovies />
     </>
   );

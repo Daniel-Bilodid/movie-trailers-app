@@ -97,6 +97,8 @@
     left: 0;
     width: 100%;
     height: 100%;
+    transform: scale(1.01);
+
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.6);
     display: flex;
@@ -179,6 +181,7 @@
 .trending__movie-thumbnail-wrapper {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   position: absolute;
   bottom: 15px;
   left: 15px;
