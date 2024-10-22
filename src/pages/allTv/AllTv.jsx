@@ -11,6 +11,7 @@ import Genre from "../../components/genre/Genre";
 import Modal from "../../components/movieModal/MovieModal";
 import { setCurrentPage } from "../../redux/store";
 import { setContentType } from "../../redux/store";
+import Search from "../../components/search/Search";
 
 const AllTv = () => {
   const dispatch = useDispatch();
@@ -87,9 +88,14 @@ const AllTv = () => {
 
   return (
     <div className="popular">
+      <div className="popular__btn-wrapper">
+        <Genre />
+        <div className="search__wrapper">
+          <Search />
+        </div>
+      </div>
       <div className="popular__text-wrapper">
         <div className="popular__title">All TV Shows</div>
-        <Genre />
       </div>
       <div className="popular__wrapper">
         {tvShowsByGenre.length > 0 ? (

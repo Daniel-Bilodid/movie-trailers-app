@@ -197,17 +197,21 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [trailers]);
 
-  if (bookmarksLoading) {
-    return <div>Loading bookmarks...</div>;
-  }
+  // if (bookmarksLoading) {
+  //   return <div>Loading bookmarks...</div>;
+  // }
 
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">
         <div className="popular__title">{title}</div>
-        <Link className="popular__more" to={moreLink}>
-          See more
-        </Link>
+        {!enablePagination ? (
+          <Link className="popular__more" to={moreLink}>
+            See more
+          </Link>
+        ) : (
+          ""
+        )}
       </div>
       <div className="popular__wrapper">
         {enablePagination
