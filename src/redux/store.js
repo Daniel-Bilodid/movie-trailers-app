@@ -40,6 +40,22 @@ const dataSlice = createSlice({
   },
 });
 
+const toastSlice = createSlice({
+  name: "toast",
+  initialState: {
+    showToast: false,
+  },
+  reducers: {
+    showToast: (state) => {
+      state.showToast = true;
+    },
+    hideToast: (state) => {
+      state.showToast = false;
+    },
+  },
+});
+
+export const { showToast, hideToast } = toastSlice.actions;
 export const {
   setData,
   setSelectedGenre,
@@ -56,6 +72,7 @@ export const selectMovies = (state) => state.data.movies;
 const store = configureStore({
   reducer: {
     data: dataSlice.reducer,
+    toast: toastSlice.reducer,
   },
 });
 

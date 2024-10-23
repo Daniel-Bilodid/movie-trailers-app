@@ -71,9 +71,9 @@ const AllMovies = () => {
     });
   };
 
-  if (bookmarksLoading) {
-    return <div>Loading movies...</div>;
-  }
+  // if (bookmarksLoading) {
+  //   return <div>Loading movies...</div>;
+  // }
 
   const handleNextTrailer = () => {
     if (playVideo !== null) {

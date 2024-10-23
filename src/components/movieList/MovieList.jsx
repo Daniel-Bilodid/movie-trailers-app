@@ -7,6 +7,7 @@ import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
 import { AuthContext } from "../context/AuthContext";
+import { showToast, hideToast } from "../../redux/store";
 import useBookmarks from "../../hooks/useBookmarks";
 import AuthToast from "../authToast/AuthToast";
 import "./movieList.scss";
@@ -27,6 +28,7 @@ const MovieCard = React.memo(
     user,
     showAuthToast,
     showToast,
+    showToastState,
   }) => (
     <div key={movie.id}>
       <div className="trending__btn-wrapper">
@@ -63,7 +65,7 @@ const MovieCard = React.memo(
           />
         </div>
       </div>
-      <AuthToast show={showToast} />
+      <AuthToast show={showToastState} />
 
       <h3 className="trending__movie-title">
         {contentType === "Movie" ? movie.title : movie.name}
@@ -149,12 +151,13 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
   const dispatch = useDispatch();
-  const [showToast, setShowToast] = useState(false);
+
+  const showToastState = useSelector((state) => state.toast.showToast);
 
   const showAuthToast = () => {
-    setShowToast(true);
+    dispatch(showToast());
     setTimeout(() => {
-      setShowToast(false);
+      dispatch(hideToast());
     }, 5000);
   };
 
@@ -254,6 +257,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 user={user}
                 showAuthToast={showAuthToast}
                 showToast={showToast}
+                showToastState={showToastState}
               />
             ))
           : trailers
@@ -277,6 +281,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   user={user}
                   showAuthToast={showAuthToast}
                   showToast={showToast}
+                  showToastState={showToastState}
                 />
               ))}
       </div>

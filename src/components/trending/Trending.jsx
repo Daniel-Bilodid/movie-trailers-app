@@ -19,7 +19,7 @@ import NowPlayingMovies from "../moviePages/nowPlayingMovies/NowPlayingMovies";
 import UpcomingMovies from "../moviePages/upcomingMovies/UpcomingMovies";
 import TopRatedMovies from "../moviePages/topRatedMovies/TopRatedMovies";
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
-
+import AuthToast from "../authToast/AuthToast";
 import Toggle from "../toggle/Toggle";
 import Search from "../search/Search";
 
@@ -27,6 +27,7 @@ const Trending = () => {
   const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
+  const [showToast, setShowToast] = useState(false);
   let [load, setLoad] = useState(true);
   const {
     movies,
@@ -160,7 +161,14 @@ const Trending = () => {
       return updatedTrailers;
     });
   };
-
+  const showAuthToast = () => {
+    setShowToast(true);
+    console.log(showToast);
+    setTimeout(() => {
+      setShowToast(false);
+      console.log(showToast);
+    }, 5000);
+  };
   if (load) {
     return <div>Loading movies...</div>;
   }
@@ -202,15 +210,20 @@ const Trending = () => {
                   <div
                     className="trending__bookmark"
                     onClick={() => {
-                      handleBookmarkClick(movie.id);
-                      selected(movie.id);
-                      console.log(movie.id);
+                      if (user) {
+                        handleBookmarkClick(movie.id);
+                        selected(movie.id);
+                      } else {
+                        showAuthToast();
+                        console.log("idk");
+                      }
                     }}
                   >
                     <FontAwesomeIcon
                       icon={faBookmark}
                       color={
-                        (Array.isArray(movies) &&
+                        (user &&
+                          Array.isArray(movies) &&
                           movies.some((m) => m.id === movie.id)) ||
                         selectedMovies[movie.id]
                           ? "yellow"
@@ -220,6 +233,7 @@ const Trending = () => {
                     />
                   </div>
                 </div>
+                <AuthToast show={showToast} />
                 <h3 className="trending__movie-title">
                   {contentType === "Movie" ? movie.title : movie.name}
                 </h3>
