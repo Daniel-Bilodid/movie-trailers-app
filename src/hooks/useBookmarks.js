@@ -76,7 +76,6 @@ const useBookmarks = () => {
       if (user) {
         const bookmarksRef = collection(db, `users/${user.uid}/bookmarks`);
 
-        // Реальное время с onSnapshot
         const unsubscribeBookmarks = onSnapshot(
           bookmarksRef,
           async (snapshot) => {

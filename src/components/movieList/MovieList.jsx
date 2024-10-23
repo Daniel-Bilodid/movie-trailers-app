@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
 import { AuthContext } from "../context/AuthContext";
 import useBookmarks from "../../hooks/useBookmarks";
+import AuthToast from "../authToast/AuthToast";
 import "./movieList.scss";
 
 const MovieCard = React.memo(
@@ -23,6 +24,9 @@ const MovieCard = React.memo(
     selected,
     isSelected,
     contentType,
+    user,
+    showAuthToast,
+    showToast,
   }) => (
     <div key={movie.id}>
       <div className="trending__btn-wrapper">
@@ -37,12 +41,19 @@ const MovieCard = React.memo(
 
         <div
           className="trending__bookmark"
-          onClick={() => onBookmarkClick(movie.id)}
+          onClick={() => {
+            if (user) {
+              onBookmarkClick(movie.id);
+            } else {
+              showAuthToast();
+            }
+          }}
         >
           <FontAwesomeIcon
             icon={faBookmark}
             color={
-              (Array.isArray(movies) &&
+              (user &&
+                Array.isArray(movies) &&
                 movies.some((m) => m.id === movie.id)) ||
               isSelected
                 ? "yellow"
@@ -52,6 +63,8 @@ const MovieCard = React.memo(
           />
         </div>
       </div>
+      <AuthToast show={showToast} />
+
       <h3 className="trending__movie-title">
         {contentType === "Movie" ? movie.title : movie.name}
       </h3>
@@ -136,8 +149,15 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
   const dispatch = useDispatch();
+  const [showToast, setShowToast] = useState(false);
 
-  // Логика синхронизации закладок
+  const showAuthToast = () => {
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 5000);
+  };
+
   const selected = (movieId) => {
     setSelectedMovies((prevState) => ({
       ...prevState,
@@ -148,7 +168,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const handleBookmarkClick = useCallback(
     (movieId) => {
       originalHandleBookmarkClick(movieId);
-      // После добавления или удаления закладки, обновляем состояние всех фильмов
+
       dispatch(setMovies(movies));
     },
     [originalHandleBookmarkClick, dispatch, movies]
@@ -231,6 +251,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 selected={() => selected(item.movie.id)}
                 isSelected={!!selectedMovies[item.movie.id]}
                 contentType={contentType}
+                user={user}
+                showAuthToast={showAuthToast}
+                showToast={showToast}
               />
             ))
           : trailers
@@ -251,6 +274,9 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   selected={() => selected(item.movie.id)}
                   isSelected={!!selectedMovies[item.movie.id]}
                   contentType={contentType}
+                  user={user}
+                  showAuthToast={showAuthToast}
+                  showToast={showToast}
                 />
               ))}
       </div>

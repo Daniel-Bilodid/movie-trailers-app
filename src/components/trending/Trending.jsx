@@ -27,7 +27,7 @@ const Trending = () => {
   const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
-
+  let [load, setLoad] = useState(true);
   const {
     movies,
     loading: bookmarksLoading,
@@ -113,6 +113,8 @@ const Trending = () => {
         setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);
+      } finally {
+        setLoad(false);
       }
     };
 
@@ -159,9 +161,9 @@ const Trending = () => {
     });
   };
 
-  // if (bookmarksLoading ) {
-  //   return <div>Loading movies...</div>;
-  // }
+  if (load) {
+    return <div>Loading movies...</div>;
+  }
 
   return (
     <>
