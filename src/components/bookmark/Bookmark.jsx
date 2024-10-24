@@ -91,7 +91,7 @@ const Bookmarks = () => {
 
       return bookmarksList;
     } catch (error) {
-      console.error("Ошибка при получении закладок: ", error);
+      console.error("Error with bookmarks loading: ", error);
       return [];
     }
   };
@@ -155,7 +155,7 @@ const Bookmarks = () => {
       dispatch(setMovies(validMoviesData));
       setLocalMovies(validMoviesData);
     } catch (error) {
-      console.error("Ошибка при загрузке фильмов", error);
+      console.error("Error with movies loading", error);
     } finally {
       setLoading(false);
     }

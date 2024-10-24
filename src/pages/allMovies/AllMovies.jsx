@@ -2,7 +2,11 @@ import React, { useState, useCallback, useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfoCircle,
+  faBookmark,
+  faPlayCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import useBookmarks from "../../hooks/useBookmarks";
 import { AuthContext } from "../../components/context/AuthContext";
@@ -165,6 +169,11 @@ const AllMovies = () => {
                   >
                     <span className="trending__movie-thumbnail-overlay-text">
                       Play Trailer
+                      <FontAwesomeIcon
+                        icon={faPlayCircle}
+                        color="white"
+                        size="1x"
+                      />
                     </span>
 
                     <div className="trending__movie-thumbnail-wrapper">

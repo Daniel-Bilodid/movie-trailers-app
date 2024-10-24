@@ -3,7 +3,11 @@ import Modal from "../movieModal/MovieModal";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfoCircle,
+  faBookmark,
+  faPlayCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
 import { AuthContext } from "../context/AuthContext";
@@ -86,6 +90,7 @@ const MovieCard = React.memo(
           >
             <span className="trending__movie-thumbnail-overlay-text">
               Play Trailer
+              <FontAwesomeIcon icon={faPlayCircle} color="white" size="1x" />
             </span>
             <div className="trending__movie-thumbnail-wrapper">
               <div className="trending__movie-thumbnail-info">

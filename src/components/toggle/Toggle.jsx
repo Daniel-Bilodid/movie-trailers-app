@@ -1,11 +1,15 @@
-import { React, useState, useCallback } from "react";
+import { React, useState, useCallback, useEffect } from "react";
 import { setContentType } from "../../redux/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./toggle.scss";
 
 const Toggle = () => {
   const dispatch = useDispatch();
-  const [active, setActive] = useState("Movie");
+  const currentContentType = useSelector(
+    (state) => state.data.contentType || "Movie"
+  );
+
+  const [active, setActive] = useState(currentContentType);
 
   const onToggle = useCallback(
     (type) => {
@@ -14,6 +18,10 @@ const Toggle = () => {
     },
     [dispatch]
   );
+
+  useEffect(() => {
+    console.log("active toggle: ", active);
+  }, [active]);
 
   return (
     <div className="toggle">

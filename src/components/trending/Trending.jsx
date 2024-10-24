@@ -10,7 +10,7 @@ import "./trending.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AuthContext";
 import { useSelector } from "react-redux";
@@ -253,6 +253,11 @@ const Trending = () => {
                     >
                       <span className="trending__movie-thumbnail-overlay-text">
                         Play Trailer
+                        <FontAwesomeIcon
+                          icon={faPlayCircle}
+                          color="white"
+                          size="1x"
+                        />
                       </span>
 
                       <div className="trending__movie-thumbnail-wrapper">
