@@ -12,6 +12,8 @@ import Modal from "../../components/movieModal/MovieModal";
 import { setCurrentPage } from "../../redux/store";
 import { setContentType } from "../../redux/store";
 import Search from "../../components/search/Search";
+import AuthToast from "../../components/authToast/AuthToast";
+import { showToast, hideToast } from "../../redux/store";
 
 const AllTv = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,7 @@ const AllTv = () => {
   const [currentTrailer, setCurrentTrailer] = useState(0);
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
+  const showToastState = useSelector((state) => state.toast.showToast);
 
   useEffect(() => {
     if (contentType !== "TV") {
@@ -64,9 +67,9 @@ const AllTv = () => {
     });
   };
 
-  if (bookmarksLoading) {
-    return <div>Loading TV shows...</div>;
-  }
+  // if (bookmarksLoading) {
+  //   return <div>Loading TV shows...</div>;
+  // }
 
   const handleNextTrailer = () => {
     if (playVideo !== null) {
@@ -84,6 +87,13 @@ const AllTv = () => {
           tvShowsByGenre[playVideo].trailers.length
       );
     }
+  };
+
+  const showAuthToast = () => {
+    dispatch(showToast());
+    setTimeout(() => {
+      dispatch(hideToast());
+    }, 5000);
   };
 
   return (
@@ -113,14 +123,19 @@ const AllTv = () => {
                 <div
                   className="trending__bookmark"
                   onClick={() => {
-                    handleBookmarkClick(tvShow.id);
-                    selected(tvShow.id);
+                    if (user) {
+                      handleBookmarkClick(tvShow.id);
+                      selected(tvShow.id);
+                    } else {
+                      showAuthToast();
+                    }
                   }}
                 >
                   <FontAwesomeIcon
                     icon={faBookmark}
                     color={
-                      (Array.isArray(tvShows) &&
+                      (user &&
+                        Array.isArray(tvShows) &&
                         tvShows.some((m) => m.id === tvShow.id)) ||
                       selectedMovies[tvShow.id]
                         ? "yellow"
@@ -130,6 +145,7 @@ const AllTv = () => {
                   />
                 </div>
               </div>
+              <AuthToast show={showToastState} />
               <h3 className="trending__movie-title">{tvShow.name}</h3>
               {tvShow.trailers.length > 0 ? (
                 <div className="trending__movie-thumbnail-container">
@@ -145,6 +161,35 @@ const AllTv = () => {
                     <span className="trending__movie-thumbnail-overlay-text">
                       Play Trailer
                     </span>
+                    <div className="trending__movie-thumbnail-wrapper">
+                      <div className="trending__movie-thumbnail-info">
+                        <div className="trending__thumbnail-movie-year">
+                          {tvShow.first_air_date
+                            ? tvShow.first_air_date.slice(0, 4)
+                            : ""}
+                        </div>
+
+                        <div className="trending__movie-thumbnail-dot">·</div>
+
+                        <div className="trending__movie-thumbnail-svg">
+                          <svg
+                            width="20"
+                            height="20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M20 4.481H9.08l2.7-3.278L10.22 0 7 3.909 3.78.029 2.22 1.203l2.7 3.278H0V20h20V4.481Zm-8 13.58H2V6.42h10v11.64Zm5-3.88h-2v-1.94h2v1.94Zm0-3.88h-2V8.36h2v1.94Z"
+                              fill="#ffffff"
+                            />
+                          </svg>
+                        </div>
+                        <div className="trending__movie-thumbnail-dot">·</div>
+                        <div className="trending__movie-thumbnail-type">TV</div>
+                      </div>
+                      <div className="trending__movie-thumbnail-overlay-name">
+                        {tvShow.title}
+                      </div>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -185,6 +230,13 @@ const AllTv = () => {
                 <div className="trending__movie-year">
                   {tvShowsByGenre[playVideo]?.first_air_date.slice(0, 4)}
                 </div>
+                <div className="trending__movie-dot">·</div>
+                <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M20 4.481H9.08l2.7-3.278L10.22 0 7 3.909 3.78.029 2.22 1.203l2.7 3.278H0V20h20V4.481Zm-8 13.58H2V6.42h10v11.64Zm5-3.88h-2v-1.94h2v1.94Zm0-3.88h-2V8.36h2v1.94Z"
+                    fill="#ffffff"
+                  />
+                </svg>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">TV Show</div>
               </div>
