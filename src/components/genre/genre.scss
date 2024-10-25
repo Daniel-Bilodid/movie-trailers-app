@@ -1,0 +1,40 @@
+.genre-filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+  margin-left: 80px;
+  margin-top: 10px;
+  label {
+    font-size: 1rem;
+    color: #5a698f;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  select {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 1px solid #5a698f;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+    color: #333;
+    outline: none;
+    appearance: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e2e6ed;
+    }
+
+    &:focus {
+      border-color: #4b5a88;
+      box-shadow: 0 0 5px rgba(75, 90, 136, 0.5);
+    }
+  }
+
+  select option {
+    padding: 10px;
+  }
+}
