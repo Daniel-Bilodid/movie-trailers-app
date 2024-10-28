@@ -1,6 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./movieModal.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+
 const MovieModal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
@@ -9,7 +12,7 @@ const MovieModal = ({ isOpen, onClose, children }) => {
       <div className="modal-content">
         {children}
         <button onClick={onClose} className="modal-close">
-          Close
+          <FontAwesomeIcon icon={faXmark} color="white" size="1x" />
         </button>
       </div>
     </div>,

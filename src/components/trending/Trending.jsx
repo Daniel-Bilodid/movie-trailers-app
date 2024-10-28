@@ -10,7 +10,12 @@ import "./trending.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faPlayCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfoCircle,
+  faPlayCircle,
+  faArrowRightLong,
+  faArrowLeftLong,
+} from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AuthContext";
 import { useSelector } from "react-redux";
@@ -416,11 +421,25 @@ const Trending = () => {
                 </div>
 
                 <div>
-                  <button onClick={() => handlePrevTrailer(playVideo)}>
-                    previous
+                  <button
+                    className="trending__btn-handle"
+                    onClick={() => handlePrevTrailer(playVideo)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faArrowLeftLong}
+                      color="white"
+                      size="2x"
+                    />
                   </button>
-                  <button onClick={() => handleNextTrailer(playVideo)}>
-                    next
+                  <button
+                    className="trending__btn-handle"
+                    onClick={() => handleNextTrailer(playVideo)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faArrowRightLong}
+                      color="white"
+                      size="2x"
+                    />
                   </button>
                 </div>
               </div>
