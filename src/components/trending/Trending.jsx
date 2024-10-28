@@ -293,6 +293,7 @@ const Trending = () => {
                           icon={faPlayCircle}
                           color="white"
                           size="1x"
+                          className="trending__play-icon"
                         />
                       </span>
 

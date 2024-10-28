@@ -7,6 +7,8 @@ import {
   faInfoCircle,
   faBookmark,
   faPlayCircle,
+  faArrowRightLong,
+  faArrowLeftLong,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
@@ -90,7 +92,12 @@ const MovieCard = React.memo(
           >
             <span className="trending__movie-thumbnail-overlay-text">
               Play Trailer
-              <FontAwesomeIcon icon={faPlayCircle} color="white" size="1x" />
+              <FontAwesomeIcon
+                className="trending__play-icon"
+                icon={faPlayCircle}
+                color="white"
+                size="1x"
+              />
             </span>
             <div className="trending__movie-thumbnail-wrapper">
               <div className="trending__movie-thumbnail-info">
@@ -383,11 +390,25 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 </div>
               </div>
               <div>
-                <button onClick={() => handlePrevTrailer(playVideo)}>
-                  Previous
+                <button
+                  className="trending__btn-handle"
+                  onClick={() => handlePrevTrailer(playVideo)}
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowLeftLong}
+                    color="white"
+                    size="2x"
+                  />
                 </button>
-                <button onClick={() => handleNextTrailer(playVideo)}>
-                  Next
+                <button
+                  className="trending__btn-handle"
+                  onClick={() => handleNextTrailer(playVideo)}
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowRightLong}
+                    color="white"
+                    size="2x"
+                  />
                 </button>
               </div>
             </div>

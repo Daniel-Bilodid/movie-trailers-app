@@ -13,7 +13,7 @@
 
 .modal-content {
   width: 90%;
-  max-width: 800px;
+  max-width: 890px;
   background: rgb(22, 29, 48);
   border-radius: 10px;
   padding: 20px;
@@ -21,13 +21,11 @@
   position: relative;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 
-  // Адаптив для мобильных устройств
   @media (max-width: 768px) {
     width: 90%;
     padding: 15px;
   }
 
-  // Адаптив для больших экранов
   @media (min-width: 1440px) {
     width: 60%;
   }
