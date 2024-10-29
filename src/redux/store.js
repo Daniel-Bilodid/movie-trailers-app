@@ -1,15 +1,50 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
-const dataSlice = createSlice({
-  name: "data",
-  initialState: {
+const loadState = () => {
+  try {
+    const serializedState = localStorage.getItem("appState");
+    return serializedState ? JSON.parse(serializedState) : undefined;
+  } catch (e) {
+    console.warn("Ошибка при загрузке состояния из localStorage", e);
+    return undefined;
+  }
+};
+
+const saveState = (state) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem("appState", serializedState);
+  } catch (e) {
+    console.warn("Ошибка при сохранении состояния в localStorage", e);
+  }
+};
+
+const isStateExpired = (timestamp) => {
+  const EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+  return Date.now() - timestamp > EXPIRATION_TIME;
+};
+
+const persistedState = loadState();
+const initialState = {
+  timestamp: Date.now(),
+  data: {
     value: "",
     selectedGenre: "",
     movies: [],
     moviesByGenre: [],
     currentPage: 1,
     contentType: "Movie",
+    ...persistedState?.data,
   },
+};
+
+if (persistedState && isStateExpired(persistedState.timestamp)) {
+  localStorage.removeItem("appState");
+}
+
+const dataSlice = createSlice({
+  name: "data",
+  initialState: initialState.data,
   reducers: {
     setData: (state, action) => {
       state.value = action.payload;
@@ -74,6 +109,14 @@ const store = configureStore({
     data: dataSlice.reducer,
     toast: toastSlice.reducer,
   },
+});
+
+store.subscribe(() => {
+  saveState({
+    timestamp: Date.now(),
+    data: store.getState().data,
+    toast: store.getState().toast,
+  });
 });
 
 export default store;
