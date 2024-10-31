@@ -27,12 +27,12 @@ const AllTv = () => {
   const { user } = useContext(AuthContext);
   const contentType = useSelector((state) => state.data.contentType);
   const showToastState = useSelector((state) => state.toast.showToast);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (contentType !== "TV") {
       dispatch(setContentType("TV"));
     }
-  }, [contentType]);
+  }, [contentType, dispatch]);
 
   const {
     movies: tvShows,
@@ -50,33 +50,18 @@ const AllTv = () => {
     movieLoading,
   } = useMovieTrailers();
 
-  const fetchPageData = useCallback(() => {
-    loadTrailers(currentPage);
+  const fetchPageData = useCallback(async () => {
+    setLoading(true);
+    await loadTrailers(currentPage);
+
+    setLoading(false);
   }, [currentPage, loadTrailers]);
 
   useEffect(() => {
     fetchPageData();
   }, [fetchPageData]);
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      dispatch(setCurrentPage(currentPage - 1));
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleNextPage = () => {
-    dispatch(setCurrentPage(currentPage + 1));
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  if (movieLoading) {
+  if (loading && movieLoading) {
     return (
       <div className="loading">
         <svg
@@ -115,6 +100,24 @@ const AllTv = () => {
       </div>
     );
   }
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      dispatch(setCurrentPage(currentPage - 1));
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleNextPage = () => {
+    dispatch(setCurrentPage(currentPage + 1));
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   const handleNextTrailer = () => {
     if (playVideo !== null) {
