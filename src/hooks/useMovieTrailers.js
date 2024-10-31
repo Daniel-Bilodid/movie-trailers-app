@@ -9,7 +9,7 @@ const useMovieTrailers = (fetchMovies) => {
   const { user } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
   const contentType = useSelector((state) => state.data.contentType);
-
+  const [movieLoading, setMovieLoading] = useState(true);
   const loadTrailers = useCallback(
     async (page) => {
       try {
@@ -17,6 +17,8 @@ const useMovieTrailers = (fetchMovies) => {
         setTrailers(trailersData);
       } catch (error) {
         console.error("Error loading trailers", error);
+      } finally {
+        setMovieLoading(false);
       }
     },
     [fetchMovies, contentType]
@@ -100,6 +102,7 @@ const useMovieTrailers = (fetchMovies) => {
     handlePrevTrailer,
     handleBookmarkClick,
     loadTrailers,
+    movieLoading,
   };
 };
 

@@ -7,7 +7,7 @@
   margin-top: 10px;
   label {
     font-size: 1rem;
-    color: #5a698f;
+    color: #f3f4f6;
     font-weight: bold;
     margin-right: 10px;
   }
@@ -15,23 +15,14 @@
   select {
     padding: 10px 15px;
     font-size: 1rem;
-    border: 1px solid #5a698f;
+    border: 1px solid #161d2f;
     border-radius: 8px;
-    background-color: #f3f4f6;
-    color: #333;
+    background-color: #161d2f;
+    color: #f3f4f6;
     outline: none;
     appearance: none;
     transition: all 0.3s ease;
     cursor: pointer;
-
-    &:hover {
-      background-color: #e2e6ed;
-    }
-
-    &:focus {
-      border-color: #4b5a88;
-      box-shadow: 0 0 5px rgba(75, 90, 136, 0.5);
-    }
   }
 
   select option {

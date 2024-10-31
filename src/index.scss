@@ -8,6 +8,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(17, 20, 30);
   font-family: $roboto;
+
+  overflow-x: hidden;
 }
 
 code {
