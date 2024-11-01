@@ -2,8 +2,9 @@ import { React, useState, useCallback, useEffect } from "react";
 import { setContentType } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import "./toggle.scss";
-
+import useMovieTrailers from "../../hooks/useMovieTrailers";
 const Toggle = () => {
+  const { movieLoading, setMovieLoading } = useMovieTrailers();
   const dispatch = useDispatch();
   const currentContentType = useSelector(
     (state) => state.data.contentType || "Movie"

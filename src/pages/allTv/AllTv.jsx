@@ -53,7 +53,6 @@ const AllTv = () => {
   const fetchPageData = useCallback(async () => {
     setLoading(true);
     await loadTrailers(currentPage);
-
     setLoading(false);
   }, [currentPage, loadTrailers]);
 

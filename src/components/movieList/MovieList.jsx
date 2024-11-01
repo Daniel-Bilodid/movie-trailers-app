@@ -169,6 +169,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     handlePrevTrailer,
     loadTrailers,
     handleBookmarkClick: originalHandleBookmarkClick,
+    movieLoading,
+    setMovieLoading,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
   const { movies, loading: bookmarksLoading } = useBookmarks();
@@ -245,10 +247,6 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [trailers]);
 
-  // if (bookmarksLoading) {
-  //   return <div>Loading bookmarks...</div>;
-  // }
-
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">
@@ -283,6 +281,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 showAuthToast={showAuthToast}
                 showToast={showToast}
                 showToastState={showToastState}
+                movieLoading={movieLoading}
               />
             ))
           : trailers
@@ -307,6 +306,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   showAuthToast={showAuthToast}
                   showToast={showToast}
                   showToastState={showToastState}
+                  movieLoading={movieLoading}
                 />
               ))}
       </div>

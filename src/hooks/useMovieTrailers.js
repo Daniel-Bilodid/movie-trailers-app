@@ -103,6 +103,7 @@ const useMovieTrailers = (fetchMovies) => {
     handleBookmarkClick,
     loadTrailers,
     movieLoading,
+    setMovieLoading,
   };
 };
 
