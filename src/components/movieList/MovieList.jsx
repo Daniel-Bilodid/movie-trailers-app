@@ -247,6 +247,18 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [trailers]);
 
+  useEffect(() => {
+    try {
+      if (contentType) {
+        setMovieLoading(true);
+      }
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      setMovieLoading(false);
+    }
+  }, [contentType, setMovieLoading]);
+
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">

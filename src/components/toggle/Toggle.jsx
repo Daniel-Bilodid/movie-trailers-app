@@ -20,10 +20,6 @@ const Toggle = () => {
     [dispatch]
   );
 
-  useEffect(() => {
-    console.log("active toggle: ", active);
-  }, [active]);
-
   return (
     <div className="toggle">
       <div className="toggle__wrapper">

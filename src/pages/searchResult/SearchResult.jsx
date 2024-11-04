@@ -12,6 +12,7 @@ import {
   faArrowLeftLong,
   faPlayCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../../components/loading/Loading";
 
 const SearchResult = () => {
   const data = useSelector((state) => state.data.value);
@@ -56,7 +57,7 @@ const SearchResult = () => {
     }
   };
   if (bookmarksLoading && user) {
-    return <div>Loading movies...</div>;
+    return <Loading />;
   }
 
   return (

@@ -29,7 +29,8 @@ import Toggle from "../toggle/Toggle";
 import Search from "../search/Search";
 import { showToast, hideToast } from "../../redux/store";
 import { useDispatch } from "react-redux";
-
+import { motion } from "framer-motion";
+import Loading from "../loading/Loading";
 const Trending = () => {
   const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
@@ -177,43 +178,7 @@ const Trending = () => {
     }, 5000);
   };
   if (load) {
-    return (
-      <div className="loading">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="xMidYMid"
-          width="200"
-          height="200"
-          style={{
-            shapeRendering: "auto",
-            display: "block",
-            background: "rgba(255, 255, 255, 0)",
-          }}
-        >
-          <g>
-            <circle
-              strokeDasharray="164.93361431346415 56.97787143782138"
-              r="35"
-              strokeWidth="10"
-              stroke="#5a698f"
-              fill="none"
-              cy="50"
-              cx="50"
-            >
-              <animateTransform
-                keyTimes="0;1"
-                values="0 50 50;360 50 50"
-                dur="1s"
-                repeatCount="indefinite"
-                type="rotate"
-                attributeName="transform"
-              />
-            </circle>
-          </g>
-        </svg>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -236,7 +201,12 @@ const Trending = () => {
         <Slider {...settings} className="trending__slider">
           {trailers.map(
             ({ movie, trailers, currentTrailerIndex, release_year }, index) => (
-              <div key={movie.id}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                key={movie.id}
+              >
                 <div className="trending__btn-wrapper ">
                   <Link
                     className="trending__info"
@@ -355,7 +325,7 @@ const Trending = () => {
                     height="auto"
                   />
                 )}
-              </div>
+              </motion.div>
             )
           )}
         </Slider>
