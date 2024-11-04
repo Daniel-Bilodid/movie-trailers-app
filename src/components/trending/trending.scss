@@ -20,8 +20,14 @@
   }
 
   &__more {
-    font-size: 14px;
-    color: #f5c518;
+    margin-top: 70px;
+    margin-right: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
     text-decoration: none;
   }
 
@@ -136,10 +142,4 @@
 }
 .welcome__message {
   display: flex;
-}
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
 }
