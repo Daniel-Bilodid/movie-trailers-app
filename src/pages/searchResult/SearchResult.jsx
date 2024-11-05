@@ -112,9 +112,18 @@ const SearchResult = () => {
                   <div className="trending__movie-thumbnail-container">
                     <img
                       className="trending__movie-thumbnail"
-                      src={`https://image.tmdb.org/t/p/w780${item.poster_path}`}
-                      alt={`${item.title || item.name} thumbnail`}
+                      src={
+                        item.poster_path
+                          ? `https://image.tmdb.org/t/p/w780${item.poster_path}`
+                          : "https://ih1.redbubble.net/image.1861329650.2941/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+                      }
+                      alt={
+                        item.poster_path
+                          ? `${item.title || item.name} thumbnail`
+                          : "Default movie thumbnail"
+                      }
                     />
+
                     {trailers.length > 0 && (
                       <div
                         className="trending__movie-thumbnail-overlay"

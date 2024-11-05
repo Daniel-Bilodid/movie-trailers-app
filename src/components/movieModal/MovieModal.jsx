@@ -7,8 +7,14 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 const MovieModal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
+  const handleOverlayClick = (event) => {
+    if (event.target.classList.contains("modal-overlay")) {
+      onClose();
+    }
+  };
+
   return ReactDOM.createPortal(
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         {children}
         <button onClick={onClose} className="modal-close">

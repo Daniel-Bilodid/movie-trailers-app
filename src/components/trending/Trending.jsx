@@ -183,9 +183,6 @@ const Trending = () => {
       dispatch(hideToast());
     }, 5000);
   };
-  if (load) {
-    return <Loading />;
-  }
 
   return (
     <>
@@ -197,6 +194,7 @@ const Trending = () => {
         <Search />
       </div>
       <div className="trending">
+        {load ? <Loading /> : ""}
         <div className="trending__wrapper">
           <h2 className="trending__title">Trending</h2>
 
@@ -240,10 +238,9 @@ const Trending = () => {
                     <FontAwesomeIcon
                       icon={faBookmark}
                       color={
-                        (user &&
-                          Array.isArray(movies) &&
-                          movies.some((m) => m.id === movie.id)) ||
-                        selectedMovies[movie.id]
+                        user &&
+                        Array.isArray(movies) &&
+                        movies.some((m) => m.id === movie.id)
                           ? "yellow"
                           : "white"
                       }

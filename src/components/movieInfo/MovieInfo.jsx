@@ -43,8 +43,12 @@ const MovieInfo = () => {
       <div className="movie__info-title-wrapper">
         <img
           className="movie__info-img"
-          src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
-          alt={`${movie.title} thumbnail`}
+          src={
+            movie.poster_path
+              ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
+              : "https://ih1.redbubble.net/image.1861329650.2941/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+          }
+          alt={`${movie.title || "Default"} thumbnail`}
         />
       </div>
       <div className="movie__info-wrapper">
