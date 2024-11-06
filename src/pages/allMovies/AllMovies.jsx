@@ -34,7 +34,7 @@ const AllMovies = () => {
     if (contentType !== "Movie") {
       dispatch(setContentType("Movie"));
     }
-  }, [contentType]);
+  }, [contentType, dispatch]);
 
   const {
     movies,

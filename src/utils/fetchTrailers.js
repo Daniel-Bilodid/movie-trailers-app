@@ -496,10 +496,10 @@ export const fetchTvShowsByGenre = async (contentType, genreId, page = 1) => {
 
     if (!tvShows || tvShows.length === 0) {
       console.warn(`No TV shows found for Genre ID ${genreId}.`);
+
       return [];
     }
 
-    // Для каждого ТВ-шоу получаем его трейлеры
     const tvShowsWithTrailers = await Promise.all(
       tvShows.map(async (tvShow) => {
         const trailers = await fetchTvShowTrailer(tvShow.id);
