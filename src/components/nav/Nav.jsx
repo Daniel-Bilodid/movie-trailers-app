@@ -11,6 +11,7 @@ import { auth, addUserToFirestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import Burger from "../burger/Burger";
+import NavList from "../navList/NavList";
 const Nav = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -95,7 +96,7 @@ const Nav = () => {
           </svg>
         </div>
         <div className="nav__wrapper">
-          <div
+          {/* <div
             className="nav__wrapper-home"
             onClick={() => handleIconClick("home")}
           >
@@ -189,13 +190,18 @@ const Nav = () => {
                 )}
               </>
             )}
-          </div>
+          </div> */}
+          <NavList />
         </div>
         <button className="nav__burger" onClick={toggleMenu}>
           Burger
         </button>
 
-        <Burger isMenuOpen={isMenuOpen} />
+        <Burger
+          isMenuOpen={isMenuOpen}
+          handleIconClick={handleIconClick}
+          activeIcon={activeIcon}
+        />
       </div>
       <div className="nav__hr"></div>
     </>

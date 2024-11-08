@@ -123,11 +123,18 @@
   width: 100px;
   padding: 10px 15px;
 }
+.nav__burger {
+  display: none;
+}
 
 @media (max-width: 600px) {
   .nav {
     &__wrapper {
       display: none;
+    }
+
+    &__burger {
+      display: block;
     }
   }
 }
