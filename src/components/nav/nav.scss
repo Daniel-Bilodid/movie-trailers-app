@@ -123,3 +123,11 @@
   width: 100px;
   padding: 10px 15px;
 }
+
+@media (max-width: 600px) {
+  .nav {
+    &__wrapper {
+      display: none;
+    }
+  }
+}

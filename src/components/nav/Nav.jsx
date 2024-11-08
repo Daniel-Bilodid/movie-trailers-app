@@ -10,6 +10,7 @@ import {
 import { auth, addUserToFirestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+import Burger from "../burger/Burger";
 const Nav = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -17,6 +18,11 @@ const Nav = () => {
   const [showAuthWarning, setShowAuthWarning] = useState(false);
   const [activeIcon, setActiveIcon] = useState("home");
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -185,6 +191,11 @@ const Nav = () => {
             )}
           </div>
         </div>
+        <button className="nav__burger" onClick={toggleMenu}>
+          Burger
+        </button>
+
+        <Burger isMenuOpen={isMenuOpen} />
       </div>
       <div className="nav__hr"></div>
     </>
