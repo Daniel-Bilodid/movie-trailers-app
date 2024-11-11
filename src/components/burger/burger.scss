@@ -1,22 +1,39 @@
 .burger {
   display: none;
-  position: absolute;
-  background-color: #161d2f;
-  width: 90%;
-  top: 60px;
-  z-index: 999;
-  border-radius: 20px;
+}
+@media (max-width: 600px) {
+  .burger {
+    display: none;
+    position: absolute;
+    background-color: #161d2f;
+    width: 90%;
+    top: 60px;
+    z-index: 999;
+    border-radius: 20px;
 
-  &__list {
-    padding: 0px;
-    &-item {
-      list-style-type: none;
-      display: flex;
-      justify-content: center;
-      margin-bottom: 10px;
+    &__list {
+      padding: 0px;
+      &-item {
+        list-style-type: none;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      &-span {
+        color: white;
+        margin-left: 10px;
+        margin-top: -10px;
+      }
+      &-item:nth-child(1) {
+        margin-top: 20px;
+      }
     }
   }
-}
-.active {
-  display: block;
+  .active {
+    display: block;
+  }
+  a {
+    width: 110px;
+    text-decoration: none;
+  }
 }

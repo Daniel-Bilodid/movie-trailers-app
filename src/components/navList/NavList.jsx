@@ -9,7 +9,8 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-const NavList = () => {
+import "./navList.scss";
+const NavList = ({ isMenuOpen }) => {
   const [activeIcon, setActiveIcon] = useState("home");
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -76,7 +77,7 @@ const NavList = () => {
   return (
     <>
       <div
-        className="nav__wrapper-home"
+        className="nav__wrapper-home burger__list-item"
         onClick={() => handleIconClick("home")}
       >
         <Link to="/">
@@ -86,10 +87,11 @@ const NavList = () => {
               fill={activeIcon === "home" ? "#ffffff" : "#5A698F"}
             />
           </svg>
+          <span className="burger__list-span">{isMenuOpen ? "Home" : ""}</span>
         </Link>
       </div>
       <div
-        className="nav__wrapper-movie"
+        className="nav__wrapper-movie burger__list-item"
         onClick={() => handleIconClick("movie")}
       >
         <Link to="/all-movies">
@@ -99,9 +101,15 @@ const NavList = () => {
               fill={activeIcon === "movie" ? "#ffffff" : "#5A698F"}
             />
           </svg>
+          <span className="burger__list-span">
+            {isMenuOpen ? "All Movies" : ""}
+          </span>
         </Link>
       </div>
-      <div className="nav__wrapper-tv" onClick={() => handleIconClick("tv")}>
+      <div
+        className="nav__wrapper-tv burger__list-item"
+        onClick={() => handleIconClick("tv")}
+      >
         <Link to="/all-tv">
           <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -109,10 +117,13 @@ const NavList = () => {
               fill={activeIcon === "tv" ? "#ffffff" : "#5A698F"}
             />
           </svg>
+          <span className="burger__list-span">
+            {isMenuOpen ? "All TV" : ""}
+          </span>
         </Link>
       </div>
       <div
-        className="nav__wrapper-bookmark"
+        className="nav__wrapper-bookmark burger__list-item"
         onMouseEnter={() => !user && setShowAuthWarning(true)}
         onMouseLeave={() => setShowAuthWarning(false)}
         onClick={() => (user ? handleIconClick("bookmark") : "")}
@@ -124,12 +135,15 @@ const NavList = () => {
               fill={activeIcon === "bookmark" ? "#ffffff" : "#5A698F"}
             />
           </svg>
+          <span className="burger__list-span">
+            {isMenuOpen ? "Bookmarks" : ""}
+          </span>
         </Link>
         {!user && showAuthWarning && (
           <p className="auth-warning">Please sign in account</p>
         )}
       </div>
-      <div className="nav__wrapper-sign">
+      <div className="nav__wrapper-sign burger__list-item">
         {user ? (
           <button onClick={handleLogout} className="logout-button">
             Logout

@@ -7,7 +7,7 @@ const Burger = ({ isMenuOpen, handleIconClick, activeIcon }) => {
     <div className={isMenuOpen ? "burger active" : "burger"}>
       <div className="burger__wrapper">
         <div className="burger__list">
-          <NavList />
+          <NavList isMenuOpen={isMenuOpen} />
         </div>
       </div>
     </div>
