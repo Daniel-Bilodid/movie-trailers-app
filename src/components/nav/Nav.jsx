@@ -52,7 +52,7 @@ const Nav = () => {
           <NavList isMenuOpen={isMenuOpen} />
         </div>
         <button className="nav__burger" onClick={toggleMenu}>
-          Burger
+          Menu
         </button>
 
         <Burger

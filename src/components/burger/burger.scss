@@ -27,13 +27,14 @@
       &-item:nth-child(1) {
         margin-top: 20px;
       }
+
+      &-link {
+        width: 110px;
+        text-decoration: none;
+      }
     }
   }
   .active {
     display: block;
-  }
-  a {
-    width: 110px;
-    text-decoration: none;
   }
 }

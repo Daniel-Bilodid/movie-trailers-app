@@ -125,12 +125,22 @@
 }
 .nav__burger {
   display: none;
+  padding: 10px 15px;
+  background: rgb(22, 29, 48);
+  border: none;
+  color: white;
+  border-radius: 999px;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
   .nav {
     &__wrapper {
       display: none;
+
+      &-sign {
+        margin-left: 0px;
+      }
     }
 
     &__burger {
