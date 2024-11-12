@@ -53,6 +53,13 @@ const MovieInfo = () => {
       </div>
       <div className="movie__info-wrapper">
         <h1 className="movie__info-title">{movie.title}</h1>
+        <div className="movie__info-rating adaptive">
+          Rating <br />
+          <div className="movie__info-rating-wrapper">
+            <FontAwesomeIcon icon={faStar} size="2x" color="gold" />
+            <span>{movie.vote_average}</span>/10
+          </div>
+        </div>
         <div className="movie__info-genres">
           <span>Genres:</span>{" "}
           {movie.genres.map((genre) => genre.name).join(", ")}

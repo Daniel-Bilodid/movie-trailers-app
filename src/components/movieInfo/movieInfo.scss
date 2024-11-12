@@ -96,13 +96,44 @@
       list-style-type: none;
     }
   }
-  &-wrapper {
-  }
+
   &-title {
     &-wrapper {
       display: flex;
       justify-content: center;
       flex-direction: row-reverse;
+    }
+  }
+}
+@media (max-width: 1300px) {
+  .movie {
+    &__info {
+      height: 667px;
+      &-rating {
+        display: none;
+      }
+    }
+  }
+
+  .adaptive {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+@media (max-width: 1200px) {
+  .movie {
+    &__info {
+      flex-direction: column;
+      justify-content: unset;
+      align-items: center;
+      height: 100%;
+      &-wrapper {
+        width: 55%;
+      }
+      &-footer {
+        flex-wrap: wrap;
+      }
     }
   }
 }
