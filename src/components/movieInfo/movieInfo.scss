@@ -105,7 +105,15 @@
     }
   }
 }
-@media (max-width: 1300px) {
+
+@media (max-width: 1700px) {
+  .movie {
+    &__info {
+      height: 667px;
+    }
+  }
+}
+@media (max-width: 1350px) {
   .movie {
     &__info {
       height: 667px;
@@ -133,6 +141,10 @@
       }
       &-footer {
         flex-wrap: wrap;
+        width: 65%;
+      }
+      &-title {
+        margin: 0;
       }
     }
   }

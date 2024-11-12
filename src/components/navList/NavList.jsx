@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth, addUserToFirestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+import Profile from "../profile/Profile";
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -149,9 +150,9 @@ const NavList = ({ isMenuOpen }) => {
       </div>
       <div className="nav__wrapper-sign burger__list-item">
         {user ? (
-          <button onClick={handleLogout} className="logout-button">
-            Logout
-          </button>
+          <>
+            <Profile handleLogout={handleLogout} />
+          </>
         ) : (
           <>
             <button
