@@ -19,6 +19,7 @@ import MoreUpcoming from "./components/moviePages/moreUpcoming/MoreUpcoming";
 import AllMovies from "./pages/allMovies/AllMovies";
 import AllTv from "./pages/allTv/AllTv";
 import SearchResult from "./pages/searchResult/SearchResult";
+import ManageProfile from "./pages/manageProfile/ManageProfile";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 function AnimatedRoutes() {
@@ -180,6 +181,20 @@ function AnimatedRoutes() {
               transition={{ duration: 0.5 }}
             >
               <SearchResult />
+            </motion.div>
+          }
+        />
+
+        <Route
+          path="manage-profile"
+          element={
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ManageProfile />
             </motion.div>
           }
         />

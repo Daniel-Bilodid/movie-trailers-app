@@ -1,0 +1,17 @@
+.manage {
+  width: 680px;
+  margin: 0 auto;
+
+  &__title {
+    font-size: 77px;
+  }
+  &__wrapper {
+    display: flex;
+  }
+  &__hr {
+    background: rgb(52, 52, 52);
+    height: 1px;
+    width: 680px;
+    margin-bottom: 30px;
+  }
+}
