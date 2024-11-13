@@ -1,8 +1,11 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../components/context/AuthContext";
 import "./manageProfile.scss";
+import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
+
 const ManageProfile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+  const auth = getAuth();
   return (
     <div className="manage">
       <div className="manage__title">Edit Profile</div>
@@ -15,7 +18,29 @@ const ManageProfile = () => {
         <input
           className="manage__name"
           type="text"
-          placeholder={user ? user.displayName : ""}
+          value={user ? user.displayName : ""}
+          onChange={async (e) => {
+            const newDisplayName = e.target.value;
+
+            setUser((prev) => ({ ...prev, displayName: newDisplayName }));
+
+            if (auth.currentUser) {
+              try {
+                await updateProfile(auth.currentUser, {
+                  displayName: newDisplayName,
+                });
+                console.log("Profile updated successfully");
+
+                onAuthStateChanged(auth, (updatedUser) => {
+                  if (updatedUser) {
+                    setUser(updatedUser);
+                  }
+                });
+              } catch (error) {
+                console.error("Error updating profile:", error);
+              }
+            }
+          }}
         />
       </div>
     </div>
