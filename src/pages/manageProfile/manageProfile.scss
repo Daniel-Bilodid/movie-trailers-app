@@ -15,10 +15,11 @@
     width: 680px;
     margin-bottom: 30px;
   }
+
   &__name {
     width: 500px;
     height: 50px;
-    margin-left: 30px;
+
     background: #161d2f;
     border: none;
     color: white;
@@ -30,5 +31,84 @@
     padding: 0.2em 0.6em;
     text-indent: 0.1vw;
     width: 18em;
+    margin-left: 30px;
   }
+  &__icon {
+    position: relative;
+    display: inline-block;
+  }
+  &__icon img {
+    width: 153px;
+    height: 153px;
+    border-radius: 4px;
+  }
+
+  &__avatar {
+    &-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+    &-user {
+      img {
+        border-radius: 4px;
+      }
+      span {
+        font-size: 35px;
+      }
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    &-back {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
+    &-file {
+      width: 30%;
+      margin: 0 auto;
+    }
+
+    &-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      input {
+        width: 40%;
+
+        background: #161d2f;
+        border: none;
+        color: white;
+        box-sizing: border-box;
+        color: #fff;
+        font-size: 1.3vw;
+        height: 2em;
+        margin: 0 0.8em 0 0;
+        padding: 0.2em 0.6em;
+        text-indent: 0.1vw;
+        width: 18em;
+        margin-left: 30px;
+      }
+      margin-bottom: 40px;
+    }
+  }
+}
+.avatar__icon-circle {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+}
+
+.avatar-edit-icon {
+  color: white;
+  font-size: 15px;
 }
