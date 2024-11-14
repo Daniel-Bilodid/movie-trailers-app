@@ -2,44 +2,54 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../components/context/AuthContext";
 import "./manageProfile.scss";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+} from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 const ManageProfile = () => {
   const { user, setUser } = useContext(AuthContext);
   const [newDisplayName, setNewDisplayName] = useState(
     user ? user.displayName : ""
   );
-
   const [newDisplayPhoto, setNewDisplayPhoto] = useState(
     user ? user.photoURL : ""
   );
   const [toggleProfileEdit, setToggleProfileEdit] = useState(false);
   const auth = getAuth();
-  const [selectedFile, setSelectedFile] = useState(null);
+  const db = getFirestore();
+  const storage = getStorage();
 
-  const handleSave = async (file) => {
+  const handleSave = async () => {
     if (auth.currentUser) {
       try {
-        let updatedPhotoURL = newDisplayPhoto;
-
-        if (file) {
-          const storage = getStorage();
-          const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
-
-          await uploadBytes(storageRef, file);
-          console.log("File uploaded successfully");
-
-          updatedPhotoURL = await getDownloadURL(storageRef);
-        }
-
+        // Обновление профиля пользователя в Firebase Authentication
         await updateProfile(auth.currentUser, {
           displayName: newDisplayName,
-          photoURL: newDisplayPhoto || updatedPhotoURL,
+          photoURL: newDisplayPhoto,
         });
+
         console.log("Profile updated successfully");
 
+        // Создаем или обновляем профиль в коллекции "users" в Firestore
+        const userRef = doc(db, "users", auth.currentUser.uid);
+        await setDoc(
+          userRef,
+          {
+            displayName: newDisplayName,
+            photoURL: newDisplayPhoto,
+          },
+          { merge: true }
+        );
+
+        // Обновляем информацию о пользователе в контексте
         onAuthStateChanged(auth, (updatedUser) => {
           if (updatedUser) {
             setUser(updatedUser);
@@ -50,6 +60,38 @@ const ManageProfile = () => {
       }
     }
   };
+
+  const handleFileUpload = async (file) => {
+    const storageRef = ref(
+      storage,
+      `avatars/${auth.currentUser.uid}/${file.name}`
+    );
+    try {
+      // Загружаем аватарку в Firebase Storage
+      await uploadBytes(storageRef, file);
+
+      // Получаем URL загруженного изображения
+      const photoURL = await getDownloadURL(storageRef);
+
+      // Сохраняем новый аватар в подколлекции avatars пользователя
+      const avatarsRef = collection(
+        db,
+        "users",
+        auth.currentUser.uid,
+        "avatars"
+      );
+      await addDoc(avatarsRef, {
+        photoURL, // Ссылка на аватар
+        createdAt: new Date(), // Дата загрузки
+      });
+
+      setNewDisplayPhoto(photoURL);
+      handleSave(); // Сохраняем обновления в профиле и коллекции
+    } catch (error) {
+      console.error("Error uploading file", error);
+    }
+  };
+
   function onProfileToggle() {
     setToggleProfileEdit((prevState) => !prevState);
   }
@@ -70,7 +112,6 @@ const ManageProfile = () => {
                   console.error("Error loading image:", e.target.src);
                 }}
               />
-
               <button className="avatar__icon-circle" onClick={onProfileToggle}>
                 <FontAwesomeIcon icon={faPen} className="avatar-edit-icon" />
               </button>
@@ -119,20 +160,14 @@ const ManageProfile = () => {
               <input
                 type="file"
                 className="manage__avatar-drop"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  setSelectedFile(file);
-                }}
+                onChange={(e) => handleFileUpload(e.target.files[0])}
               />
             </div>
           </div>
         )}
       </div>
 
-      <button
-        onClick={() => handleSave(selectedFile)}
-        className="manage__save-button"
-      >
+      <button onClick={handleSave} className="manage__save-button">
         Save
       </button>
     </>
