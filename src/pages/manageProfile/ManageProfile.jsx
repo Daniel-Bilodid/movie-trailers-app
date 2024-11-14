@@ -5,6 +5,7 @@ import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const ManageProfile = () => {
   const { user, setUser } = useContext(AuthContext);
   const [newDisplayName, setNewDisplayName] = useState(
@@ -16,12 +17,26 @@ const ManageProfile = () => {
   );
   const [toggleProfileEdit, setToggleProfileEdit] = useState(false);
   const auth = getAuth();
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const handleSave = async () => {
+  const handleSave = async (file) => {
     if (auth.currentUser) {
       try {
+        let updatedPhotoURL = newDisplayPhoto;
+
+        if (file) {
+          const storage = getStorage();
+          const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+
+          await uploadBytes(storageRef, file);
+          console.log("File uploaded successfully");
+
+          updatedPhotoURL = await getDownloadURL(storageRef);
+        }
+
         await updateProfile(auth.currentUser, {
           displayName: newDisplayName,
+          photoURL: newDisplayPhoto || updatedPhotoURL,
         });
         console.log("Profile updated successfully");
 
@@ -47,7 +62,15 @@ const ManageProfile = () => {
         {!toggleProfileEdit ? (
           <div className="manage__wrapper">
             <div className="manage__icon">
-              <img src={user ? user.photoURL : ""} alt="User Avatar" />
+              <img
+                src={user ? user.photoURL : ""}
+                alt="User Avatar"
+                onError={(e) => {
+                  e.target.src = "";
+                  console.error("Error loading image:", e.target.src);
+                }}
+              />
+
               <button className="avatar__icon-circle" onClick={onProfileToggle}>
                 <FontAwesomeIcon icon={faPen} className="avatar-edit-icon" />
               </button>
@@ -81,6 +104,7 @@ const ManageProfile = () => {
                 type="text"
                 className="manage__avatar-input"
                 placeholder="Add link to change your avatar"
+                onChange={(e) => setNewDisplayPhoto(e.target.value)}
               />
             </div>
             <div
@@ -97,6 +121,7 @@ const ManageProfile = () => {
                 className="manage__avatar-drop"
                 onChange={(e) => {
                   const file = e.target.files[0];
+                  setSelectedFile(file);
                 }}
               />
             </div>
@@ -104,7 +129,10 @@ const ManageProfile = () => {
         )}
       </div>
 
-      <button onClick={handleSave} className="manage__save-button">
+      <button
+        onClick={() => handleSave(selectedFile)}
+        className="manage__save-button"
+      >
         Save
       </button>
     </>
