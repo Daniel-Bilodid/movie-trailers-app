@@ -8,29 +8,30 @@ import {
   setDoc,
   collection,
   addDoc,
+  getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 const ManageProfile = () => {
   const { user, setUser } = useContext(AuthContext);
-  const [newDisplayName, setNewDisplayName] = useState(
-    user ? user.displayName : ""
-  );
-  const [newDisplayPhoto, setNewDisplayPhoto] = useState(
-    user ? user.photoURL : ""
-  );
+  const [newDisplayName, setNewDisplayName] = useState(user?.displayName || "");
+  const [newDisplayPhoto, setNewDisplayPhoto] = useState(user?.photoURL || "");
   const [toggleProfileEdit, setToggleProfileEdit] = useState(false);
   const auth = getAuth();
   const db = getFirestore();
   const storage = getStorage();
-
   const handleSave = async () => {
+    if (!newDisplayName || !newDisplayPhoto) {
+      console.warn("Display name or photo URL is empty, nothing to save.");
+      return;
+    }
+
     if (auth.currentUser) {
       try {
-        // Обновление профиля пользователя в Firebase Authentication
         await updateProfile(auth.currentUser, {
           displayName: newDisplayName,
           photoURL: newDisplayPhoto,
@@ -38,7 +39,6 @@ const ManageProfile = () => {
 
         console.log("Profile updated successfully");
 
-        // Создаем или обновляем профиль в коллекции "users" в Firestore
         const userRef = doc(db, "users", auth.currentUser.uid);
         await setDoc(
           userRef,
@@ -49,12 +49,24 @@ const ManageProfile = () => {
           { merge: true }
         );
 
-        // Обновляем информацию о пользователе в контексте
-        onAuthStateChanged(auth, (updatedUser) => {
-          if (updatedUser) {
-            setUser(updatedUser);
-          }
-        });
+        const avatarsRef = collection(
+          db,
+          "users",
+          auth.currentUser.uid,
+          "avatars"
+        );
+        if (newDisplayName !== newDisplayName) {
+          await addDoc(avatarsRef, {
+            photoURL: newDisplayPhoto,
+            createdAt: new Date(),
+          });
+        }
+
+        await auth.currentUser.reload();
+        setUser(auth.currentUser);
+
+        setNewDisplayName(newDisplayName);
+        setNewDisplayPhoto(newDisplayPhoto);
       } catch (error) {
         console.error("Error updating profile:", error);
       }
@@ -62,33 +74,25 @@ const ManageProfile = () => {
   };
 
   const handleFileUpload = async (file) => {
-    const storageRef = ref(
-      storage,
-      `avatars/${auth.currentUser.uid}/${file.name}`
-    );
-    try {
-      // Загружаем аватарку в Firebase Storage
-      await uploadBytes(storageRef, file);
+    if (!file) {
+      console.warn("No file selected for upload.");
+      return;
+    }
 
-      // Получаем URL загруженного изображения
-      const photoURL = await getDownloadURL(storageRef);
-
-      // Сохраняем новый аватар в подколлекции avatars пользователя
-      const avatarsRef = collection(
-        db,
-        "users",
-        auth.currentUser.uid,
-        "avatars"
+    if (auth.currentUser) {
+      const storageRef = ref(
+        storage,
+        `users/${auth.currentUser.uid}/avatars/${file.name}`
       );
-      await addDoc(avatarsRef, {
-        photoURL, // Ссылка на аватар
-        createdAt: new Date(), // Дата загрузки
-      });
+      try {
+        await uploadBytes(storageRef, file);
+        const photoURL = await getDownloadURL(storageRef);
 
-      setNewDisplayPhoto(photoURL);
-      handleSave(); // Сохраняем обновления в профиле и коллекции
-    } catch (error) {
-      console.error("Error uploading file", error);
+        setNewDisplayPhoto(photoURL);
+        console.log("File uploaded and URL obtained");
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
     }
   };
 
@@ -105,7 +109,7 @@ const ManageProfile = () => {
           <div className="manage__wrapper">
             <div className="manage__icon">
               <img
-                src={user ? user.photoURL : ""}
+                src={user?.photoURL || ""}
                 alt="User Avatar"
                 onError={(e) => {
                   e.target.src = "";
@@ -134,8 +138,8 @@ const ManageProfile = () => {
               />
 
               <div className="manage__avatar-user">
-                <span>{user ? user.displayName : ""}</span>
-                <img src={user ? user.photoURL : ""} alt="User Avatar" />
+                <span>{user?.displayName || ""}</span>
+                <img src={user?.photoURL || ""} alt="User Avatar" />
               </div>
             </div>
 
