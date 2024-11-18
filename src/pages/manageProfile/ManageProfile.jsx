@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../components/context/AuthContext";
 import "./manageProfile.scss";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
@@ -19,6 +19,7 @@ import { faPen, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 const ManageProfile = () => {
   const { user, setUser } = useContext(AuthContext);
   const [newDisplayName, setNewDisplayName] = useState(user?.displayName || "");
+
   const [newDisplayPhoto, setNewDisplayPhoto] = useState(user?.photoURL || "");
   const [toggleProfileEdit, setToggleProfileEdit] = useState(false);
   const auth = getAuth();
@@ -32,41 +33,56 @@ const ManageProfile = () => {
 
     if (auth.currentUser) {
       try {
-        await updateProfile(auth.currentUser, {
-          displayName: newDisplayName,
-          photoURL: newDisplayPhoto,
-        });
+        const hasNameChanged = newDisplayName !== user?.displayName;
+        const hasPhotoChanged = newDisplayPhoto !== user?.photoURL;
 
-        console.log("Profile updated successfully");
-
-        const userRef = doc(db, "users", auth.currentUser.uid);
-        await setDoc(
-          userRef,
-          {
+        if (hasNameChanged || hasPhotoChanged) {
+          await updateProfile(auth.currentUser, {
             displayName: newDisplayName,
             photoURL: newDisplayPhoto,
-          },
-          { merge: true }
-        );
-
-        const avatarsRef = collection(
-          db,
-          "users",
-          auth.currentUser.uid,
-          "avatars"
-        );
-        if (newDisplayName !== newDisplayName) {
-          await addDoc(avatarsRef, {
-            photoURL: newDisplayPhoto,
-            createdAt: new Date(),
           });
+
+          console.log("Profile updated successfully");
+
+          const userRef = doc(db, "users", auth.currentUser.uid);
+          await setDoc(
+            userRef,
+            {
+              displayName: newDisplayName,
+              photoURL: newDisplayPhoto,
+            },
+            { merge: true }
+          );
+
+          const avatarsRef = collection(
+            db,
+            "users",
+            auth.currentUser.uid,
+            "avatars"
+          );
+          const q = query(avatarsRef, where("photoURL", "==", newDisplayPhoto));
+          const querySnapshot = await getDocs(q);
+
+          if (querySnapshot.empty) {
+            await addDoc(avatarsRef, {
+              photoURL: newDisplayPhoto,
+              createdAt: new Date(),
+            });
+            console.log("New avatar added.");
+          } else {
+            console.log("Avatar with this URL already exists.");
+          }
+
+          // Перезагружаем данные пользователя
+          await auth.currentUser.reload();
+          setUser(auth.currentUser);
+
+          // Обновляем состояние
+          setNewDisplayName(newDisplayName);
+          setNewDisplayPhoto(newDisplayPhoto);
+        } else {
+          console.log("No changes detected.");
         }
-
-        await auth.currentUser.reload();
-        setUser(auth.currentUser);
-
-        setNewDisplayName(newDisplayName);
-        setNewDisplayPhoto(newDisplayPhoto);
       } catch (error) {
         console.error("Error updating profile:", error);
       }
@@ -99,6 +115,36 @@ const ManageProfile = () => {
   function onProfileToggle() {
     setToggleProfileEdit((prevState) => !prevState);
   }
+
+  const [avatars, setAvatars] = useState([]);
+
+  useEffect(() => {
+    const fetchAvatars = async () => {
+      if (auth.currentUser) {
+        try {
+          const avatarsRef = collection(
+            db,
+            "users",
+            auth.currentUser.uid,
+            "avatars"
+          );
+
+          const querySnapshot = await getDocs(avatarsRef);
+
+          const avatarsData = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          setAvatars(avatarsData);
+        } catch (error) {
+          console.error("Error fetching avatars:", error);
+        }
+      }
+    };
+
+    fetchAvatars();
+  }, [auth.currentUser]);
 
   return (
     <>
@@ -142,7 +188,21 @@ const ManageProfile = () => {
                 <img src={user?.photoURL || ""} alt="User Avatar" />
               </div>
             </div>
-
+            <div className="manage__avatars-title">Your History: </div>
+            <div className="manage__avatars-wrapper">
+              {avatars.length > 0 ? (
+                avatars.map((avatar) => (
+                  <div
+                    key={avatar.id}
+                    onClick={() => setNewDisplayPhoto(avatar.photoURL)}
+                  >
+                    <img src={avatar.photoURL} alt={`Avatar ${avatar.id}`} />
+                  </div>
+                ))
+              ) : (
+                <p>No avatars found.</p>
+              )}
+            </div>
             <div className="manage__avatar-link">
               <span>Add avatar via link</span>
               <input

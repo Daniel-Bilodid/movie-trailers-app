@@ -42,7 +42,16 @@
     height: 153px;
     border-radius: 4px;
   }
-
+  &__avatars {
+    &-wrapper {
+      display: flex;
+      gap: 40px;
+      cursor: pointer;
+    }
+    &-title {
+      font-size: 25px;
+    }
+  }
   &__avatar {
     &-wrapper {
       display: flex;
