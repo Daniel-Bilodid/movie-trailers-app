@@ -25,7 +25,6 @@ const ManageProfile = () => {
   const [toggleProfileEdit, setToggleProfileEdit] = useState(false);
   const auth = getAuth();
   const db = getFirestore();
-  const storage = getStorage();
 
   const settings = {
     dots: true,
@@ -69,7 +68,7 @@ const ManageProfile = () => {
       const photoURL = await uploadToImgdb(file);
 
       if (photoURL) {
-        setNewDisplayPhoto(photoURL); // Сохраняем ссылку на аватар
+        setNewDisplayPhoto(photoURL);
         console.log("File uploaded to imgdb and URL obtained:", photoURL);
       } else {
         console.warn("Failed to upload file to imgdb.");
@@ -130,7 +129,6 @@ const ManageProfile = () => {
           await auth.currentUser.reload();
           setUser(auth.currentUser);
 
-          // Обновляем состояние
           setNewDisplayName(newDisplayName);
           setNewDisplayPhoto(newDisplayPhoto);
         } else {
@@ -185,13 +183,14 @@ const ManageProfile = () => {
           <div className="manage__wrapper">
             <div className="manage__icon">
               <img
-                src={user?.photoURL || ""}
+                src={newDisplayPhoto || user?.photoURL || ""}
                 alt="User Avatar"
                 onError={(e) => {
                   e.target.src = "";
                   console.error("Error loading image:", e.target.src);
                 }}
               />
+
               <button className="avatar__icon-circle" onClick={onProfileToggle}>
                 <FontAwesomeIcon icon={faPen} className="avatar-edit-icon" />
               </button>
@@ -215,7 +214,11 @@ const ManageProfile = () => {
 
               <div className="manage__avatar-user">
                 <span>{user?.displayName || ""}</span>
-                <img src={user?.photoURL || ""} alt="User Avatar" />
+                <img
+                  src={newDisplayPhoto || user?.photoURL || ""}
+                  alt="User Avatar"
+                  className="manage__avatars-avatar"
+                />
               </div>
             </div>
             <div className="manage__avatars-title">Your History: </div>
@@ -230,6 +233,7 @@ const ManageProfile = () => {
                       src={avatar.photoURL}
                       alt={`Avatar ${avatar.id}`}
                       className="manage__avatars-avatar"
+                      onClick={() => setNewDisplayPhoto(avatar.photoURL)}
                     />
                   </div>
                 ))
@@ -263,11 +267,10 @@ const ManageProfile = () => {
             </div>
           </div>
         )}
+        <button onClick={handleSave} className="manage__save-button">
+          Save
+        </button>
       </div>
-
-      <button onClick={handleSave} className="manage__save-button">
-        Save
-      </button>
     </>
   );
 };
