@@ -15,6 +15,7 @@ import {
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import Slider from "react-slick";
 
 const ManageProfile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -25,6 +26,59 @@ const ManageProfile = () => {
   const auth = getAuth();
   const db = getFirestore();
   const storage = getStorage();
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+  };
+  const uploadToImgdb = async (file) => {
+    const apiKey = process.env.REACT_APP_IMGDB_APIKEY;
+    const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        return data.data.url;
+      } else {
+        console.error("Error uploading image to imgdb:", data.error);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error uploading to imgdb:", error);
+      return null;
+    }
+  };
+  const handleFileUpload = async (file) => {
+    if (!file) {
+      console.warn("No file selected for upload.");
+      return;
+    }
+
+    try {
+      const photoURL = await uploadToImgdb(file);
+
+      if (photoURL) {
+        setNewDisplayPhoto(photoURL); // Сохраняем ссылку на аватар
+        console.log("File uploaded to imgdb and URL obtained:", photoURL);
+      } else {
+        console.warn("Failed to upload file to imgdb.");
+      }
+    } catch (error) {
+      console.error("Error in handleFileUpload:", error);
+    }
+  };
+
   const handleSave = async () => {
     if (!newDisplayName || !newDisplayPhoto) {
       console.warn("Display name or photo URL is empty, nothing to save.");
@@ -73,7 +127,6 @@ const ManageProfile = () => {
             console.log("Avatar with this URL already exists.");
           }
 
-          // Перезагружаем данные пользователя
           await auth.currentUser.reload();
           setUser(auth.currentUser);
 
@@ -85,29 +138,6 @@ const ManageProfile = () => {
         }
       } catch (error) {
         console.error("Error updating profile:", error);
-      }
-    }
-  };
-
-  const handleFileUpload = async (file) => {
-    if (!file) {
-      console.warn("No file selected for upload.");
-      return;
-    }
-
-    if (auth.currentUser) {
-      const storageRef = ref(
-        storage,
-        `users/${auth.currentUser.uid}/avatars/${file.name}`
-      );
-      try {
-        await uploadBytes(storageRef, file);
-        const photoURL = await getDownloadURL(storageRef);
-
-        setNewDisplayPhoto(photoURL);
-        console.log("File uploaded and URL obtained");
-      } catch (error) {
-        console.error("Error uploading file:", error);
       }
     }
   };
@@ -189,20 +219,24 @@ const ManageProfile = () => {
               </div>
             </div>
             <div className="manage__avatars-title">Your History: </div>
-            <div className="manage__avatars-wrapper">
+            <Slider {...settings} className="manage__avatars-wrapper">
               {avatars.length > 0 ? (
                 avatars.map((avatar) => (
                   <div
                     key={avatar.id}
                     onClick={() => setNewDisplayPhoto(avatar.photoURL)}
                   >
-                    <img src={avatar.photoURL} alt={`Avatar ${avatar.id}`} />
+                    <img
+                      src={avatar.photoURL}
+                      alt={`Avatar ${avatar.id}`}
+                      className="manage__avatars-avatar"
+                    />
                   </div>
                 ))
               ) : (
                 <p>No avatars found.</p>
               )}
-            </div>
+            </Slider>
             <div className="manage__avatar-link">
               <span>Add avatar via link</span>
               <input
