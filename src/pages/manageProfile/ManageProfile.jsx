@@ -23,16 +23,27 @@ const ManageProfile = () => {
 
   const [newDisplayPhoto, setNewDisplayPhoto] = useState(user?.photoURL || "");
   const [toggleProfileEdit, setToggleProfileEdit] = useState(false);
+
+  const [showIconConfirmation, setShowIconConfirmation] = useState(false);
+
   const auth = getAuth();
   const db = getFirestore();
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
   };
+  const openIconConfirmation = () => {
+    setShowIconConfirmation(true);
+  };
+
+  const closeIconConfirmation = () => {
+    setShowIconConfirmation(false);
+  };
+
   const uploadToImgdb = async (file) => {
     const apiKey = process.env.REACT_APP_IMGDB_APIKEY;
     const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
@@ -222,25 +233,60 @@ const ManageProfile = () => {
               </div>
             </div>
             <div className="manage__avatars-title">Your History: </div>
-            <Slider {...settings} className="manage__avatars-wrapper">
-              {avatars.length > 0 ? (
-                avatars.map((avatar) => (
-                  <div
-                    key={avatar.id}
-                    onClick={() => setNewDisplayPhoto(avatar.photoURL)}
-                  >
-                    <img
-                      src={avatar.photoURL}
-                      alt={`Avatar ${avatar.id}`}
-                      className="manage__avatars-avatar"
-                      onClick={() => setNewDisplayPhoto(avatar.photoURL)}
-                    />
+            {avatars.length !== 0 ? (
+              <Slider {...settings} className="manage__avatars-wrapper">
+                {avatars.length > 0 ? (
+                  avatars.map((avatar) => (
+                    <div
+                      key={avatar.id}
+                      onClick={() => {
+                        setNewDisplayPhoto(avatar.photoURL);
+                        openIconConfirmation();
+                      }}
+                    >
+                      <img
+                        src={avatar.photoURL || user.photoURL}
+                        alt={`Avatar ${avatar.id}`}
+                        className="manage__avatars-avatar"
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p>No avatars found.</p>
+                )}
+              </Slider>
+            ) : (
+              "No avatars in your history. Add a new one!"
+            )}
+            {showIconConfirmation ? (
+              <div className="manage__confirmation">
+                <div className="manage__confirmation-wrapper">
+                  <div className="manage__confirmation-title">
+                    Change profile icon?
                   </div>
-                ))
-              ) : (
-                <p>No avatars found.</p>
-              )}
-            </Slider>
+
+                  <div className="manage__confirmation-hr"></div>
+
+                  <div className="manage__confirmation-icons">
+                    <div className="manage__confirmation-icons-old">
+                      <img
+                        src={user.photoURL}
+                        alt={`user`}
+                        className="manage__avatars-avatar"
+                      />
+
+                      <img
+                        src={newDisplayPhoto}
+                        alt={`user`}
+                        className="manage__avatars-avatar"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
             <div className="manage__avatar-link">
               <span>Add avatar via link</span>
               <input
