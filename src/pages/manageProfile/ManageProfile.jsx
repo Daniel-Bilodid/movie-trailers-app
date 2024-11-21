@@ -16,6 +16,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import Slider from "react-slick";
+import { button } from "framer-motion/client";
 
 const ManageProfile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -216,48 +217,6 @@ const ManageProfile = () => {
           </div>
         ) : (
           <div className="manage__avatar">
-            <div className="manage__avatar-wrapper">
-              <FontAwesomeIcon
-                icon={faArrowLeftLong}
-                className="manage__avatar-back"
-                onClick={onProfileToggle}
-              />
-
-              <div className="manage__avatar-user">
-                <span>{user?.displayName || ""}</span>
-                <img
-                  src={newDisplayPhoto || user?.photoURL || ""}
-                  alt="User Avatar"
-                  className="manage__avatars-avatar"
-                />
-              </div>
-            </div>
-            <div className="manage__avatars-title">Your History: </div>
-            {avatars.length !== 0 ? (
-              <Slider {...settings} className="manage__avatars-wrapper">
-                {avatars.length > 0 ? (
-                  avatars.map((avatar) => (
-                    <div
-                      key={avatar.id}
-                      onClick={() => {
-                        setNewDisplayPhoto(avatar.photoURL);
-                        openIconConfirmation();
-                      }}
-                    >
-                      <img
-                        src={avatar.photoURL || user.photoURL}
-                        alt={`Avatar ${avatar.id}`}
-                        className="manage__avatars-avatar"
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p>No avatars found.</p>
-                )}
-              </Slider>
-            ) : (
-              "No avatars in your history. Add a new one!"
-            )}
             {showIconConfirmation ? (
               <div className="manage__confirmation">
                 <div className="manage__confirmation-wrapper">
@@ -285,37 +244,101 @@ const ManageProfile = () => {
                 </div>
               </div>
             ) : (
-              ""
+              <>
+                <div className="manage__avatar-wrapper">
+                  <FontAwesomeIcon
+                    icon={faArrowLeftLong}
+                    className="manage__avatar-back"
+                    onClick={onProfileToggle}
+                  />
+
+                  <div className="manage__avatar-user">
+                    <span>{user?.displayName || ""}</span>
+                    <img
+                      src={newDisplayPhoto || user?.photoURL || ""}
+                      alt="User Avatar"
+                      className="manage__avatars-avatar"
+                    />
+                  </div>
+                </div>
+                <div className="manage__avatars-title">Your History: </div>
+                {avatars.length !== 0 ? (
+                  <Slider {...settings} className="manage__avatars-wrapper">
+                    {avatars.map((avatar) => (
+                      <div
+                        key={avatar.id}
+                        onClick={() => {
+                          setNewDisplayPhoto(avatar.photoURL);
+                          openIconConfirmation();
+                        }}
+                      >
+                        <img
+                          src={avatar.photoURL || user.photoURL}
+                          alt={`Avatar ${avatar.id}`}
+                          className="manage__avatars-avatar"
+                        />
+                      </div>
+                    ))}
+                  </Slider>
+                ) : (
+                  "No avatars in your history. Add a new one!"
+                )}
+                <div className="manage__avatar-link">
+                  <span>Add avatar via link</span>
+                  <input
+                    type="text"
+                    className="manage__avatar-input"
+                    placeholder="Add link to change your avatar"
+                    onChange={(e) => setNewDisplayPhoto(e.target.value)}
+                  />
+                </div>
+                <div
+                  className="manage__avatar-file"
+                  style={{
+                    border: "2px dashed #ccc",
+                    padding: "20px",
+                    textAlign: "center",
+                  }}
+                >
+                  <span>Add avatar via file</span>
+                  <input
+                    type="file"
+                    className="manage__avatar-drop"
+                    onChange={(e) => handleFileUpload(e.target.files[0])}
+                  />
+                </div>
+              </>
             )}
-            <div className="manage__avatar-link">
-              <span>Add avatar via link</span>
-              <input
-                type="text"
-                className="manage__avatar-input"
-                placeholder="Add link to change your avatar"
-                onChange={(e) => setNewDisplayPhoto(e.target.value)}
-              />
-            </div>
-            <div
-              className="manage__avatar-file"
-              style={{
-                border: "2px dashed #ccc",
-                padding: "20px",
-                textAlign: "center",
-              }}
-            >
-              <span>Add avatar via file</span>
-              <input
-                type="file"
-                className="manage__avatar-drop"
-                onChange={(e) => handleFileUpload(e.target.files[0])}
-              />
-            </div>
           </div>
         )}
-        <button onClick={handleSave} className="manage__save-button">
-          Save
-        </button>
+        <div
+          className={showIconConfirmation ? "manage__confirmation-btns" : ""}
+        >
+          <button
+            onClick={handleSave}
+            className={
+              showIconConfirmation
+                ? "manage__save-button manage__confirmation-btn"
+                : "manage__save-button"
+            }
+          >
+            {showIconConfirmation ? "Let`s do it" : "Save"}
+          </button>
+          {showIconConfirmation ? (
+            <button
+              onClick={closeIconConfirmation}
+              className={
+                showIconConfirmation
+                  ? "manage__exit-button manage__confirmation-btn"
+                  : "manage__exit-button"
+              }
+            >
+              Not yet
+            </button>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     </>
   );

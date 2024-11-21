@@ -16,6 +16,19 @@
     width: 680px;
     margin-bottom: 30px;
   }
+  &__confirmation {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    &-btns {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    &-btn {
+      margin: 0px !important;
+    }
+  }
   &__save {
     &-button {
       background: white;
