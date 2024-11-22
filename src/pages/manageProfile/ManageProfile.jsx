@@ -95,6 +95,7 @@ const ManageProfile = () => {
   };
 
   const handleSave = async () => {
+    console.log("im here");
     if (!newDisplayName || !newDisplayPhoto) {
       console.warn("Display name or photo URL is empty, nothing to save.");
       return;
@@ -245,12 +246,13 @@ const ManageProfile = () => {
                         icon={faChevronRight}
                         className="manage__avatars-icon"
                       />
-                      <div>
+                      <div className="manage__conf-wrapper">
                         <img
                           src={newDisplayPhoto}
                           alt={`user`}
                           className="manage__avatars-avatar"
                         />
+                        <span className="test">New</span>
                       </div>
                     </div>
                   </div>
