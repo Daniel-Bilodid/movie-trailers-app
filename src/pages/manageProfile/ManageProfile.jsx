@@ -14,7 +14,11 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPen,
+  faArrowLeftLong,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import Slider from "react-slick";
 import { button } from "framer-motion/client";
 
@@ -95,7 +99,7 @@ const ManageProfile = () => {
       console.warn("Display name or photo URL is empty, nothing to save.");
       return;
     }
-
+    setShowIconConfirmation(false);
     if (auth.currentUser) {
       try {
         const hasNameChanged = newDisplayName !== user?.displayName;
@@ -228,17 +232,26 @@ const ManageProfile = () => {
 
                   <div className="manage__confirmation-icons">
                     <div className="manage__confirmation-icons-old">
-                      <img
-                        src={user.photoURL}
-                        alt={`user`}
-                        className="manage__avatars-avatar"
-                      />
+                      <div className="manage__conf-wrapper">
+                        <img
+                          src={user.photoURL}
+                          alt={`user`}
+                          className="manage__avatars-avatar"
+                        />
+                        <span className="test">Current</span>
+                      </div>
 
-                      <img
-                        src={newDisplayPhoto}
-                        alt={`user`}
-                        className="manage__avatars-avatar"
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className="manage__avatars-icon"
                       />
+                      <div>
+                        <img
+                          src={newDisplayPhoto}
+                          alt={`user`}
+                          className="manage__avatars-avatar"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
