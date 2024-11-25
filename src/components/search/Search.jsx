@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./search.scss";
 import { searchMoviesAndTVShows } from "../../utils/fetchTrailers";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setData } from "../../redux/store";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -37,6 +38,12 @@ const Search = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && query) {
+      navigate("/search-result"); // Выполняем навигацию
+    }
+  };
+
   return (
     <div className="search">
       <div className="search__wrapper">
@@ -46,6 +53,7 @@ const Search = () => {
           className="search__input"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown} // Обработка нажатия Enter
         />
 
         {loading && <p>Loading...</p>}
@@ -61,11 +69,12 @@ const Search = () => {
         </div>
       </div>
 
-      <Link to="/search-result">
-        <button disabled={!query}>
-          <FaSearch className="search__icon" />
-        </button>
-      </Link>
+      <button
+        disabled={!query}
+        onClick={() => navigate("/search-result")} // Переход при клике
+      >
+        <FaSearch className="search__icon" />
+      </button>
     </div>
   );
 };
