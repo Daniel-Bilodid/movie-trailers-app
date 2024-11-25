@@ -1,16 +1,17 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import "./profile.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../components/context/AuthContext";
+
 const Profile = ({ handleLogout }) => {
   const [toggleMenu, setToggleMenu] = useState(false);
-
+  const menuRef = useRef(null);
   const { user } = useContext(AuthContext);
   const [userProfilePic, setUserProfilePic] = useState(user.photoUrl);
 
-  function OnProfileMenuToggle() {
+  function onProfileMenuToggle() {
     setToggleMenu((prevToggleMenu) => !prevToggleMenu);
   }
 
@@ -20,15 +21,35 @@ const Profile = ({ handleLogout }) => {
     console.log(user);
   }, [user, user.photoURL]);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setToggleMenu(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="profile">
+    <div className="profile" ref={menuRef}>
       <div className="profile__wrapper">
-        <div className="profile__pic" onClick={OnProfileMenuToggle}>
+        <div className="profile__pic" onClick={onProfileMenuToggle}>
           <img src={userProfilePic} alt="User Avatar" />
 
-          <FontAwesomeIcon className="profile__pic-drop" icon={faCaretDown} />
+          <FontAwesomeIcon
+            className={
+              toggleMenu
+                ? "profile__pic-drop profile__pic-drop-active"
+                : "profile__pic-drop"
+            }
+            icon={faCaretDown}
+          />
         </div>
-
+        {console.log(toggleMenu)}
         <div className={toggleMenu ? "profile__menu active" : "profile__menu"}>
           <ul className="profile__menu-list">
             <Link className="profile__menu-item" to="/manage-profile">
