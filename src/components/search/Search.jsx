@@ -40,7 +40,7 @@ const Search = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && query) {
-      navigate("/search-result"); // Выполняем навигацию
+      navigate("/search-result");
     }
   };
 
@@ -53,7 +53,7 @@ const Search = () => {
           className="search__input"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyDown} // Обработка нажатия Enter
+          onKeyDown={handleKeyDown}
         />
 
         {loading && <p>Loading...</p>}
@@ -69,10 +69,7 @@ const Search = () => {
         </div>
       </div>
 
-      <button
-        disabled={!query}
-        onClick={() => navigate("/search-result")} // Переход при клике
-      >
+      <button disabled={!query} onClick={() => navigate("/search-result")}>
         <FaSearch className="search__icon" />
       </button>
     </div>
