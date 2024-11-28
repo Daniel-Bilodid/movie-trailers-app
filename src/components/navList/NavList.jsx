@@ -11,12 +11,14 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import "./navList.scss";
+import Sign from "../sign/Sign";
 const NavList = ({ isMenuOpen }) => {
   const [activeIcon, setActiveIcon] = useState("home");
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showSignInOptions, setShowSignInOptions] = useState(false);
   const [showAuthWarning, setShowAuthWarning] = useState(false);
+  const [signModal, setSignModal] = useState(false);
   const location = useLocation();
   const handleIconClick = (icon) => {
     setActiveIcon(icon);
@@ -181,10 +183,18 @@ const NavList = ({ isMenuOpen }) => {
                   />
                   Sign in with GitHub
                 </button>
+
+                <div className="sign__wrapper">
+                  <button onClick={() => setSignModal(true)}>Sign In</button>
+                  <button>Log In</button>
+                </div>
               </div>
             )}
           </>
         )}
+      </div>
+      <div className="sign">
+        <Sign signModal={signModal} setSignModal={setSignModal} />
       </div>
     </>
   );
