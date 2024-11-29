@@ -18,7 +18,7 @@ const NavList = ({ isMenuOpen }) => {
   const [user, setUser] = useState(null);
   const [showSignInOptions, setShowSignInOptions] = useState(false);
   const [showAuthWarning, setShowAuthWarning] = useState(false);
-  const [signModal, setSignModal] = useState(false);
+  const [signModal, setSignModal] = useState("");
   const location = useLocation();
   const handleIconClick = (icon) => {
     setActiveIcon(icon);
@@ -185,8 +185,8 @@ const NavList = ({ isMenuOpen }) => {
                 </button>
 
                 <div className="sign__wrapper">
-                  <button onClick={() => setSignModal(true)}>Sign In</button>
-                  <button>Log In</button>
+                  <button onClick={() => setSignModal("login")}>Sign In</button>
+                  <button onClick={() => setSignModal("sign")}>Log In</button>
                 </div>
               </div>
             )}
