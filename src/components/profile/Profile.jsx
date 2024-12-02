@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../components/context/AuthContext";
-
+import profilePic from "../../assets/image-avatar.png";
 const Profile = ({ handleLogout }) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const menuRef = useRef(null);
@@ -38,7 +38,10 @@ const Profile = ({ handleLogout }) => {
     <div className="profile" ref={menuRef}>
       <div className="profile__wrapper">
         <div className="profile__pic" onClick={onProfileMenuToggle}>
-          <img src={userProfilePic} alt="User Avatar" />
+          <img
+            src={userProfilePic ? userProfilePic : profilePic}
+            alt="User Avatar"
+          />
 
           <FontAwesomeIcon
             className={

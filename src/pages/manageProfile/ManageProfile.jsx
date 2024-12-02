@@ -21,6 +21,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Slider from "react-slick";
 import { button } from "framer-motion/client";
+import profilePic from "../../assets/image-avatar.png";
+import imgPlaceholder from "../../assets/image-placeholder.png";
 
 const ManageProfile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -200,7 +202,7 @@ const ManageProfile = () => {
           <div className="manage__wrapper">
             <div className="manage__icon">
               <img
-                src={newDisplayPhoto || user?.photoURL || ""}
+                src={newDisplayPhoto || user?.photoURL || profilePic}
                 alt="User Avatar"
                 onError={(e) => {
                   e.target.src = "";
@@ -270,7 +272,7 @@ const ManageProfile = () => {
                   <div className="manage__avatar-user">
                     <span>{user?.displayName || ""}</span>
                     <img
-                      src={newDisplayPhoto || user?.photoURL || ""}
+                      src={newDisplayPhoto || user?.photoURL || imgPlaceholder}
                       alt="User Avatar"
                       className="manage__avatars-avatar"
                     />
