@@ -16,6 +16,9 @@ export default (req, res) => {
   // Генерация nonce для скриптов и стилей
   const nonce = Math.random().toString(36).substr(2, 10);
 
+  // Получаем текущую метку времени Unix
+  const unixTimestamp = Math.floor(Date.now() / 1000);
+
   // Устанавливаем заголовок Content Security Policy (CSP)
   res.setHeader(
     "Content-Security-Policy",
@@ -62,6 +65,7 @@ export default (req, res) => {
   const exampleResponse = {
     message: "Security headers applied!",
     createdAt: new Date().toISOString(), // Преобразуем метки времени в ISO-формат
+    unixTimestamp, // Добавляем Unix метку времени
     nonce, // Отправляем nonce в ответ
   };
 

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../components/context/AuthContext";
 import "./manageProfile.scss";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
@@ -35,6 +36,7 @@ const ManageProfile = () => {
 
   const auth = getAuth();
   const db = getFirestore();
+  const navigate = useNavigate();
 
   const settings = {
     dots: false,
@@ -192,6 +194,12 @@ const ManageProfile = () => {
 
     fetchAvatars();
   }, [auth.currentUser]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   return (
     <>
