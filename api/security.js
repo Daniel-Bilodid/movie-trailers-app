@@ -1,4 +1,18 @@
 export default (req, res) => {
+  // Обрабатываем OPTIONS-запросы для CORS
+  if (req.method === "OPTIONS") {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://movie-trailers-app.vercel.app"
+    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
+    return res.status(200).end(); // Завершаем обработку для OPTIONS
+  }
+
   // Генерация nonce для скриптов и стилей
   const nonce = Math.random().toString(36).substr(2, 10);
 
