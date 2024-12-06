@@ -185,8 +185,18 @@ const NavList = ({ isMenuOpen }) => {
                 </button>
 
                 <div className="sign__wrapper">
-                  <button onClick={() => setSignModal("login")}>log In</button>
-                  <button onClick={() => setSignModal("sign")}>Sign In</button>
+                  <button
+                    className="sign__wrapper-item"
+                    onClick={() => setSignModal("login")}
+                  >
+                    log In
+                  </button>
+                  <button
+                    className="sign__wrapper-item"
+                    onClick={() => setSignModal("sign")}
+                  >
+                    Sign In
+                  </button>
                 </div>
               </div>
             )}
