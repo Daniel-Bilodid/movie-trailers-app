@@ -133,9 +133,11 @@
   }
 }
 .trending__movie-thumbnail {
-  width: 343px;
-  height: 513px;
+  width: 100%;
+  max-width: 343px;
+  height: auto;
 }
+
 .trending__btn-wrapper {
   margin-top: 53px;
   display: none;
