@@ -4,7 +4,7 @@ import { searchMoviesAndTVShows } from "../../utils/fetchTrailers";
 import { useDispatch } from "react-redux";
 import { setData } from "../../redux/store";
 import { FaSearch } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -59,10 +59,18 @@ const Search = () => {
         {loading && <p>Loading...</p>}
         <div className="search__results">
           {results.length > 0
-            ? results.map((result) => (
+            ? results.slice(0, 10).map((result) => (
                 <div key={result.item.id} className="search__result-item">
-                  <p>{result.item.title || result.item.name}</p>
-                  <p>{result.item.type === "Movie" ? "Movie" : "TV Show"}</p>
+                  <p>
+                    <Link
+                      className="search__results-title"
+                      to={`/${
+                        result.item.type === "Movie" ? "movie-info" : "tv-info"
+                      }/${result.item.id}`}
+                    >
+                      {result.item.title || result.item.name}
+                    </Link>
+                  </p>
                 </div>
               ))
             : !loading && query && <p>No results found</p>}

@@ -13,6 +13,15 @@
     position: absolute;
     z-index: 1000;
     background-color: #161d2f;
+    margin-top: 25px;
+    border-radius: 20px;
+    padding: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+    &-title {
+      color: white;
+      text-decoration: none;
+    }
   }
   &__icon {
     color: white;
