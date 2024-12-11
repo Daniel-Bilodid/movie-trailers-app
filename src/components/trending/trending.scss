@@ -153,3 +153,10 @@
     align-items: center;
   }
 }
+
+@media (max-width: 1440px) {
+  .slick-list {
+    width: 78%;
+    margin: 0 auto !important;
+  }
+}

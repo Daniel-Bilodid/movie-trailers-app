@@ -3,12 +3,27 @@ import { useParams, useLocation } from "react-router-dom";
 import "./movieInfo.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { useTrailerHandlers } from "../../hooks/useTrailerHandlers";
+import useMovieTrailers from "../../hooks/useMovieTrailers";
+import Modal from "../movieModal/MovieModal";
 
 const MovieInfo = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
   const location = useLocation();
+  const [localMovies, setLocalMovies] = useState([]);
+  const {
+    trailers,
+    setTrailers,
+    playVideo,
+    setPlayVideo,
+    handlePlayVideo,
+    handleCloseModal,
+    handleBookmarkClick,
+  } = useMovieTrailers();
+  const { handlePlayTrailer, handleNextMovie, handlePrevMovie } =
+    useTrailerHandlers(setLocalMovies, setPlayVideo);
 
   const type = location.pathname.includes("movie-info") ? "movie" : "tv";
   useEffect(() => {
@@ -49,7 +64,9 @@ const MovieInfo = () => {
               : "https://ih1.redbubble.net/image.1861329650.2941/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
           }
           alt={`${movie.title || "Default"} thumbnail`}
+          onClick={() => console.log(handlePlayTrailer(movie.id))}
         />
+        {console.log(movie)}
       </div>
       <div className="movie__info-wrapper">
         <h1 className="movie__info-title">{movie.title}</h1>
@@ -113,6 +130,51 @@ const MovieInfo = () => {
           <span>{movie.vote_average}</span>/10
         </div>
       </div>
+
+      <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
+        {playVideo !== null && localMovies.length > 0 && (
+          <>
+            <iframe
+              className="trending__movie-frame"
+              width="560"
+              height="315"
+              src={`https://www.youtube.com/embed/${
+                localMovies[playVideo].videos.results?.[
+                  localMovies[playVideo].currentTrailerIndex
+                ]?.key || ""
+              }`}
+              title={
+                localMovies[playVideo]?.videos.results?.[
+                  localMovies[playVideo].currentTrailerIndex
+                ]?.name || "Trailer"
+              }
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+
+            <div className="trending__movie-info">
+              <div className="trending__movie-wrapper">
+                <div className="trending__movie-year">
+                  {localMovies[playVideo]?.release_date
+                    ? localMovies[playVideo]?.release_date.slice(0, 4)
+                    : "Unknown Year" || localMovies[playVideo]?.first_air_date
+                    ? localMovies[playVideo]?.first_air_date.slice(0, 4)
+                    : "Unknown Year"}
+                </div>
+                <div className="trending__movie-dot">·</div>
+                <div className="trending__movie-type">Movie</div>
+              </div>
+              <div>
+                <button onClick={() => handlePrevMovie(playVideo)}>
+                  previous
+                </button>
+                <button onClick={() => handleNextMovie(playVideo)}>next</button>
+              </div>
+            </div>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };
