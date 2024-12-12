@@ -8,6 +8,11 @@ import useMovieTrailers from "../../hooks/useMovieTrailers";
 import Modal from "../movieModal/MovieModal";
 import axios from "axios";
 
+import {
+  faArrowRightLong,
+  faArrowLeftLong,
+} from "@fortawesome/free-solid-svg-icons";
+
 const fetchMovieById = async (id) => {
   try {
     const movieResponse = await axios.get(
@@ -227,10 +232,27 @@ const MovieInfo = () => {
                 <div className="trending__movie-type">Movie</div>
               </div>
               <div>
-                <button onClick={() => handlePrevMovie(playVideo)}>
-                  previous
+                <button
+                  className="movie__info-modal-btns"
+                  onClick={() => handlePrevMovie(playVideo)}
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowLeftLong}
+                    color="white"
+                    size="2x"
+                  />
                 </button>
-                <button onClick={() => handleNextMovie(playVideo)}>next</button>
+                <button
+                  className="movie__info-modal-btns"
+                  onClick={() => handleNextMovie(playVideo)}
+                >
+                  {" "}
+                  <FontAwesomeIcon
+                    icon={faArrowRightLong}
+                    color="white"
+                    size="2x"
+                  />
+                </button>
               </div>
             </div>
           </>
