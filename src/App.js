@@ -20,6 +20,7 @@ import AllMovies from "./pages/allMovies/AllMovies";
 import AllTv from "./pages/allTv/AllTv";
 import SearchResult from "./pages/searchResult/SearchResult";
 import ManageProfile from "./pages/manageProfile/ManageProfile";
+import Comments from "./pages/comments/Comments";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 function AnimatedRoutes() {
@@ -77,6 +78,19 @@ function AnimatedRoutes() {
               transition={{ duration: 0.5 }}
             >
               <MovieInfo />
+            </motion.div>
+          }
+        />
+        <Route
+          path="/movie-info/comments"
+          element={
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Comments />
             </motion.div>
           }
         />

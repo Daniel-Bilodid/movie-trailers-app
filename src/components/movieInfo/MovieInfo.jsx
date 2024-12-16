@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import "./movieInfo.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faComment } from "@fortawesome/free-solid-svg-icons";
 import { useTrailerHandlers } from "../../hooks/useTrailerHandlers";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import Modal from "../movieModal/MovieModal";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 import {
   faArrowRightLong,
   faArrowLeftLong,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaFontAwesome } from "react-icons/fa";
 
 const fetchMovieById = async (id) => {
   try {
@@ -36,6 +39,7 @@ const MovieInfo = () => {
   const location = useLocation();
   const [localMovies, setLocalMovies] = useState([]);
   const [playVideo, setPlayVideo] = useState(null);
+  const contentType = useSelector((state) => state.data.contentType);
 
   const type = location.pathname.includes("movie-info") ? "movie" : "tv";
 
@@ -196,6 +200,15 @@ const MovieInfo = () => {
               <button className="movie__info-homepage">Website</button>
             </a>
           )}
+
+          <Link
+            className="movie__info-comments"
+            to={`/${
+              contentType === "Movie" ? "movie-info" : "tv-info"
+            }/comments`}
+          >
+            <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+          </Link>
         </div>
       </div>
 
