@@ -30,45 +30,54 @@ const Comments = () => {
     fetchMovieData();
   }, [movieId, type]);
   return (
-    <div className="comments">
-      <div className="comments__wrapper">
-        {movie ? movie.original_title : "error"}
-        <img
-          className="movie__info-img"
-          src={
-            movie
-              ? movie.poster_path
-                ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
-                : "https://ih1.redbubble.net/image.1861329650.2941/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
-              : ""
-          }
-          alt={`${movie ? movie.title : "" || "Default"} thumbnail`}
-        />
-        stars
-      </div>
-      <div className="comments__body">
-        <div className="comments__list">
-          Comments (0)
-          <div className="comments__list-item">
-            <div className="comments__user-wrapper">
-              <div className="comments__user-name">Silco</div>
-              <div className="comments__user-avatar">
-                <img src="" alt="" />
+    <>
+      <div className="comments">
+        <div className="comments__wrapper">
+          {movie ? movie.original_title : "error"}
+          <img
+            className="movie__info-img"
+            src={
+              movie
+                ? movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
+                  : "https://ih1.redbubble.net/image.1861329650.2941/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+                : ""
+            }
+            alt={`${movie ? movie.title : "" || "Default"} thumbnail`}
+          />
+          stars
+        </div>
+        <div className="comments__body">
+          <div className="comments__list">
+            <span className="comments__count">Comments (1)</span>
+            <div className="comments__list-item">
+              <div className="comments__user-wrapper">
+                <div className="comments__user-avatar">
+                  <img src="" alt="smth" />
+                </div>
+                <div className="comments__user-name">Silco</div>
+
+                <div className="comment__user-date">17.12.2024</div>
               </div>
-            </div>
-            <div className="comments__user-text">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-              soluta necessitatibus officia quae quas, voluptatem modi accusamus
-              iure explicabo eius quasi inventore, aspernatur voluptas nostrum
-              placeat fugiat, ipsam cupiditate laborum? Voluptates dicta aliquid
-              porro praesentium placeat nam rerum suscipit facere ea vero fugiat
-              quaerat modi vel expedita sapiente est itaque non, veniam impedit
-              excepturi consectetur veritatis? Non perferendis libero eius.
+              <div className="comments__user-text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
+                soluta necessitatibus officia quae quas, voluptatem modi
+                accusamus iure explicabo eius quasi inventore, aspernatur
+                voluptas nostrum placeat fugiat, ipsam cupiditate laborum?
+                Voluptates dicta aliquid porro praesentium placeat nam rerum
+                suscipit facere ea vero fugiat quaerat modi vel expedita
+                sapiente est itaque non, veniam impedit excepturi consectetur
+                veritatis? Non perferendis libero eius.
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="comments__input">
+        <input type="text" placeholder="Leave your comment here" />
+      </div>
+      <button className="comments__btn">Add comment</button>
+    </>
   );
 };
 
