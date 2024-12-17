@@ -205,7 +205,7 @@ const MovieInfo = () => {
             className="movie__info-comments"
             to={`/${
               contentType === "Movie" ? "movie-info" : "tv-info"
-            }/comments`}
+            }/comments/${movieId}`}
           >
             <FontAwesomeIcon icon={faComment} color="white" size="1x" />
           </Link>

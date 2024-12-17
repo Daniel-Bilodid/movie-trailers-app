@@ -82,7 +82,7 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path="/movie-info/comments"
+          path="/movie-info/comments/:movieId"
           element={
             <motion.div
               initial={{ opacity: 0, x: -100 }}
