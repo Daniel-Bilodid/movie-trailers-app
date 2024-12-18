@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import { AuthContext } from "../../components/context/AuthContext";
+import {
+  createMovieDocIfNotExists,
+  fetchCommentsAndRating,
+  addComment,
+} from "../../utils/firestoreUtils";
 import "./comments.scss";
 const Comments = () => {
   const { movieId } = useParams();
+  const { user } = useContext(AuthContext);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
   const [movie, setMovie] = useState(null);
   const location = useLocation();
   const type = location.pathname.includes("movie-info") ? "movie" : "tv";
-
+  console.log(user);
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
@@ -29,13 +38,44 @@ const Comments = () => {
 
     fetchMovieData();
   }, [movieId, type]);
+
+  useEffect(() => {
+    const loadComments = async () => {
+      const data = await fetchCommentsAndRating(movieId);
+      console.log("comments data", data);
+      setComments(data.comments);
+    };
+
+    if (movieId) {
+      loadComments();
+    }
+  }, [movieId]);
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+
+    const comment = {
+      userId: user.uid,
+      userName: user.displayName,
+      userPhoto: user.photoURL,
+      text: newComment,
+      date: new Date().toISOString(),
+    };
+    await createMovieDocIfNotExists(movieId);
+    await addComment(movieId, comment);
+
+    setComments((prev) => [...prev, comment]);
+    setNewComment("");
+  };
   return (
     <>
       <div className="comments">
         <div className="comments__wrapper">
-          {movie ? movie.original_title : "error"}
+          <div className="comments__title">
+            {movie ? movie.original_title : "error"}
+          </div>
           <img
-            className="movie__info-img"
+            className="comments__info-img"
             src={
               movie
                 ? movie.poster_path
@@ -50,33 +90,34 @@ const Comments = () => {
         <div className="comments__body">
           <div className="comments__list">
             <span className="comments__count">Comments (1)</span>
-            <div className="comments__list-item">
-              <div className="comments__user-wrapper">
-                <div className="comments__user-avatar">
-                  <img src="" alt="smth" />
-                </div>
-                <div className="comments__user-name">Silco</div>
 
-                <div className="comment__user-date">17.12.2024</div>
-              </div>
-              <div className="comments__user-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-                soluta necessitatibus officia quae quas, voluptatem modi
-                accusamus iure explicabo eius quasi inventore, aspernatur
-                voluptas nostrum placeat fugiat, ipsam cupiditate laborum?
-                Voluptates dicta aliquid porro praesentium placeat nam rerum
-                suscipit facere ea vero fugiat quaerat modi vel expedita
-                sapiente est itaque non, veniam impedit excepturi consectetur
-                veritatis? Non perferendis libero eius.
-              </div>
-            </div>
+            {comments.map((comment, index) => (
+              <li key={index} className="comments__list-item">
+                <div className="comments__user-wrapper">
+                  <div className="comments__user-avatar">
+                    <img src={comment.userPhoto} alt="smth" />
+                  </div>
+                  <div className="comments__user-name">{comment.userName}</div>
+
+                  <div className="comment__user-date">
+                    {new Date(comment.date).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className="comments__user-text">{comment.text}</div>
+              </li>
+            ))}
           </div>
         </div>
       </div>
       <div className="comments__input">
-        <input type="text" placeholder="Leave your comment here" />
+        <input
+          type="text"
+          value={newComment}
+          placeholder="Leave your comment here"
+          onChange={(e) => setNewComment(e.target.value)}
+        />
       </div>
-      <button className="comments__btn">Add comment</button>
+      <button onClick={handleAddComment}>Add comment</button>
     </>
   );
 };
