@@ -7,6 +7,7 @@ import {
   addComment,
 } from "../../utils/firestoreUtils";
 import "./comments.scss";
+import StarRating from "../../components/starRating/StarRating";
 const Comments = () => {
   const { movieId } = useParams();
   const { user } = useContext(AuthContext);
@@ -89,7 +90,7 @@ const Comments = () => {
             }
             alt={`${movie ? movie.title : "" || "Default"} thumbnail`}
           />
-          stars
+          <StarRating userId={user ? user.uid : ""} movieId={movieId} />
         </div>
         <div className="comments__body">
           <div className="comments__list">
