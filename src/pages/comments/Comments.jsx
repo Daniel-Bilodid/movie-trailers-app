@@ -55,18 +55,22 @@ const Comments = () => {
     if (!newComment.trim()) return;
 
     const comment = {
+      id: crypto.randomUUID(), // Уникальный ID комментария
       userId: user.uid,
       userName: user.displayName,
       userPhoto: user.photoURL,
       text: newComment,
       date: new Date().toISOString(),
     };
-    await createMovieDocIfNotExists(movieId);
+
+    // Добавляем комментарий
     await addComment(movieId, comment);
 
+    // Обновляем локальное состояние
     setComments((prev) => [...prev, comment]);
     setNewComment("");
   };
+
   return (
     <>
       <div className="comments">

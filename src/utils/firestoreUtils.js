@@ -28,19 +28,17 @@ export const addComment = async (movieId, comment) => {
   const docRef = doc(db, "comments", movieId);
 
   try {
-    await updateDoc(docRef, {
-      comments: arrayUnion(comment),
-    });
+    // Создаем документ с пустым массивом, если он не существует
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      await setDoc(docRef, { comments: [comment] });
+    } else {
+      // Если документ существует, добавляем комментарий
+      await updateDoc(docRef, {
+        comments: arrayUnion(comment),
+      });
+    }
   } catch (error) {
     console.error("Error adding comment:", error);
-  }
-};
-export const createMovieDocIfNotExists = async (movieId) => {
-  const docRef = doc(db, "comments", movieId);
-
-  try {
-    await setDoc(docRef, { comments: [] }, { merge: true });
-  } catch (error) {
-    console.error("Error creating movie document:", error);
   }
 };
