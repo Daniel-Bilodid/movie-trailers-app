@@ -57,7 +57,7 @@ const Comments = () => {
     if (!newComment.trim()) return;
 
     const comment = {
-      id: crypto.randomUUID(), // Уникальный ID комментария
+      id: crypto.randomUUID(),
       userId: user.uid,
       userName: user.displayName,
       userPhoto: user.photoURL,

@@ -9,6 +9,7 @@ const StarRating = ({ movieId, userId }) => {
   const { user } = useContext(AuthContext);
 
   const averageRating = useMemo(() => {
+    console.log("ratings changed", ratings);
     if (ratings.length > 0) {
       return (
         ratings.reduce((total, current) => total + current.rating, 0) /
@@ -53,8 +54,6 @@ const StarRating = ({ movieId, userId }) => {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        const data = docSnap.data();
-
         const existingRatings = docSnap.data().ratings || [];
         const userRatingIndex = existingRatings.findIndex(
           (rating) => rating.userId === userId
@@ -75,6 +74,12 @@ const StarRating = ({ movieId, userId }) => {
         await setDoc(docRef, {
           ratings: [{ userId, rating: selectedRating }],
         });
+      }
+
+      // Обновить локальное состояние после сохранения
+      const updatedDocSnap = await getDoc(docRef);
+      if (updatedDocSnap.exists()) {
+        setRatings(updatedDocSnap.data().ratings || []);
       }
     } catch (error) {
       console.error("Error saving rating:", error);
