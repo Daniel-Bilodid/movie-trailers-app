@@ -14,6 +14,7 @@ const Comments = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [movie, setMovie] = useState(null);
+
   const location = useLocation();
   const type = location.pathname.includes("movie-info") ? "movie" : "tv";
   console.log(user);
@@ -94,7 +95,9 @@ const Comments = () => {
         </div>
         <div className="comments__body">
           <div className="comments__list">
-            <span className="comments__count">Comments (1)</span>
+            <span className="comments__count">
+              Comments ({comments.length})
+            </span>
 
             {comments.map((comment, index) => (
               <li key={index} className="comments__list-item">
@@ -122,7 +125,9 @@ const Comments = () => {
           onChange={(e) => setNewComment(e.target.value)}
         />
       </div>
-      <button onClick={handleAddComment}>Add comment</button>
+      <div className="comments__btn">
+        <button onClick={handleAddComment}>Add comment</button>
+      </div>
     </>
   );
 };
