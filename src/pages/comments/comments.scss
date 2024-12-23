@@ -1,6 +1,7 @@
 .comments {
   display: flex;
   justify-content: center;
+  position: relative;
   &__body {
     padding-top: 15px;
     width: 500px;
@@ -11,6 +12,18 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+  &__list {
+    &-item {
+      position: relative;
+    }
+  }
+  &__icon {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    cursor: pointer;
+  }
+
   &__btn {
     display: flex;
     justify-content: center;

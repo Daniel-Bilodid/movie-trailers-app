@@ -112,9 +112,9 @@ const StarRating = ({ movieId, userId }) => {
               fontSize: "24px",
               color: starValue <= (hover || rating) ? "#FFD700" : "#CCCCCC",
             }}
-            onClick={() => handleClick(starValue)}
-            onMouseEnter={() => setHover(starValue)}
-            onMouseLeave={() => setHover(0)}
+            onClick={() => (user ? handleClick(starValue) : "")}
+            onMouseEnter={() => (user ? setHover(starValue) : "")}
+            onMouseLeave={() => (user ? setHover(0) : "")}
           >
             ★
           </span>

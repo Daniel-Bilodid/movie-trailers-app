@@ -62,7 +62,7 @@ const Comments = () => {
 
     const comment = {
       id: crypto.randomUUID(),
-      userId: user.uid,
+      userId: user.uid ? user.uid : "",
       userName: user.displayName,
       userPhoto: user.photoURL,
       text: newComment,
@@ -141,14 +141,13 @@ const Comments = () => {
 
                   <div className="comment__user-date">
                     {new Date(comment.date).toLocaleDateString()}
-                    {comment.userId === user.uid ? (
+                    {user && comment.userId === user.uid ? (
                       <FontAwesomeIcon
+                        className="comments__icon"
                         icon={faTrash}
                         onClick={() => deleteComments(movieId, comment.id)}
                       />
-                    ) : (
-                      ""
-                    )}
+                    ) : null}
                   </div>
                 </div>
                 <div className="comments__user-text">{comment.text}</div>
@@ -166,7 +165,7 @@ const Comments = () => {
         />
       </div>
       <div className="comments__btn">
-        <button onClick={handleAddComment}>Add comment</button>
+        <button onClick={user ? handleAddComment : null}>Add comment</button>
       </div>
     </>
   );
