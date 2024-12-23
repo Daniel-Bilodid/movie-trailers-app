@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useMemo } from "react";
 import { db } from "../../firebase";
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { AuthContext } from "../../components/context/AuthContext";
+import "./starRating.scss";
 const StarRating = ({ movieId, userId }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
@@ -96,7 +97,11 @@ const StarRating = ({ movieId, userId }) => {
   }, [averageRating]);
 
   return (
-    <div style={{ display: "flex", gap: "5px", cursor: "pointer" }}>
+    <div
+      className="star__rating"
+      style={{ display: "flex", gap: "5px", cursor: "pointer" }}
+    >
+      <span>Rate</span>
       {Array.from({ length: 5 }, (_, index) => {
         const starValue = index + 1;
 
@@ -115,7 +120,7 @@ const StarRating = ({ movieId, userId }) => {
           </span>
         );
       })}
-      <ul>{averageRating}</ul>
+      <div className="star__average">{averageRating}</div>
     </div>
   );
 };

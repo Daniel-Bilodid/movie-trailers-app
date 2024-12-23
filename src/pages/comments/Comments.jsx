@@ -7,6 +7,8 @@ import {
   addComment,
 } from "../../utils/firestoreUtils";
 import "./comments.scss";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StarRating from "../../components/starRating/StarRating";
 const Comments = () => {
   const { movieId } = useParams();
@@ -65,10 +67,8 @@ const Comments = () => {
       date: new Date().toISOString(),
     };
 
-    // Добавляем комментарий
     await addComment(movieId, comment);
 
-    // Обновляем локальное состояние
     setComments((prev) => [...prev, comment]);
     setNewComment("");
   };
@@ -109,6 +109,14 @@ const Comments = () => {
 
                   <div className="comment__user-date">
                     {new Date(comment.date).toLocaleDateString()}
+                    {comment.userId === user.uid ? (
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        onClick={() => console.log("im here")}
+                      />
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
                 <div className="comments__user-text">{comment.text}</div>
