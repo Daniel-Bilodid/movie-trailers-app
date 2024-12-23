@@ -10,6 +10,8 @@ import "./comments.scss";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StarRating from "../../components/starRating/StarRating";
+import { doc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 const Comments = () => {
   const { movieId } = useParams();
   const { user } = useContext(AuthContext);
@@ -73,6 +75,36 @@ const Comments = () => {
     setNewComment("");
   };
 
+  async function deleteComments(movieId, commentId) {
+    try {
+      const docRef = doc(db, "comments", movieId);
+
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        console.error(`Document with movieId ${movieId} does not exist.`);
+        return;
+      }
+
+      const data = docSnap.data();
+      const comments = data.comments || [];
+
+      const updatedComments = comments.filter(
+        (comment) => comment.id !== commentId
+      );
+
+      await updateDoc(docRef, { comments: updatedComments });
+
+      console.log(`Comment with ID ${commentId} successfully deleted.`);
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+    } catch (error) {
+      console.error("Error while deleting comment:", error);
+    }
+  }
+
   return (
     <>
       <div className="comments">
@@ -112,7 +144,7 @@ const Comments = () => {
                     {comment.userId === user.uid ? (
                       <FontAwesomeIcon
                         icon={faTrash}
-                        onClick={() => console.log("im here")}
+                        onClick={() => deleteComments(movieId, comment.id)}
                       />
                     ) : (
                       ""
