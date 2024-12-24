@@ -15,6 +15,7 @@ import {
   faPlayCircle,
   faArrowRightLong,
   faArrowLeftLong,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../context/AuthContext";
@@ -391,6 +392,17 @@ const Trending = () => {
                   <div className="trending__movie-type">
                     {contentType === "Movie" ? "Movie" : "TV"}
                   </div>
+                  <div className="">.</div>
+                  <Link
+                    className="movie__info-comments"
+                    to={`/${
+                      contentType === "Movie" ? "movie-info" : "tv-info"
+                    }/comments/${trailers[playVideo].movie.id}`}
+                  >
+                    {console.log("trailer", trailers[playVideo])}
+                    {console.log("trailer", trailers[playVideo].movie.id)}
+                    <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+                  </Link>
                 </div>
 
                 <div>

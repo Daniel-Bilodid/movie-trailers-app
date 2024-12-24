@@ -94,6 +94,7 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
+
         <Route
           path="/bookmarks"
           element={
