@@ -110,7 +110,12 @@ const Comments = () => {
       <div className="comments">
         <div className="comments__wrapper">
           <div className="comments__title">
-            {movie ? movie.original_title : "error"}
+            {console.log("movie", movie)}
+            {movie
+              ? movie.original_title
+                ? movie.original_title
+                : movie.name
+              : "movie"}
           </div>
           <img
             className="comments__info-img"

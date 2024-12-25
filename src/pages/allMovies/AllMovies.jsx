@@ -6,6 +6,7 @@ import {
   faInfoCircle,
   faBookmark,
   faPlayCircle,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import useBookmarks from "../../hooks/useBookmarks";
@@ -224,7 +225,6 @@ const AllMovies = () => {
       <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
         {moviesByGenre?.[playVideo]?.trailers && (
           <>
-            {console.log("Trailers:", moviesByGenre)}
             <iframe
               className="trending__movie-frame"
               width="560"
@@ -256,6 +256,16 @@ const AllMovies = () => {
                 </svg>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">Movie</div>
+                <div className="">.</div>
+
+                <Link
+                  className="movie__info-comments"
+                  to={`/${
+                    contentType === "Movie" ? "movie-info" : "tv-info"
+                  }/comments/${moviesByGenre[playVideo].id}`}
+                >
+                  <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+                </Link>
               </div>
 
               <div>

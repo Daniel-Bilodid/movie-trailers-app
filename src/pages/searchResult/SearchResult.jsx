@@ -11,6 +11,7 @@ import {
   faArrowRightLong,
   faArrowLeftLong,
   faPlayCircle,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../../components/loading/Loading";
 
@@ -243,6 +244,17 @@ const SearchResult = () => {
                   <div className="trending__movie-type">
                     {data[playVideo].item.type === "Movie" ? "Movie" : "TV"}
                   </div>
+                  <div className="">.</div>
+                  <Link
+                    className="movie__info-comments"
+                    to={`/${
+                      data[playVideo].item.type === "Movie"
+                        ? "movie-info"
+                        : "tv-info"
+                    }/comments/${data[playVideo].item.id}`}
+                  >
+                    <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+                  </Link>
                 </div>
 
                 <div>

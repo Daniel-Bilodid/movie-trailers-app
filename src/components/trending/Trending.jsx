@@ -399,8 +399,6 @@ const Trending = () => {
                       contentType === "Movie" ? "movie-info" : "tv-info"
                     }/comments/${trailers[playVideo].movie.id}`}
                   >
-                    {console.log("trailer", trailers[playVideo])}
-                    {console.log("trailer", trailers[playVideo].movie.id)}
                     <FontAwesomeIcon icon={faComment} color="white" size="1x" />
                   </Link>
                 </div>

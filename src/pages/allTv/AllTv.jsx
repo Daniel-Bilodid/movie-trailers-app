@@ -6,6 +6,7 @@ import {
   faInfoCircle,
   faBookmark,
   faPlayCircle,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import useBookmarks from "../../hooks/useBookmarks";
@@ -255,6 +256,16 @@ const AllTv = () => {
                 </svg>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">TV Show</div>
+                <div className="">.</div>
+
+                <Link
+                  className="movie__info-comments"
+                  to={`/${
+                    contentType === "Movie" ? "movie-info" : "tv-info"
+                  }/comments/${tvShowsByGenre[playVideo].id}`}
+                >
+                  <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+                </Link>
               </div>
 
               <div>

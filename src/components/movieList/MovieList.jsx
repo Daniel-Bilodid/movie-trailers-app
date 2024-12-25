@@ -9,6 +9,7 @@ import {
   faPlayCircle,
   faArrowRightLong,
   faArrowLeftLong,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setMovies, selectMovies } from "../../redux/store";
@@ -400,6 +401,15 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   {" "}
                   {contentType === "Movie" ? "Movie" : "TV Show"}
                 </div>
+                <div className="">.</div>
+                <Link
+                  className="movie__info-comments"
+                  to={`/${
+                    contentType === "Movie" ? "movie-info" : "tv-info"
+                  }/comments/${trailers[playVideo].movie.id}`}
+                >
+                  <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+                </Link>
               </div>
               <div>
                 <button
