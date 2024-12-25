@@ -14,6 +14,8 @@ import {
   faXmark,
   faPlayCircle,
   faComment,
+  faArrowLeftLong,
+  faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Modal from "../movieModal/MovieModal";
@@ -328,7 +330,7 @@ const Bookmarks = () => {
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">Movie</div>
                 <div className="">.</div>
-                {console.log("local", localMovies)}
+
                 <Link
                   className="movie__info-comments"
                   to={`/${
@@ -341,10 +343,26 @@ const Bookmarks = () => {
                 </Link>
               </div>
               <div>
-                <button onClick={() => handlePrevMovie(playVideo)}>
-                  previous
+                <button
+                  className="trending__btn-handle"
+                  onClick={() => handlePrevMovie(playVideo)}
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowLeftLong}
+                    color="white"
+                    size="2x"
+                  />
                 </button>
-                <button onClick={() => handleNextMovie(playVideo)}>next</button>
+                <button
+                  className="trending__btn-handle"
+                  onClick={() => handleNextMovie(playVideo)}
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowRightLong}
+                    color="white"
+                    size="2x"
+                  />
+                </button>
               </div>
             </div>
           </>

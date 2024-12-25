@@ -110,7 +110,6 @@ const Comments = () => {
       <div className="comments">
         <div className="comments__wrapper">
           <div className="comments__title">
-            {console.log("movie", movie)}
             {movie
               ? movie.original_title
                 ? movie.original_title

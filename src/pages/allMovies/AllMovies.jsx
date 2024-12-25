@@ -7,6 +7,8 @@ import {
   faBookmark,
   faPlayCircle,
   faComment,
+  faArrowLeftLong,
+  faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import useBookmarks from "../../hooks/useBookmarks";
@@ -269,8 +271,26 @@ const AllMovies = () => {
               </div>
 
               <div>
-                <button onClick={handlePrevTrailer}>Previous</button>
-                <button onClick={handleNextTrailer}>Next</button>
+                <button
+                  className="trending__btn-handle"
+                  onClick={() => handlePrevTrailer(playVideo)}
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowLeftLong}
+                    color="white"
+                    size="2x"
+                  />
+                </button>
+                <button
+                  className="trending__btn-handle"
+                  onClick={() => handleNextTrailer(playVideo)}
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowRightLong}
+                    color="white"
+                    size="2x"
+                  />
+                </button>
               </div>
             </div>
           </>
