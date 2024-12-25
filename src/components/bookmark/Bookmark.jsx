@@ -13,6 +13,7 @@ import {
   faInfoCircle,
   faXmark,
   faPlayCircle,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Modal from "../movieModal/MovieModal";
@@ -326,6 +327,18 @@ const Bookmarks = () => {
                 </div>
                 <div className="trending__movie-dot">·</div>
                 <div className="trending__movie-type">Movie</div>
+                <div className="">.</div>
+                {console.log("local", localMovies)}
+                <Link
+                  className="movie__info-comments"
+                  to={`/${
+                    localMovies[playVideo].movieType === "Movie"
+                      ? "movie-info"
+                      : "tv-info"
+                  }/comments/${localMovies[playVideo].id}`}
+                >
+                  <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+                </Link>
               </div>
               <div>
                 <button onClick={() => handlePrevMovie(playVideo)}>
