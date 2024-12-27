@@ -17,6 +17,7 @@ const Comments = () => {
   const { user } = useContext(AuthContext);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [confirmation, setConfirmation] = useState(false);
   const [movie, setMovie] = useState(null);
 
   const location = useLocation();
@@ -76,6 +77,8 @@ const Comments = () => {
   };
 
   async function deleteComments(movieId, commentId) {
+    setConfirmation((prev) => [...prev, confirmation]);
+
     try {
       const docRef = doc(db, "comments", movieId);
 
@@ -170,6 +173,20 @@ const Comments = () => {
       </div>
       <div className="comments__btn">
         <button onClick={user ? handleAddComment : null}>Add comment</button>
+      </div>
+      <div
+        className={
+          confirmation
+            ? "comments__condirmation active"
+            : "comments__confirmation"
+        }
+      >
+        <div className="comments__confirmation-text">Delete your comment?</div>
+
+        <div className="comments__confirmation-wrapper">
+          <button className="comments__confirmation-btn">Delete</button>
+          <button className="comments__confirmation-btn">Cancel</button>
+        </div>
       </div>
     </>
   );
