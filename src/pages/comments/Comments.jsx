@@ -77,7 +77,7 @@ const Comments = () => {
   };
 
   async function deleteComments(movieId, commentId) {
-    setConfirmation((prev) => [...prev, confirmation]);
+    setConfirmation((prev) => !prev);
 
     try {
       const docRef = doc(db, "comments", movieId);
@@ -185,7 +185,12 @@ const Comments = () => {
 
         <div className="comments__confirmation-wrapper">
           <button className="comments__confirmation-btn">Delete</button>
-          <button className="comments__confirmation-btn">Cancel</button>
+          <button
+            className="comments__confirmation-btn"
+            onClick={() => setConfirmation((prev) => !prev)}
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </>

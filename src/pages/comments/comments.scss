@@ -15,13 +15,29 @@
   &__confirmation {
     position: absolute;
     top: 0;
-
+    opacity: 0;
     width: 300px;
     height: 150px;
-    background-color: black;
+    background-color: rgb(22, 29, 48);
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 999;
+    &-text {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+    &-btn {
+      width: 100px;
+      height: 40px;
+      margin-left: 30px;
+      cursor: pointer;
+      background-color: rgb(17, 20, 30);
+      border: none;
+      color: white;
+      text-transform: uppercase;
+    }
   }
   &__list {
     &-item {
@@ -125,4 +141,15 @@
     display: flex;
     justify-content: center;
   }
+}
+.active {
+  width: 300px;
+  height: 150px;
+  opacity: 1;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  background-color: rgb(22, 29, 48);
 }
