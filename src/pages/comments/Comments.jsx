@@ -18,6 +18,7 @@ const Comments = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [confirmation, setConfirmation] = useState(false);
+  const [popupConfirmation, setPopupConfirmation] = useState(false);
   const [movie, setMovie] = useState(null);
 
   const location = useLocation();
@@ -77,34 +78,36 @@ const Comments = () => {
   };
 
   async function deleteComments(movieId, commentId) {
+    console.log(confirmation);
     setConfirmation((prev) => !prev);
+    if (confirmation) {
+      try {
+        const docRef = doc(db, "comments", movieId);
 
-    try {
-      const docRef = doc(db, "comments", movieId);
+        const docSnap = await getDoc(docRef);
 
-      const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          console.error(`Document with movieId ${movieId} does not exist.`);
+          return;
+        }
 
-      if (!docSnap.exists()) {
-        console.error(`Document with movieId ${movieId} does not exist.`);
-        return;
+        const data = docSnap.data();
+        const comments = data.comments || [];
+
+        const updatedComments = comments.filter(
+          (comment) => comment.id !== commentId
+        );
+
+        await updateDoc(docRef, { comments: updatedComments });
+
+        console.log(`Comment with ID ${commentId} successfully deleted.`);
+
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.id !== commentId)
+        );
+      } catch (error) {
+        console.error("Error while deleting comment:", error);
       }
-
-      const data = docSnap.data();
-      const comments = data.comments || [];
-
-      const updatedComments = comments.filter(
-        (comment) => comment.id !== commentId
-      );
-
-      await updateDoc(docRef, { comments: updatedComments });
-
-      console.log(`Comment with ID ${commentId} successfully deleted.`);
-
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.id !== commentId)
-      );
-    } catch (error) {
-      console.error("Error while deleting comment:", error);
     }
   }
 
@@ -139,26 +142,56 @@ const Comments = () => {
             </span>
 
             {comments.map((comment, index) => (
-              <li key={index} className="comments__list-item">
-                <div className="comments__user-wrapper">
-                  <div className="comments__user-avatar">
-                    <img src={comment.userPhoto} alt="smth" />
-                  </div>
-                  <div className="comments__user-name">{comment.userName}</div>
+              <>
+                <li key={index} className="comments__list-item">
+                  <div className="comments__user-wrapper">
+                    <div className="comments__user-avatar">
+                      <img src={comment.userPhoto} alt="user_profile_photo" />
+                    </div>
+                    <div className="comments__user-name">
+                      {comment.userName}
+                    </div>
 
-                  <div className="comment__user-date">
-                    {new Date(comment.date).toLocaleDateString()}
-                    {user && comment.userId === user.uid ? (
-                      <FontAwesomeIcon
-                        className="comments__icon"
-                        icon={faTrash}
-                        onClick={() => deleteComments(movieId, comment.id)}
-                      />
-                    ) : null}
+                    <div className="comment__user-date">
+                      {new Date(comment.date).toLocaleDateString()}
+                      {user && comment.userId === user.uid ? (
+                        <FontAwesomeIcon
+                          className="comments__icon"
+                          icon={faTrash}
+                          onClick={() => deleteComments(movieId, comment.id)}
+                        />
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="comments__user-text">{comment.text}</div>
+                </li>
+                <div
+                  className={
+                    confirmation
+                      ? "comments__confirmation popup-btn"
+                      : "comments__confirmation"
+                  }
+                >
+                  <div className="comments__confirmation-text">
+                    Delete your comment?
+                  </div>
+
+                  <div className="comments__confirmation-wrapper">
+                    <button
+                      className="comments__confirmation-btn"
+                      onClick={() => deleteComments(movieId, comment.id)}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className="comments__confirmation-btn"
+                      onClick={() => setConfirmation((prev) => !prev)}
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </div>
-                <div className="comments__user-text">{comment.text}</div>
-              </li>
+              </>
             ))}
           </div>
         </div>
@@ -173,25 +206,6 @@ const Comments = () => {
       </div>
       <div className="comments__btn">
         <button onClick={user ? handleAddComment : null}>Add comment</button>
-      </div>
-      <div
-        className={
-          confirmation
-            ? "comments__condirmation active"
-            : "comments__confirmation"
-        }
-      >
-        <div className="comments__confirmation-text">Delete your comment?</div>
-
-        <div className="comments__confirmation-wrapper">
-          <button className="comments__confirmation-btn">Delete</button>
-          <button
-            className="comments__confirmation-btn"
-            onClick={() => setConfirmation((prev) => !prev)}
-          >
-            Cancel
-          </button>
-        </div>
       </div>
     </>
   );

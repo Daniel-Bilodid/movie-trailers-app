@@ -15,7 +15,7 @@
   &__confirmation {
     position: absolute;
     top: 0;
-    opacity: 0;
+    visibility: hidden;
     width: 300px;
     height: 150px;
     background-color: rgb(22, 29, 48);
@@ -142,10 +142,10 @@
     justify-content: center;
   }
 }
-.active {
+.popup-btn {
   width: 300px;
   height: 150px;
-  opacity: 1;
+  visibility: visible;
   position: absolute;
   top: 45%;
   left: 50%;
