@@ -59,7 +59,9 @@ const Profile = ({ handleLogout }) => {
               Manage Profile
             </Link>
 
-            <li className="profile__menu-item">Account</li>
+            <Link className="profile__menu-item" to="/user-comments">
+              Comments
+            </Link>
             <li className="profile__menu-item">Smth</li>
           </ul>
           <button onClick={handleLogout} className="logout-button">

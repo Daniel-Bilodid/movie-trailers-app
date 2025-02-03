@@ -23,6 +23,7 @@ import ManageProfile from "./pages/manageProfile/ManageProfile";
 import Comments from "./pages/comments/Comments";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import UserComments from "./pages/userComments/UserComments";
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -212,7 +213,19 @@ function AnimatedRoutes() {
             </motion.div>
           }
         />
-
+        <Route
+          path="/user-comments"
+          element={
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.5 }}
+            >
+              <UserComments />
+            </motion.div>
+          }
+        />
         <Route
           path="manage-profile"
           element={
