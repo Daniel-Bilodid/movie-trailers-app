@@ -74,7 +74,7 @@ const Trending = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 5, // По умолчанию
+    slidesToShow: 5,
     slidesToScroll: 2,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
