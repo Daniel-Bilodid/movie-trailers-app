@@ -23,6 +23,7 @@ const Comments = () => {
 
   const location = useLocation();
   const type = location.pathname.includes("movie-info") ? "movie" : "tv";
+
   console.log(user);
   useEffect(() => {
     const fetchMovieData = async () => {
@@ -69,6 +70,7 @@ const Comments = () => {
       userPhoto: user.photoURL,
       text: newComment,
       date: new Date().toISOString(),
+      type: type,
     };
 
     await addComment(movieId, comment);
