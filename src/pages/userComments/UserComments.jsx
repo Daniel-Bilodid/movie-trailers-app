@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./userComments.scss";
 import { fetchMovieById, fetchTVShowById } from "../../utils/fetchTrailers";
+
 const UserComments = () => {
   const { user, setUser } = useContext(AuthContext);
   const auth = getAuth();
@@ -18,7 +19,6 @@ const UserComments = () => {
       const querySnapshot = await getDocs(collection(db, "comments"));
       const fetchedComments = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-
         ...doc.data(),
       }));
       setComments(fetchedComments);
@@ -35,10 +35,10 @@ const UserComments = () => {
     const loadTrailers = async () => {
       try {
         const trailersData = await Promise.all(
-          comments.map((item) => {
+          comments.map(async (item) => {
             const firstComment = item.comments?.[0];
 
-            if (!fetchComments) return null;
+            if (!firstComment || !firstComment.type) return null;
 
             return firstComment.type === "movie"
               ? fetchMovieById(item.id)
@@ -46,8 +46,7 @@ const UserComments = () => {
           })
         );
 
-        setTrailers(trailersData);
-        console.log("comments", comments);
+        setTrailers(trailersData.filter(Boolean));
       } catch (error) {
         console.error("Error loading trailers", error);
       }
@@ -60,7 +59,7 @@ const UserComments = () => {
     <>
       <div className="user__comments-header">Your Comments:</div>
       <div className="user__comments">
-        {comments && comments.length > 0 ? (
+        {comments.length > 0 ? (
           comments.map((element, index) => {
             const relatedMovie = trailers.find(
               (movie) => String(movie.id) === String(element.id)
@@ -70,7 +69,7 @@ const UserComments = () => {
               <div key={index}>
                 <div className="user__comments-name">
                   {relatedMovie
-                    ? element.comments[index].type === "movie"
+                    ? element.comments?.[0].type === "movie"
                       ? relatedMovie.title || "No title"
                       : relatedMovie.name || "No name"
                     : "Loading..."}
@@ -88,11 +87,7 @@ const UserComments = () => {
                         key={relatedMovie.id}
                         src={`https://image.tmdb.org/t/p/w780${relatedMovie.poster_path}`}
                         alt={
-                          relatedMovie.title
-                            ? relatedMovie.title
-                            : "" || relatedMovie.name
-                            ? relatedMovie.name
-                            : relatedMovie.name
+                          relatedMovie.title || relatedMovie.name || "No title"
                         }
                       />
                     </Link>
