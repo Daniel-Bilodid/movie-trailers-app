@@ -58,47 +58,69 @@ const UserComments = () => {
 
   return (
     <>
-      <div>Your Comments:</div>
+      <div className="user__comments-header">Your Comments:</div>
       <div className="user__comments">
         {comments && comments.length > 0 ? (
-          comments.map((element, index) => (
-            <div key={index}>
-              {element.comments && element.comments.length > 0
-                ? element.comments.map((comment) =>
-                    user.uid === comment.userId ? (
-                      <div key={comment.id}>
-                        <Link
-                          to={`/${
-                            comment.type === "movie" ? "movie-info" : "tv-info"
-                          }/comments/${element.id}`}
-                        >
-                          {trailers.map((movie, i) => (
-                            <div>
-                              {String(movie.id) === String(element.id) ? (
-                                <div>
-                                  {movie.title}
-                                  <img
-                                    className="img"
-                                    key={movie.id}
-                                    src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
-                                    alt=""
-                                  />
-                                </div>
-                              ) : (
-                                ""
-                              )}
+          comments.map((element, index) => {
+            const relatedMovie = trailers.find(
+              (movie) => String(movie.id) === String(element.id)
+            );
+
+            return (
+              <div key={index}>
+                <div className="user__comments-name">
+                  {relatedMovie
+                    ? element.comments[index].type === "movie"
+                      ? relatedMovie.title || "No title"
+                      : relatedMovie.name || "No name"
+                    : "Loading..."}
+                </div>
+
+                {relatedMovie && (
+                  <div className="user__comments-img">
+                    <Link
+                      to={`/${
+                        element.type === "movie" ? "movie-info" : "tv-info"
+                      }/comments/${element.id}`}
+                    >
+                      <img
+                        className="img"
+                        key={relatedMovie.id}
+                        src={`https://image.tmdb.org/t/p/w780${relatedMovie.poster_path}`}
+                        alt={
+                          relatedMovie.title
+                            ? relatedMovie.title
+                            : "" || relatedMovie.name
+                            ? relatedMovie.name
+                            : relatedMovie.name
+                        }
+                      />
+                    </Link>
+                  </div>
+                )}
+
+                {element.comments && element.comments.length > 0
+                  ? element.comments
+                      .filter((comment) => user.uid === comment.userId)
+                      .map((comment) => (
+                        <div key={comment.id}>
+                          <Link
+                            to={`/${
+                              comment.type === "movie"
+                                ? "movie-info"
+                                : "tv-info"
+                            }/comments/${element.id}`}
+                          >
+                            <div className="user__comments-comment">
+                              Comment: {comment.text}
                             </div>
-                          ))}
-                        </Link>
-                        <div>Comment: {comment.text}</div>
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  )
-                : null}
-            </div>
-          ))
+                          </Link>
+                        </div>
+                      ))
+                  : null}
+              </div>
+            );
+          })
         ) : (
           <div>Loading comments...</div>
         )}

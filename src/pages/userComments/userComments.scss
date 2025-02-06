@@ -5,8 +5,31 @@
   width: 80%;
   margin: 0 auto;
   justify-content: center;
+  gap: 20px;
+  &-img {
+    display: flex;
+  }
+  &-header {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    font-size: 30px;
+  }
+  &-name {
+    margin-bottom: 10px;
+  }
+  &-comment {
+    width: 250px;
+    min-height: 40px;
+    background: rgb(22, 29, 47);
+    border-radius: 15px;
+    text-align: center;
+    padding: 20px;
+    margin-top: 5px;
+  }
 }
 .img {
-  width: 250px;
-  height: 300px;
+  width: 290px;
+  height: 350px;
 }
