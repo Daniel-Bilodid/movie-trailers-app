@@ -60,62 +60,72 @@ const UserComments = () => {
       <div className="user__comments-header">Your Comments:</div>
       <div className="user__comments">
         {comments.length > 0 ? (
-          comments.map((element, index) => {
-            const relatedMovie = trailers.find(
-              (movie) => String(movie.id) === String(element.id)
-            );
+          comments
+            .filter((element) =>
+              element.comments.some((comment) => comment.userId === user.uid)
+            )
+            .map((element, index) => {
+              const relatedMovie = trailers.find(
+                (movie) => String(movie.id) === String(element.id)
+              );
 
-            return (
-              <div key={index}>
-                <div className="user__comments-name">
-                  {relatedMovie
-                    ? element.comments?.[0].type === "movie"
-                      ? relatedMovie.title || "No title"
-                      : relatedMovie.name || "No name"
-                    : "Loading..."}
-                </div>
-
-                {relatedMovie && (
-                  <div className="user__comments-img">
-                    <Link
-                      to={`/${
-                        element.type === "movie" ? "movie-info" : "tv-info"
-                      }/comments/${element.id}`}
-                    >
-                      <img
-                        className="img"
-                        key={relatedMovie.id}
-                        src={`https://image.tmdb.org/t/p/w780${relatedMovie.poster_path}`}
-                        alt={
-                          relatedMovie.title || relatedMovie.name || "No title"
-                        }
-                      />
-                    </Link>
+              return (
+                <div key={index}>
+                  <div className="user__comments-name">
+                    {relatedMovie
+                      ? element.comments?.[0].type === "movie"
+                        ? relatedMovie.title || "No title"
+                        : relatedMovie.name || "No name"
+                      : "Loading..."}
                   </div>
-                )}
 
-                {element.comments && element.comments.length > 0
-                  ? element.comments
-                      .filter((comment) => user.uid === comment.userId)
-                      .map((comment) => (
-                        <div key={comment.id}>
-                          <Link
-                            to={`/${
-                              comment.type === "movie"
-                                ? "movie-info"
-                                : "tv-info"
-                            }/comments/${element.id}`}
-                          >
-                            <div className="user__comments-comment">
-                              Comment: {comment.text}
-                            </div>
-                          </Link>
-                        </div>
-                      ))
-                  : null}
-              </div>
-            );
-          })
+                  {relatedMovie && (
+                    <div className="user__comments-img">
+                      <Link
+                        to={`/${
+                          element.type === "movie" ? "movie-info" : "tv-info"
+                        }/comments/${element.id}`}
+                      >
+                        <img
+                          className="img"
+                          key={relatedMovie.id}
+                          src={`https://image.tmdb.org/t/p/w780${relatedMovie.poster_path}`}
+                          alt={
+                            relatedMovie.title ||
+                            relatedMovie.name ||
+                            "No title"
+                          }
+                        />
+                      </Link>
+                    </div>
+                  )}
+
+                  {element.comments && element.comments.length > 0
+                    ? element.comments
+                        .slice(0, 3)
+                        .filter((comment) => user.uid === comment.userId)
+                        .map((comment) => (
+                          <div key={comment.id}>
+                            <Link
+                              to={`/${
+                                comment.type === "movie"
+                                  ? "movie-info"
+                                  : "tv-info"
+                              }/comments/${element.id}`}
+                            >
+                              <div className="user__comments-comment">
+                                Comment:{" "}
+                                {comment.text.length > 40
+                                  ? comment.text.slice(0, 90) + "..."
+                                  : comment.text}
+                              </div>
+                            </Link>
+                          </div>
+                        ))
+                    : null}
+                </div>
+              );
+            })
         ) : (
           <div>Loading comments...</div>
         )}
