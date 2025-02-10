@@ -28,14 +28,29 @@ export const addComment = async (movieId, comment) => {
   const docRef = doc(db, "comments", movieId);
 
   try {
-    // Создаем документ с пустым массивом, если он не существует
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       await setDoc(docRef, { comments: [comment] });
     } else {
-      // Если документ существует, добавляем комментарий
       await updateDoc(docRef, {
         comments: arrayUnion(comment),
+      });
+    }
+  } catch (error) {
+    console.error("Error adding comment:", error);
+  }
+};
+
+export const addHistory = async (movieId, movie) => {
+  const docRef = doc(db, "movieHistory", movieId);
+
+  try {
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      await setDoc(docRef, { movieHistory: [movie] });
+    } else {
+      await updateDoc(docRef, {
+        movieHistory: arrayUnion(movie),
       });
     }
   } catch (error) {

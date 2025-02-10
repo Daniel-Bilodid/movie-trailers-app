@@ -349,6 +349,7 @@ const Trending = () => {
                 className="trending__movie-frame"
                 width="560"
                 height="315"
+                onClick={() => console.log("hello")}
                 src={`https://www.youtube.com/embed/${
                   trailers[playVideo].trailers[
                     trailers[playVideo].currentTrailerIndex
@@ -363,6 +364,7 @@ const Trending = () => {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
+
               <div className="trending__movie-info">
                 <div className="trending__movie-wrapper">
                   <div className="trending__movie-year">

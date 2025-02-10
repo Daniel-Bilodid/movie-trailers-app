@@ -17,7 +17,9 @@ import { AuthContext } from "../context/AuthContext";
 import { showToast, hideToast } from "../../redux/store";
 import useBookmarks from "../../hooks/useBookmarks";
 import AuthToast from "../authToast/AuthToast";
+
 import "./movieList.scss";
+import { addHistory } from "../../utils/firestoreUtils";
 
 const MovieCard = React.memo(
   ({
@@ -184,6 +186,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const { movies, loading: bookmarksLoading } = useBookmarks();
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
+  const [history, setHistory] = useState([]);
+  const [newHistory, setNewHistory] = useState("");
   const contentType = useSelector((state) => state.data.contentType);
   const dispatch = useDispatch();
 

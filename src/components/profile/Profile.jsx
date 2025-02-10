@@ -62,7 +62,9 @@ const Profile = ({ handleLogout }) => {
             <Link className="profile__menu-item" to="/user-comments">
               Comments
             </Link>
-            <li className="profile__menu-item">Smth</li>
+            <Link className="profile__menu-item" to="/history">
+              History
+            </Link>
           </ul>
           <button onClick={handleLogout} className="logout-button">
             Logout
