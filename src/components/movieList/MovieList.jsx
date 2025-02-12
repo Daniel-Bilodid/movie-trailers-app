@@ -187,7 +187,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
   const [history, setHistory] = useState([]);
-  const [newHistory, setNewHistory] = useState("");
+
   const contentType = useSelector((state) => state.data.contentType);
   const dispatch = useDispatch();
 
@@ -270,6 +270,15 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
       setMovieLoading(false);
     }
   }, [contentType, setMovieLoading]);
+
+  useEffect(() => {
+    if (playVideo !== null && user) {
+      const movieId = trailers[playVideo].movie.id;
+      const movie = trailers[playVideo].movie;
+
+      addHistory(user.uid, movieId.toString(), movie, contentType);
+    }
+  }, [playVideo]);
 
   return (
     <div className="popular-list">

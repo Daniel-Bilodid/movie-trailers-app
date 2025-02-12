@@ -1,6 +1,14 @@
 // firestoreUtils.js
 import { db } from "../firebase";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  collection,
+  addDoc,
+} from "firebase/firestore";
 
 /**
 
@@ -41,19 +49,19 @@ export const addComment = async (movieId, comment) => {
   }
 };
 
-export const addHistory = async (movieId, movie) => {
-  const docRef = doc(db, "movieHistory", movieId);
-
+export const addHistory = async (userId, movieId, movie, type) => {
   try {
-    const docSnap = await getDoc(docRef);
+    const movieRef = doc(db, "users", userId, "history", movieId);
+
+    const docSnap = await getDoc(movieRef);
     if (!docSnap.exists()) {
-      await setDoc(docRef, { movieHistory: [movie] });
+      await setDoc(movieRef, { ...movie, type, timestamp: new Date() });
     } else {
-      await updateDoc(docRef, {
-        movieHistory: arrayUnion(movie),
-      });
+      await updateDoc(movieRef, { type, timestamp: new Date() });
     }
+
+    console.log("Movie added to history:", movieId, "Type:", type);
   } catch (error) {
-    console.error("Error adding comment:", error);
+    console.error("Error adding movie to history:", error);
   }
 };
