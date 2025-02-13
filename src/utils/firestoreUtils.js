@@ -55,7 +55,7 @@ export const addHistory = async (userId, movieId, movie, type) => {
 
     const docSnap = await getDoc(movieRef);
     if (!docSnap.exists()) {
-      await setDoc(movieRef, { ...movie, type, timestamp: new Date() });
+      await setDoc(movieRef, { movie, type, timestamp: new Date() });
     } else {
       await updateDoc(movieRef, { type, timestamp: new Date() });
     }

@@ -276,7 +276,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
       const movieId = trailers[playVideo].movie.id;
       const movie = trailers[playVideo].movie;
 
-      addHistory(user.uid, movieId.toString(), movie, contentType);
+      addHistory(user.uid, movieId.toString(), movie.title, contentType);
     }
   }, [playVideo]);
 
