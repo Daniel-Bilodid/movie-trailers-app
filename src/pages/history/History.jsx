@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../components/context/AuthContext";
 import { fetchMovieById, fetchTVShowById } from "../../utils/fetchTrailers";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
+import "./history.scss";
 
 const History = () => {
   const { user } = useContext(AuthContext);
@@ -29,23 +30,28 @@ const History = () => {
   useEffect(() => {
     fetchHistory();
   }, [user]);
-  console.log("historyyy", history);
+
   useEffect(() => {
     const loadTrailers = async () => {
       if (!history.length) return;
       try {
         const trailersData = await Promise.all(
           history.map(async (item) => {
-            return item.type === "Movie"
-              ? fetchMovieById(item.id)
-              : fetchTVShowById(item.id);
+            const trailer =
+              item.type === "Movie"
+                ? await fetchMovieById(item.id)
+                : await fetchTVShowById(item.id);
+
+            return trailer ? { ...trailer, type: item.type } : null;
           })
         );
+
         setTrailers(trailersData.filter(Boolean));
       } catch (error) {
         console.error("Error loading trailers", error);
       }
     };
+
     loadTrailers();
   }, [history]);
   console.log("traileers", trailers);
@@ -53,14 +59,19 @@ const History = () => {
     <div className="history">
       <div className="history__title">Your History:</div>
 
-      {trailers.length > 0
-        ? trailers.map((item, index) =>
+      <div className="history__wrapper">
+        {trailers.length > 0 ? (
+          trailers.map((item, index) =>
             item.id.toString() === history[index].id.toString() &&
             history[index].userId === user.uid ? (
               <>
-                <div className="history__wrapper">
+                <div className="history__card-wrapper">
                   <div className="history__card">
-                    <div className="history__card-title">{item.title}</div>
+                    <div className="history__card-title">
+                      {item.type === "Movie" ? item.title : item.name}
+
+                      {console.log("item", item)}
+                    </div>
 
                     <img
                       className="img"
@@ -72,12 +83,15 @@ const History = () => {
                 </div>
               </>
             ) : (
-              <>
-                <div>Ni</div>
-              </>
+              <></>
             )
           )
-        : ""}
+        ) : (
+          <>
+            <div>There is nothing yet.</div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

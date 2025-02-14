@@ -49,13 +49,19 @@ export const addComment = async (movieId, comment) => {
   }
 };
 
-export const addHistory = async (userId, movieId, movie, type) => {
+export const addHistory = async (userId, movieId, title, type) => {
   try {
     const movieRef = doc(db, "users", userId, "history", movieId);
+    console.log("Adding to history:", {
+      userId,
+      movieId,
+      title,
+      type,
+    });
 
     const docSnap = await getDoc(movieRef);
     if (!docSnap.exists()) {
-      await setDoc(movieRef, { movie, type, timestamp: new Date() });
+      await setDoc(movieRef, { title, type, timestamp: new Date() });
     } else {
       await updateDoc(movieRef, { type, timestamp: new Date() });
     }

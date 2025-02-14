@@ -274,11 +274,18 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   useEffect(() => {
     if (playVideo !== null && user) {
       const movieId = trailers[playVideo].movie.id;
-      const movie = trailers[playVideo].movie;
 
-      addHistory(user.uid, movieId.toString(), movie.title, contentType);
+      const movie = trailers[playVideo].movie;
+      console.log("contentType:", contentType);
+
+      addHistory(
+        user.uid,
+        movieId.toString(),
+        contentType === "Movie" ? movie.title : movie.name,
+        contentType
+      );
     }
-  }, [playVideo]);
+  }, [playVideo, contentType, trailers, user]);
 
   return (
     <div className="popular-list">
