@@ -93,6 +93,18 @@ const SearchResult = () => {
                         size="1x"
                       />
                     </Link>
+                    <Link
+                      className="movie__info-comments"
+                      to={`/${isMovie ? "movie-info" : "tv-info"}/comments/${
+                        item.id
+                      }`}
+                    >
+                      <FontAwesomeIcon
+                        icon={faComment}
+                        color="white"
+                        size="1x"
+                      />
+                    </Link>
                     <div
                       className="trending__bookmark"
                       onClick={() => {

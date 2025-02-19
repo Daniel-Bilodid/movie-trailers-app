@@ -212,6 +212,14 @@ const Bookmarks = () => {
                     size="1x"
                   />
                 </Link>
+                <Link
+                  className="movie__info-comments"
+                  to={`/${
+                    movie.movieType === "Movie" ? "movie-info" : "tv-info"
+                  }/comments/${movie.id}`}
+                >
+                  <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+                </Link>
                 <div
                   className="trending__bookmark"
                   onClick={() => handleBookmarkClick(movie.id)}
