@@ -8,6 +8,7 @@ import {
   arrayUnion,
   collection,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 /**
@@ -69,5 +70,15 @@ export const addHistory = async (userId, movieId, title, type) => {
     console.log("Movie added to history:", movieId, "Type:", type);
   } catch (error) {
     console.error("Error adding movie to history:", error);
+  }
+};
+export const removeMovieFromHistory = async (userId, movieId) => {
+  try {
+    console.log("UserID:", userId, "MovieID:", movieId);
+    const movieRef = doc(db, `users/${userId}/history/${movieId}`);
+    await deleteDoc(movieRef);
+    console.log("Movie removed successfully");
+  } catch (error) {
+    console.error("Error removing movie: ", error);
   }
 };
