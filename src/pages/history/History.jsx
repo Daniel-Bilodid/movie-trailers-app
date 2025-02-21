@@ -10,7 +10,7 @@ import "./history.scss";
 
 const History = () => {
   const historyData = useFetchHistory();
-
+  const [history, setHistory] = useState(historyData);
   const {
     playVideo,
     setPlayVideo,
@@ -31,6 +31,8 @@ const History = () => {
       <div className="history__wrapper">
         <HistoryList
           historyData={historyData}
+          history={history}
+          setHistory={setHistory}
           handlePlayTrailer={handlePlayTrailer}
           showAuthToast={showAuthToast}
         />
@@ -39,6 +41,7 @@ const History = () => {
           onClose={handleCloseModal}
           playVideo={playVideo}
           trailers={historyData}
+          setTrailers={setHistory}
           handlePrevMovie={handlePrevMovie}
           handleNextMovie={handleNextMovie}
         />

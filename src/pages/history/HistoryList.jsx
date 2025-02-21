@@ -4,10 +4,14 @@ import "./history.scss";
 import { AuthContext } from "../../components/context/AuthContext";
 import { removeMovieFromHistory } from "../../utils/firestoreUtils";
 
-const HistoryList = ({ historyData, handlePlayTrailer, showAuthToast }) => {
+const HistoryList = ({
+  history,
+  setHistory,
+  historyData,
+  handlePlayTrailer,
+  showAuthToast,
+}) => {
   const { user } = useContext(AuthContext);
-
-  const [history, setHistory] = useState(historyData);
 
   useEffect(() => {
     setHistory(historyData);

@@ -6,17 +6,52 @@ import {
   faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
 
-const ModalMovie = ({
-  isOpen,
-  onClose,
-  playVideo,
-  trailers,
-  handlePrevMovie,
-  handleNextMovie,
-}) => {
+const ModalMovie = ({ isOpen, onClose, playVideo, trailers, setTrailers }) => {
   if (playVideo === null || !trailers.length) return null;
 
   const currentTrailer = trailers[playVideo];
+
+  const handleNextMovie = (index) => {
+    setTrailers((prevMovies) => {
+      const updatedMovies = [...prevMovies];
+      const currentMovie = updatedMovies[index];
+
+      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
+        const nextIndex =
+          (currentMovie.currentTrailerIndex + 1) %
+          currentMovie.videos.results.length;
+
+        updatedMovies[index] = {
+          ...currentMovie,
+          currentTrailerIndex: nextIndex,
+        };
+      }
+
+      return updatedMovies;
+    });
+  };
+
+  const handlePrevMovie = (index) => {
+    setTrailers((prevMovies) => {
+      const updatedMovies = [...prevMovies];
+      const currentMovie = updatedMovies[index];
+
+      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
+        const prevIndex =
+          (currentMovie.currentTrailerIndex -
+            1 +
+            currentMovie.videos.results.length) %
+          currentMovie.videos.results.length;
+
+        updatedMovies[index] = {
+          ...currentMovie,
+          currentTrailerIndex: prevIndex,
+        };
+      }
+
+      return updatedMovies;
+    });
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
