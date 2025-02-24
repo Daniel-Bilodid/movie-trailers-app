@@ -113,7 +113,7 @@ export const fetchTVShowById = async (id) => {
 export const fetchTrendingMovies = async (page = 1) => {
   try {
     const trendingResponse = await axios.get(
-      `https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
     );
     const trendingMovies = trendingResponse.data.results;
 
@@ -420,7 +420,7 @@ export const fetchMoviesByGenre = async (contentType, genreId, page = 1) => {
 export const fetchTrendingTVShows = async (page = 1) => {
   try {
     const trendingResponse = await axios.get(
-      `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
+      `https://api.themoviedb.org/3/trending/tv/week?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`
     );
     const trendingTVShows = trendingResponse.data.results;
 

@@ -263,6 +263,7 @@ const Trending = () => {
                 </h3>
                 {trailers.length > 0 ? (
                   <div className="trending__movie-thumbnail-container">
+                    {console.log("trailers check", trailers)}
                     <img
                       className="trending__movie-thumbnail"
                       src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
