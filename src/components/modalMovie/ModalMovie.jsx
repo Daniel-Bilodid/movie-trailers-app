@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "../../components/movieModal/MovieModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,36 +17,42 @@ const ModalMovie = ({
   contentType,
 }) => {
   const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
+  useEffect(() => {
+    if (!isOpen) {
+      setCurrentTrailerIndex(0);
+    }
+  }, [isOpen]);
   if (playVideo === null || !trailers.length) return null;
 
   const currentTrailer = trailers[playVideo];
 
-  console.log("curr", currentTrailer);
-
-  if (
-    !currentTrailer ||
-    !currentTrailer.videos ||
-    !currentTrailer.videos.results.length
-  ) {
-    return null;
-  }
-
-  const trailer = currentTrailer.videos.results[currentTrailerIndex];
+  const trailer =
+    currentTrailer.trailers && currentTrailer.trailers[currentTrailerIndex]
+      ? currentTrailer.trailers[currentTrailerIndex]
+      : currentTrailer.videos &&
+        currentTrailer.videos.results &&
+        currentTrailer.videos.results[currentTrailerIndex]
+      ? currentTrailer.videos.results[currentTrailerIndex]
+      : null;
 
   if (!trailer) return null;
 
   const handleNextMovie = (index) => {
     setTrailers((prevTrailers) => {
       const updatedTrailers = [...prevTrailers];
+
       const currentTrailer = updatedTrailers[index];
 
       if (currentTrailer && currentTrailer.videos) {
         const nextIndex =
           (currentTrailerIndex + 1) % currentTrailer.videos.results.length;
         setCurrentTrailerIndex(nextIndex);
+      } else {
+        const nextIndex =
+          (currentTrailerIndex + 1) % currentTrailer.trailers.length;
+        setCurrentTrailerIndex(nextIndex);
       }
 
-      console.log("Updated trailers:", updatedTrailers);
       return updatedTrailers;
     });
   };
@@ -68,7 +74,7 @@ const ModalMovie = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={playVideo !== null} onClose={onClose}>
       <iframe
         className="trending__movie-frame"
         width="560"
@@ -118,7 +124,9 @@ const ModalMovie = ({
             className="movie__info-comments"
             to={`/${
               contentType === "Movie" ? "movie-info" : "tv-info"
-            }/comments/${currentTrailer.id}`}
+            }/comments/${
+              currentTrailer.id ? currentTrailer.id : currentTrailer.movie.id
+            }`}
           >
             <FontAwesomeIcon icon={faComment} color="white" size="1x" />
           </Link>

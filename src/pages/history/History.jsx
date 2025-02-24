@@ -11,14 +11,8 @@ import "./history.scss";
 const History = () => {
   const historyData = useFetchHistory();
   const [history, setHistory] = useState(historyData);
-  const {
-    playVideo,
-    setPlayVideo,
-    handleCloseModal,
-    handleNextMovie,
-    handlePrevMovie,
-  } = useMovieTrailers();
-  console.log("1231232", historyData[playVideo]);
+  const { playVideo, setPlayVideo, handleCloseModal } = useMovieTrailers();
+
   const handlePlayTrailer = (index) => {
     setPlayVideo(index);
   };
@@ -42,8 +36,6 @@ const History = () => {
           playVideo={playVideo}
           trailers={historyData}
           setTrailers={setHistory}
-          handlePrevMovie={handlePrevMovie}
-          handleNextMovie={handleNextMovie}
           contentType={
             history && playVideo !== null && history[playVideo]
               ? history[playVideo].type
