@@ -32,6 +32,9 @@ import { showToast, hideToast } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import Loading from "../loading/Loading";
+import MovieActions from "../movieActions/MovieActions";
+import ModalMovie from "../modalMovie/ModalMovie";
+import useMovieTrailers from "../../hooks/useMovieTrailers";
 const Trending = () => {
   const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
@@ -47,6 +50,8 @@ const Trending = () => {
     selectedMovies,
     handleBookmarkClick,
   } = useBookmarkHandle();
+
+  const { handleNextMovie, handlePrevMovie } = useMovieTrailers();
 
   const contentType = useSelector((state) => state.data.contentType);
 
@@ -212,51 +217,16 @@ const Trending = () => {
                 transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                 key={movie.id}
               >
-                <div className="trending__btn-wrapper ">
-                  <Link
-                    className="trending__info"
-                    to={`/${
-                      contentType === "Movie" ? "movie-info" : "tv-info"
-                    }/${movie.id}`}
-                  >
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      color="white"
-                      size="1x"
-                    />
-                  </Link>
-                  <Link
-                    className="movie__info-comments"
-                    to={`/${
-                      contentType === "Movie" ? "movie-info" : "tv-info"
-                    }/comments/${movie.id}`}
-                  >
-                    <FontAwesomeIcon icon={faComment} color="white" size="1x" />
-                  </Link>
-                  <div
-                    className="trending__bookmark"
-                    onClick={() => {
-                      if (user) {
-                        handleBookmarkClick(movie.id);
-                        selected(movie.id);
-                      } else {
-                        showAuthToast();
-                      }
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faBookmark}
-                      color={
-                        user &&
-                        Array.isArray(movies) &&
-                        movies.some((m) => m.id === movie.id)
-                          ? "yellow"
-                          : "white"
-                      }
-                      size="1x"
-                    />
-                  </div>
-                </div>
+                <MovieActions
+                  movie={movie}
+                  contentType={contentType}
+                  user={user}
+                  movies={movies}
+                  selected={selected}
+                  showAuthToast={showAuthToast}
+                  handleBookmarkClick={handleBookmarkClick}
+                />
+
                 <AuthToast show={showToastState} />
                 <h3 className="trending__movie-title">
                   {contentType === "Movie" ? movie.title : movie.name}
@@ -350,7 +320,6 @@ const Trending = () => {
                 className="trending__movie-frame"
                 width="560"
                 height="315"
-                onClick={() => console.log("hello")}
                 src={`https://www.youtube.com/embed/${
                   trailers[playVideo].trailers[
                     trailers[playVideo].currentTrailerIndex

@@ -1,55 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "../../components/movieModal/MovieModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeftLong,
   faArrowRightLong,
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
-const ModalMovie = ({ isOpen, onClose, playVideo, trailers, setTrailers }) => {
+const ModalMovie = ({
+  isOpen,
+  onClose,
+  playVideo,
+  trailers,
+  setTrailers,
+  contentType,
+}) => {
+  const [currentTrailerIndex, setCurrentTrailerIndex] = useState(0);
   if (playVideo === null || !trailers.length) return null;
 
   const currentTrailer = trailers[playVideo];
 
+  console.log("curr", currentTrailer);
+
+  if (
+    !currentTrailer ||
+    !currentTrailer.videos ||
+    !currentTrailer.videos.results.length
+  ) {
+    return null;
+  }
+
+  const trailer = currentTrailer.videos.results[currentTrailerIndex];
+
+  if (!trailer) return null;
+
   const handleNextMovie = (index) => {
-    setTrailers((prevMovies) => {
-      const updatedMovies = [...prevMovies];
-      const currentMovie = updatedMovies[index];
+    setTrailers((prevTrailers) => {
+      const updatedTrailers = [...prevTrailers];
+      const currentTrailer = updatedTrailers[index];
 
-      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
+      if (currentTrailer && currentTrailer.videos) {
         const nextIndex =
-          (currentMovie.currentTrailerIndex + 1) %
-          currentMovie.videos.results.length;
-
-        updatedMovies[index] = {
-          ...currentMovie,
-          currentTrailerIndex: nextIndex,
-        };
+          (currentTrailerIndex + 1) % currentTrailer.videos.results.length;
+        setCurrentTrailerIndex(nextIndex);
       }
 
-      return updatedMovies;
+      console.log("Updated trailers:", updatedTrailers);
+      return updatedTrailers;
     });
   };
 
   const handlePrevMovie = (index) => {
-    setTrailers((prevMovies) => {
-      const updatedMovies = [...prevMovies];
-      const currentMovie = updatedMovies[index];
+    setTrailers((prevTrailers) => {
+      const updatedTrailers = [...prevTrailers];
+      const currentTrailer = updatedTrailers[index];
 
-      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
+      if (currentTrailer && currentTrailer.videos) {
         const prevIndex =
-          (currentMovie.currentTrailerIndex -
-            1 +
-            currentMovie.videos.results.length) %
-          currentMovie.videos.results.length;
-
-        updatedMovies[index] = {
-          ...currentMovie,
-          currentTrailerIndex: prevIndex,
-        };
+          (currentTrailerIndex - 1 + currentTrailer.videos.results.length) %
+          currentTrailer.videos.results.length;
+        setCurrentTrailerIndex(prevIndex);
       }
 
-      return updatedMovies;
+      return updatedTrailers;
     });
   };
 
@@ -59,28 +73,71 @@ const ModalMovie = ({ isOpen, onClose, playVideo, trailers, setTrailers }) => {
         className="trending__movie-frame"
         width="560"
         height="315"
-        src={`https://www.youtube.com/embed/${
-          currentTrailer.videos.results?.[playVideo]?.key || ""
-        }`}
-        title={currentTrailer.videos.results?.[playVideo]?.name || "Trailer"}
+        src={`https://www.youtube.com/embed/${trailer.key}`}
+        title={trailer.name || "Trailer"}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       ></iframe>
 
       <div className="trending__movie-info">
-        <button
-          className="trending__btn-handle"
-          onClick={() => handlePrevMovie(playVideo)}
-        >
-          <FontAwesomeIcon icon={faArrowLeftLong} color="white" size="2x" />
-        </button>
-        <button
-          className="trending__btn-handle"
-          onClick={() => handleNextMovie(playVideo)}
-        >
-          <FontAwesomeIcon icon={faArrowRightLong} color="white" size="2x" />
-        </button>
+        <div className="trending__movie-wrapper">
+          <div className="trending__movie-year">
+            {currentTrailer.release_year ||
+              currentTrailer.release_date?.slice(0, 4) ||
+              currentTrailer.first_air_date?.slice(0, 4) ||
+              "N/A"}
+          </div>
+
+          <div className="trending__movie-dot">·</div>
+
+          <div className="trending__movie-svg">
+            {contentType === "Movie" ? (
+              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M16.956 0H3.044A3.044 3.044 0 0 0 0 3.044v13.912A3.044 3.044 0 0 0 3.044 20h13.912A3.044 3.044 0 0 0 20 16.956V3.044A3.044 3.044 0 0 0 16.956 0ZM4 9H2V7h2v2Zm-2 2h2v2H2v-2Zm16-2h-2V7h2v2Zm-2 2h2v2h-2v-2Zm2-8.26V4h-2V2h1.26a.74.74 0 0 1 .74.74ZM2.74 2H4v2H2V2.74A.74.74 0 0 1 2.74 2ZM2 17.26V16h2v2H2.74a.74.74 0 0 1-.74-.74Zm16 0a.74.74 0 0 1-.74.74H16v-2h2v1.26Z"
+                  fill="#FFFFFF"
+                />
+              </svg>
+            ) : (
+              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M20 4.481H9.08l2.7-3.278L10.22 0 7 3.909 3.78.029 2.22 1.203l2.7 3.278H0V20h20V4.481Zm-8 13.58H2V6.42h10v11.64Zm5-3.88h-2v-1.94h2v1.94Zm0-3.88h-2V8.36h2v1.94Z"
+                  fill="#ffffff"
+                />
+              </svg>
+            )}
+          </div>
+
+          <div className="trending__movie-dot">·</div>
+          <div className="trending__movie-type">
+            {contentType === "Movie" ? "Movie" : "TV"}
+          </div>
+
+          <Link
+            className="movie__info-comments"
+            to={`/${
+              contentType === "Movie" ? "movie-info" : "tv-info"
+            }/comments/${currentTrailer.id}`}
+          >
+            <FontAwesomeIcon icon={faComment} color="white" size="1x" />
+          </Link>
+        </div>
+
+        <div>
+          <button
+            className="trending__btn-handle"
+            onClick={() => handlePrevMovie(playVideo)}
+          >
+            <FontAwesomeIcon icon={faArrowLeftLong} color="white" size="2x" />
+          </button>
+          <button
+            className="trending__btn-handle"
+            onClick={() => handleNextMovie(playVideo)}
+          >
+            <FontAwesomeIcon icon={faArrowRightLong} color="white" size="2x" />
+          </button>
+        </div>
       </div>
     </Modal>
   );

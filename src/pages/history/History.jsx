@@ -18,7 +18,7 @@ const History = () => {
     handleNextMovie,
     handlePrevMovie,
   } = useMovieTrailers();
-
+  console.log("1231232", historyData[playVideo]);
   const handlePlayTrailer = (index) => {
     setPlayVideo(index);
   };
@@ -44,6 +44,11 @@ const History = () => {
           setTrailers={setHistory}
           handlePrevMovie={handlePrevMovie}
           handleNextMovie={handleNextMovie}
+          contentType={
+            history && playVideo !== null && history[playVideo]
+              ? history[playVideo].type
+              : ""
+          }
         />
       </div>
     </div>

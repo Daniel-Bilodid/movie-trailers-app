@@ -38,7 +38,7 @@ const getAllMovieUrl = (contentType, genreId, page) => {
 };
 const getTrendingFetchUrl = (contentType, page) => {
   const baseUrl = "https://api.themoviedb.org/3/trending";
-  const endpoints = contentType === "TV" ? "/tv/day" : "/movie/day";
+  const endpoints = contentType === "TV" ? "/tv/week" : "/movie/week";
   return `${baseUrl}${endpoints}?api_key=${process.env.REACT_APP_TMDB_APIKEY}&page=${page}`;
 };
 export const fetchMoreTrendingMovies = async (contentType, page = 1) => {
