@@ -37,42 +37,29 @@ const ModalMovie = ({
 
   if (!trailer) return null;
 
-  const handleNextMovie = (index) => {
-    setTrailers((prevTrailers) => {
-      const updatedTrailers = [...prevTrailers];
-
-      const currentTrailer = updatedTrailers[index];
-
-      if (currentTrailer && currentTrailer.videos) {
-        const nextIndex =
-          (currentTrailerIndex + 1) % currentTrailer.videos.results.length;
-        setCurrentTrailerIndex(nextIndex);
-      } else {
-        const nextIndex =
-          (currentTrailerIndex + 1) % currentTrailer.trailers.length;
-        setCurrentTrailerIndex(nextIndex);
-      }
-
-      return updatedTrailers;
+  const handleNextMovie = () => {
+    setCurrentTrailerIndex((prevIndex) => {
+      const totalTrailers =
+        currentTrailer.videos?.results?.length ||
+        currentTrailer.trailers?.length ||
+        1;
+      return (prevIndex + 1) % totalTrailers;
     });
   };
 
-  const handlePrevMovie = (index) => {
-    setTrailers((prevTrailers) => {
-      const updatedTrailers = [...prevTrailers];
-      const currentTrailer = updatedTrailers[index];
-
-      if (currentTrailer && currentTrailer.videos) {
-        const prevIndex =
-          (currentTrailerIndex - 1 + currentTrailer.videos.results.length) %
-          currentTrailer.videos.results.length;
-        setCurrentTrailerIndex(prevIndex);
-      }
-
-      return updatedTrailers;
+  const handlePrevMovie = () => {
+    setCurrentTrailerIndex((prevIndex) => {
+      const totalTrailers =
+        currentTrailer.videos?.results?.length ||
+        currentTrailer.trailers?.length ||
+        1;
+      return (prevIndex - 1 + totalTrailers) % totalTrailers;
     });
   };
 
+  console.log(trailer);
+
+  console.log("current trailer", currentTrailer?.movie?.first_air_date);
   return (
     <Modal isOpen={playVideo !== null} onClose={onClose}>
       <iframe
@@ -91,6 +78,7 @@ const ModalMovie = ({
           <div className="trending__movie-year">
             {currentTrailer.first_air_date?.slice(0, 4) ||
               currentTrailer.release_date?.slice(0, 4) ||
+              currentTrailer?.movie?.first_air_date?.slice(0, 4) ||
               currentTrailer.release_year ||
               "N/A"}
           </div>
@@ -118,17 +106,25 @@ const ModalMovie = ({
           <div className="trending__movie-dot">·</div>
           <div className="trending__movie-type">
             {contentType === "Movie" ||
-            contentType?.[playVideo]?.movieType === "Movie"
+            contentType?.[playVideo]?.movieType === "Movie" ||
+            contentType?.[playVideo]?.item?.type
               ? "Movie"
               : "TV"}
           </div>
-
+          <div className="trending__movie-dot">·</div>
           <Link
             className="movie__info-comments"
             to={`/${
-              contentType === "Movie" ? "movie-info" : "tv-info"
+              contentType === "Movie" ||
+              contentType?.[playVideo]?.movieType === "Movie" ||
+              contentType?.[playVideo]?.item?.type
+                ? "movie-info"
+                : "tv-info"
             }/comments/${
-              currentTrailer.id ? currentTrailer.id : currentTrailer.movie.id
+              currentTrailer?.id ??
+              currentTrailer?.movie?.id ??
+              currentTrailer?.item?.id ??
+              ""
             }`}
           >
             <FontAwesomeIcon icon={faComment} color="white" size="1x" />

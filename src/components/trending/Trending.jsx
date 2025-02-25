@@ -1,23 +1,17 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Slider from "react-slick";
 import {
   fetchTrendingMovies,
   fetchTrendingTVShows,
 } from "../../utils/fetchTrailers";
 import { Link } from "react-router-dom";
-import Modal from "../movieModal/MovieModal";
+
 import "./trending.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faInfoCircle,
-  faPlayCircle,
-  faArrowRightLong,
-  faArrowLeftLong,
-  faComment,
-} from "@fortawesome/free-solid-svg-icons";
-import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
+
 import { AuthContext } from "../context/AuthContext";
 import { useSelector } from "react-redux";
 import PopularMovies from "../moviePages/popularMovies/PopularMovies";

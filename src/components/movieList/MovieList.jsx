@@ -285,6 +285,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [playVideo, contentType, trailers, user]);
 
+  console.log(trailers[playVideo]?.movie?.first_air_date);
+
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">

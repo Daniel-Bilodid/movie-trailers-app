@@ -1,11 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { AuthContext } from "../../components/context/AuthContext";
-import {
-  createMovieDocIfNotExists,
-  fetchCommentsAndRating,
-  addComment,
-} from "../../utils/firestoreUtils";
+import { fetchCommentsAndRating, addComment } from "../../utils/firestoreUtils";
 import "./comments.scss";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,7 +14,7 @@ const Comments = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [confirmation, setConfirmation] = useState(false);
-  const [popupConfirmation, setPopupConfirmation] = useState(false);
+
   const [movie, setMovie] = useState(null);
 
   const location = useLocation();

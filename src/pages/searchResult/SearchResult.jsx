@@ -1,26 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Modal from "../../components/movieModal/MovieModal";
-import { Link } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faBookmark } from "@fortawesome/free-solid-svg-icons";
+
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
 import { AuthContext } from "../../components/context/AuthContext";
 import Search from "../../components/search/Search";
-import {
-  faArrowRightLong,
-  faArrowLeftLong,
-  faPlayCircle,
-  faComment,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../../components/loading/Loading";
+import ModalMovie from "../../components/modalMovie/ModalMovie";
+import { showAuthToast } from "../../utils/showAuthToast";
+import MovieActions from "../../components/movieActions/MovieActions";
 
 const SearchResult = () => {
   const data = useSelector((state) => state.data.value);
+  const [results, setResults] = useState(data);
   const [playVideo, setPlayVideo] = useState(null);
   const [currentTrailer, setCurrentTrailer] = useState(0);
   const { user } = useContext(AuthContext);
-  const contentType = useSelector((state) => state.data.contentType);
+
   const {
     movies,
     loading: bookmarksLoading,
@@ -42,21 +40,6 @@ const SearchResult = () => {
     setCurrentTrailer(0);
   };
 
-  const handleNextTrailer = () => {
-    if (playVideo !== null) {
-      setCurrentTrailer((prev) => (prev + 1) % data[playVideo].trailers.length);
-    }
-  };
-
-  const handlePrevTrailer = () => {
-    if (playVideo !== null) {
-      setCurrentTrailer(
-        (prev) =>
-          (prev - 1 + data[playVideo].trailers.length) %
-          data[playVideo].trailers.length
-      );
-    }
-  };
   if (bookmarksLoading && user) {
     return <Loading />;
   }
@@ -82,43 +65,16 @@ const SearchResult = () => {
 
               return (
                 <div key={item.id}>
-                  <div className="trending__btn-wrapper">
-                    <Link
-                      className="trending__info"
-                      to={`/${isMovie ? "movie-info" : "tv-info"}/${item.id}`}
-                    >
-                      <FontAwesomeIcon
-                        icon={faInfoCircle}
-                        color="white"
-                        size="1x"
-                      />
-                    </Link>
-                    <Link
-                      className="movie__info-comments"
-                      to={`/${isMovie ? "movie-info" : "tv-info"}/comments/${
-                        item.id
-                      }`}
-                    >
-                      <FontAwesomeIcon
-                        icon={faComment}
-                        color="white"
-                        size="1x"
-                      />
-                    </Link>
-                    <div
-                      className="trending__bookmark"
-                      onClick={() => {
-                        handleBookmarkClick(item.id);
-                        selected(item.id);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faBookmark}
-                        color={isBookmarked ? "yellow" : "white"}
-                        size="1x"
-                      />
-                    </div>
-                  </div>
+                  <MovieActions
+                    movie={item}
+                    contentType={item.type}
+                    user={user}
+                    movies={movies}
+                    selected={selected}
+                    showAuthToast={showAuthToast}
+                    handleBookmarkClick={handleBookmarkClick}
+                  />
+
                   <h3 className="trending__movie-title">
                     {isMovie ? item.title : item.name}
                   </h3>
@@ -200,101 +156,14 @@ const SearchResult = () => {
             })}
         </div>
 
-        <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
-          {data?.[playVideo]?.trailers && (
-            <>
-              {console.log(data)}
-              <iframe
-                className="trending__movie-frame"
-                width="560"
-                height="315"
-                src={`https://www.youtube.com/embed/${
-                  data[playVideo].trailers[currentTrailer]?.key ||
-                  data[playVideo].trailers[0]?.key
-                }`}
-                title={
-                  data[playVideo].trailers[currentTrailer]?.name || "Trailer"
-                }
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-
-              <div className="trending__movie-info">
-                <div className="trending__movie-wrapper">
-                  <div className="trending__movie-year">
-                    {data[playVideo]?.release_year}
-                  </div>
-                  <div className="trending__movie-dot">·</div>
-
-                  <div className="trending__movie-thumbnail-svg">
-                    {data[playVideo].item.type === "Movie" ? (
-                      <svg
-                        width="20"
-                        height="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M16.956 0H3.044A3.044 3.044 0 0 0 0 3.044v13.912A3.044 3.044 0 0 0 3.044 20h13.912A3.044 3.044 0 0 0 20 16.956V3.044A3.044 3.044 0 0 0 16.956 0ZM4 9H2V7h2v2Zm-2 2h2v2H2v-2Zm16-2h-2V7h2v2Zm-2 2h2v2h-2v-2Zm2-8.26V4h-2V2h1.26a.74.74 0 0 1 .74.74ZM2.74 2H4v2H2V2.74A.74.74 0 0 1 2.74 2ZM2 17.26V16h2v2H2.74a.74.74 0 0 1-.74-.74Zm16 0a.74.74 0 0 1-.74.74H16v-2h2v1.26Z"
-                          fill="#FFFFFF"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        width="20"
-                        height="20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M20 4.481H9.08l2.7-3.278L10.22 0 7 3.909 3.78.029 2.22 1.203l2.7 3.278H0V20h20V4.481Zm-8 13.58H2V6.42h10v11.64Zm5-3.88h-2v-1.94h2v1.94Zm0-3.88h-2V8.36h2v1.94Z"
-                          fill="#ffffff"
-                        />
-                      </svg>
-                    )}
-                  </div>
-                  <div className="trending__movie-dot">·</div>
-                  <div className="trending__movie-type">
-                    {data[playVideo].item.type === "Movie" ? "Movie" : "TV"}
-                  </div>
-                  <div className="">.</div>
-                  <Link
-                    className="movie__info-comments"
-                    to={`/${
-                      data[playVideo].item.type === "Movie"
-                        ? "movie-info"
-                        : "tv-info"
-                    }/comments/${data[playVideo].item.id}`}
-                  >
-                    <FontAwesomeIcon icon={faComment} color="white" size="1x" />
-                  </Link>
-                </div>
-
-                <div>
-                  <button
-                    className="trending__btn-handle"
-                    onClick={handlePrevTrailer}
-                  >
-                    <FontAwesomeIcon
-                      icon={faArrowLeftLong}
-                      color="white"
-                      size="2x"
-                    />
-                  </button>
-                  <button
-                    className="trending__btn-handle"
-                    onClick={handleNextTrailer}
-                  >
-                    <FontAwesomeIcon
-                      icon={faArrowRightLong}
-                      color="white"
-                      size="2x"
-                    />
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-        </Modal>
+        <ModalMovie
+          isOpen={playVideo !== null}
+          onClose={handleCloseModal}
+          playVideo={playVideo}
+          trailers={results}
+          setTrailers={setResults}
+          contentType={results}
+        />
       </div>
     </>
   );

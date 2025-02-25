@@ -61,7 +61,6 @@ const Genre = () => {
           value={selectedGenre}
           onChange={(e) => dispatch(setSelectedGenre(e.target.value))}
         >
-          {console.log(genres)}
           <option value="">All genres</option>
           {genres.map((genre) => (
             <option key={genre.id} value={genre.id}>
