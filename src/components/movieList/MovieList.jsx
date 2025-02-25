@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState, useEffect } from "react";
-import Modal from "../movieModal/MovieModal";
+
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,8 +7,6 @@ import {
   faInfoCircle,
   faBookmark,
   faPlayCircle,
-  faArrowRightLong,
-  faArrowLeftLong,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,23 +18,24 @@ import AuthToast from "../authToast/AuthToast";
 
 import "./movieList.scss";
 import { addHistory } from "../../utils/firestoreUtils";
+import ModalMovie from "../modalMovie/ModalMovie";
 
 const MovieCard = React.memo(
   ({
     movie,
     trailers,
-    currentTrailerIndex,
+
     release_year,
-    first_air_date,
+
     onPlayVideo,
     onBookmarkClick,
     movies,
-    selected,
+
     isSelected,
     contentType,
     user,
     showAuthToast,
-    showToast,
+
     showToastState,
   }) => (
     <div key={movie.id}>
@@ -172,11 +171,11 @@ const MovieCard = React.memo(
 const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const {
     trailers,
+    setTrailers,
     playVideo,
     handlePlayVideo: originalHandlePlayVideo,
     handleCloseModal,
-    handleNextTrailer,
-    handlePrevTrailer,
+
     loadTrailers,
     handleBookmarkClick: originalHandleBookmarkClick,
     movieLoading,
@@ -186,7 +185,6 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const { movies, loading: bookmarksLoading } = useBookmarks();
   const [selectedMovies, setSelectedMovies] = useState({});
   const { user } = useContext(AuthContext);
-  const [history, setHistory] = useState([]);
 
   const contentType = useSelector((state) => state.data.contentType);
   const dispatch = useDispatch();
@@ -367,103 +365,15 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
           )}
         </div>
       )}
-      <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
-        {playVideo !== null && (
-          <>
-            <iframe
-              className="trending__movie-frame"
-              width="560"
-              height="315"
-              src={`https://www.youtube.com/embed/${
-                trailers[playVideo].trailers[
-                  trailers[playVideo].currentTrailerIndex
-                ].key
-              }`}
-              title={
-                trailers[playVideo].trailers[
-                  trailers[playVideo].currentTrailerIndex
-                ].name
-              }
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-            <div className="trending__movie-info">
-              <div className="trending__movie-wrapper">
-                <div className="trending__movie-year">
-                  {contentType === "Movie"
-                    ? trailers[playVideo].release_year
-                    : trailers[playVideo].movie.first_air_date
-                    ? trailers[playVideo].movie.first_air_date.slice(0, 4)
-                    : ""}
-                </div>
-                <div className="trending__movie-dot">·</div>
-                <div className="trending__movie-svg">
-                  {contentType === "Movie" ? (
-                    <svg
-                      width="20"
-                      height="20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M16.956 0H3.044A3.044 3.044 0 0 0 0 3.044v13.912A3.044 3.044 0 0 0 3.044 20h13.912A3.044 3.044 0 0 0 20 16.956V3.044A3.044 3.044 0 0 0 16.956 0ZM4 9H2V7h2v2Zm-2 2h2v2H2v-2Zm16-2h-2V7h2v2Zm-2 2h2v2h-2v-2Zm2-8.26V4h-2V2h1.26a.74.74 0 0 1 .74.74ZM2.74 2H4v2H2V2.74A.74.74 0 0 1 2.74 2ZM2 17.26V16h2v2H2.74a.74.74 0 0 1-.74-.74Zm16 0a.74.74 0 0 1-.74.74H16v-2h2v1.26Z"
-                        fill="#FFFFFF"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      width="20"
-                      height="20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M20 4.481H9.08l2.7-3.278L10.22 0 7 3.909 3.78.029 2.22 1.203l2.7 3.278H0V20h20V4.481Zm-8 13.58H2V6.42h10v11.64Zm5-3.88h-2v-1.94h2v1.94Zm0-3.88h-2V8.36h2v1.94Z"
-                        fill="#ffffff"
-                      />
-                    </svg>
-                  )}
-                </div>
-                <div className="trending__movie-dot">·</div>
-                <div className="trending__movie-type">
-                  {" "}
-                  {contentType === "Movie" ? "Movie" : "TV Show"}
-                </div>
-                <div className="">.</div>
-                <Link
-                  className="movie__info-comments"
-                  to={`/${
-                    contentType === "Movie" ? "movie-info" : "tv-info"
-                  }/comments/${trailers[playVideo].movie.id}`}
-                >
-                  <FontAwesomeIcon icon={faComment} color="white" size="1x" />
-                </Link>
-              </div>
-              <div>
-                <button
-                  className="trending__btn-handle"
-                  onClick={() => handlePrevTrailer(playVideo)}
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowLeftLong}
-                    color="white"
-                    size="2x"
-                  />
-                </button>
-                <button
-                  className="trending__btn-handle"
-                  onClick={() => handleNextTrailer(playVideo)}
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowRightLong}
-                    color="white"
-                    size="2x"
-                  />
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-      </Modal>
+
+      <ModalMovie
+        isOpen={playVideo !== null}
+        onClose={handleCloseModal}
+        playVideo={playVideo}
+        trailers={trailers}
+        setTrailers={setTrailers}
+        contentType={contentType}
+      />
     </div>
   );
 };

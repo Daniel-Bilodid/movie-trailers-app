@@ -7,19 +7,18 @@ import { fetchTVShowById } from "../../utils/fetchTrailers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { useDispatch, useSelector } from "react-redux";
-import { useBookmarks } from "../../hooks/useBookmarks.js";
+
 import { setMovies } from "../../redux/store";
 import {
   faInfoCircle,
   faXmark,
   faPlayCircle,
   faComment,
-  faArrowLeftLong,
-  faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import Modal from "../movieModal/MovieModal";
+
 import "./bookmark.scss";
+import ModalMovie from "../modalMovie/ModalMovie.jsx";
 
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);
@@ -29,59 +28,15 @@ const Bookmarks = () => {
   const moviesFromStore = useSelector((state) => state.data.movies);
 
   const {
-    trailers,
-    setTrailers,
     playVideo,
     setPlayVideo,
-    handlePlayVideo,
+
     handleCloseModal,
     handleBookmarkClick,
   } = useMovieTrailers();
 
   const handlePlayTrailer = (index) => {
     setPlayVideo(index);
-  };
-
-  const handleNextMovie = (index) => {
-    setLocalMovies((prevMovies) => {
-      const updatedMovies = [...prevMovies];
-      const currentMovie = updatedMovies[index];
-
-      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
-        const nextIndex =
-          (currentMovie.currentTrailerIndex + 1) %
-          currentMovie.videos.results.length;
-
-        updatedMovies[index] = {
-          ...currentMovie,
-          currentTrailerIndex: nextIndex,
-        };
-      }
-
-      return updatedMovies;
-    });
-  };
-
-  const handlePrevMovie = (index) => {
-    setLocalMovies((prevMovies) => {
-      const updatedMovies = [...prevMovies];
-      const currentMovie = updatedMovies[index];
-
-      if (currentMovie.videos && currentMovie.videos.results.length > 0) {
-        const prevIndex =
-          (currentMovie.currentTrailerIndex -
-            1 +
-            currentMovie.videos.results.length) %
-          currentMovie.videos.results.length;
-
-        updatedMovies[index] = {
-          ...currentMovie,
-          currentTrailerIndex: prevIndex,
-        };
-      }
-
-      return updatedMovies;
-    });
   };
 
   const fetchBookmarks = async (userId) => {
@@ -304,78 +259,14 @@ const Bookmarks = () => {
         )}
       </ul>
 
-      <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
-        {playVideo !== null && localMovies.length > 0 && (
-          <>
-            <iframe
-              className="trending__movie-frame"
-              width="560"
-              height="315"
-              src={`https://www.youtube.com/embed/${
-                localMovies[playVideo].videos.results?.[
-                  localMovies[playVideo].currentTrailerIndex
-                ]?.key || ""
-              }`}
-              title={
-                localMovies[playVideo]?.videos.results?.[
-                  localMovies[playVideo].currentTrailerIndex
-                ]?.name || "Trailer"
-              }
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-
-            <div className="trending__movie-info">
-              <div className="trending__movie-wrapper">
-                <div className="trending__movie-year">
-                  {localMovies[playVideo]?.release_date
-                    ? localMovies[playVideo]?.release_date.slice(0, 4)
-                    : "Unknown Year" || localMovies[playVideo]?.first_air_date
-                    ? localMovies[playVideo]?.first_air_date.slice(0, 4)
-                    : "Unknown Year"}
-                </div>
-                <div className="trending__movie-dot">·</div>
-                <div className="trending__movie-type">Movie</div>
-                <div className="">.</div>
-
-                <Link
-                  className="movie__info-comments"
-                  to={`/${
-                    localMovies[playVideo].movieType === "Movie"
-                      ? "movie-info"
-                      : "tv-info"
-                  }/comments/${localMovies[playVideo].id}`}
-                >
-                  <FontAwesomeIcon icon={faComment} color="white" size="1x" />
-                </Link>
-              </div>
-              <div>
-                <button
-                  className="trending__btn-handle"
-                  onClick={() => handlePrevMovie(playVideo)}
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowLeftLong}
-                    color="white"
-                    size="2x"
-                  />
-                </button>
-                <button
-                  className="trending__btn-handle"
-                  onClick={() => handleNextMovie(playVideo)}
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowRightLong}
-                    color="white"
-                    size="2x"
-                  />
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-      </Modal>
+      <ModalMovie
+        isOpen={playVideo !== null}
+        onClose={handleCloseModal}
+        playVideo={playVideo}
+        trailers={localMovies}
+        setTrailers={setLocalMovies}
+        contentType={localMovies}
+      />
     </div>
   );
 };

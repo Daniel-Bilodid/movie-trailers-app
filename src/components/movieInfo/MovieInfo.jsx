@@ -3,18 +3,9 @@ import { useSelector } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import "./movieInfo.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faComment } from "@fortawesome/free-solid-svg-icons";
-import { useTrailerHandlers } from "../../hooks/useTrailerHandlers";
-import useMovieTrailers from "../../hooks/useMovieTrailers";
-import Modal from "../movieModal/MovieModal";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
-import {
-  faArrowRightLong,
-  faArrowLeftLong,
-} from "@fortawesome/free-solid-svg-icons";
-import { FaFontAwesome } from "react-icons/fa";
+import axios from "axios";
 
 const fetchMovieById = async (id) => {
   try {
@@ -85,49 +76,6 @@ const MovieInfo = () => {
       setPlayVideo(localMovies.findIndex((movie) => movie.id === id));
     } catch (error) {
       console.error("Ошибка при воспроизведении трейлера:", error);
-    }
-  };
-
-  const handleNextMovie = async (currentIndex) => {
-    const nextIndex = (currentIndex + 1) % localMovies.length;
-    const nextMovieId = localMovies[nextIndex]?.id;
-
-    if (nextMovieId) {
-      try {
-        const fetchedMovie = await fetchMovieById(nextMovieId);
-        setLocalMovies((prevMovies) =>
-          prevMovies.map((movie, index) =>
-            index === nextIndex
-              ? { ...fetchedMovie, currentTrailerIndex: 0 }
-              : movie
-          )
-        );
-        setPlayVideo(nextIndex);
-      } catch (error) {
-        console.error("Ошибка при переключении фильма:", error);
-      }
-    }
-  };
-
-  const handlePrevMovie = async (currentIndex) => {
-    const prevIndex =
-      (currentIndex - 1 + localMovies.length) % localMovies.length;
-    const prevMovieId = localMovies[prevIndex]?.id;
-
-    if (prevMovieId) {
-      try {
-        const fetchedMovie = await fetchMovieById(prevMovieId);
-        setLocalMovies((prevMovies) =>
-          prevMovies.map((movie, index) =>
-            index === prevIndex
-              ? { ...fetchedMovie, currentTrailerIndex: 0 }
-              : movie
-          )
-        );
-        setPlayVideo(prevIndex);
-      } catch (error) {
-        console.error("Ошибка при переключении фильма:", error);
-      }
     }
   };
 
@@ -202,66 +150,6 @@ const MovieInfo = () => {
           )}
         </div>
       </div>
-
-      <Modal isOpen={playVideo !== null} onClose={() => setPlayVideo(null)}>
-        {playVideo !== null && localMovies.length > 0 && (
-          <>
-            <iframe
-              className="trending__movie-frame"
-              width="560"
-              height="315"
-              src={`https://www.youtube.com/embed/${
-                localMovies[playVideo]?.videos.results?.[
-                  localMovies[playVideo].currentTrailerIndex
-                ]?.key || ""
-              }`}
-              title={
-                localMovies[playVideo]?.videos.results?.[
-                  localMovies[playVideo].currentTrailerIndex
-                ]?.name || "Trailer"
-              }
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-
-            <div className="trending__movie-info">
-              <div className="trending__movie-wrapper">
-                <div className="trending__movie-year">
-                  {localMovies[playVideo]?.release_date
-                    ? localMovies[playVideo]?.release_date.slice(0, 4)
-                    : "Unknown Year"}
-                </div>
-                <div className="trending__movie-dot">·</div>
-                <div className="trending__movie-type">Movie</div>
-              </div>
-              <div>
-                <button
-                  className="movie__info-modal-btns"
-                  onClick={() => handlePrevMovie(playVideo)}
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowLeftLong}
-                    color="white"
-                    size="2x"
-                  />
-                </button>
-                <button
-                  className="movie__info-modal-btns"
-                  onClick={() => handleNextMovie(playVideo)}
-                >
-                  {" "}
-                  <FontAwesomeIcon
-                    icon={faArrowRightLong}
-                    color="white"
-                    size="2x"
-                  />
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-      </Modal>
     </div>
   );
 };

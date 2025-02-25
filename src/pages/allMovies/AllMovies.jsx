@@ -18,12 +18,13 @@ import Toggle from "../../components/toggle/Toggle";
 import Genre from "../../components/genre/Genre";
 import Modal from "../../components/movieModal/MovieModal";
 import Search from "../../components/search/Search";
-import { setCurrentPage } from "../../redux/store";
+import { setCurrentPage, setMoviesByGenre } from "../../redux/store";
 import { setContentType } from "../../redux/store";
 import AuthToast from "../../components/authToast/AuthToast";
 import { showToast, hideToast } from "../../redux/store";
 import Loading from "../../components/loading/Loading";
 import "./allMovies.scss";
+import ModalMovie from "../../components/modalMovie/ModalMovie";
 
 const AllMovies = () => {
   const dispatch = useDispatch();
@@ -224,6 +225,16 @@ const AllMovies = () => {
           <p>No movies found for this genre</p>
         )}
       </div>
+      {/* 
+      <ModalMovie
+        isOpen={playVideo !== null}
+        onClose={handleCloseModal}
+        playVideo={playVideo}
+        trailers={moviesByGenre}
+        setTrailers={setMoviesByGenre}
+        contentType={contentType}
+      /> */}
+
       <Modal isOpen={playVideo !== null} onClose={handleCloseModal}>
         {moviesByGenre?.[playVideo]?.trailers && (
           <>

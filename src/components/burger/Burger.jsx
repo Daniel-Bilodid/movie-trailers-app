@@ -1,6 +1,6 @@
 import React from "react";
 import "./burger.scss";
-import { Link } from "react-router-dom";
+
 import NavList from "../navList/NavList";
 const Burger = ({ isMenuOpen, handleIconClick, activeIcon }) => {
   return (

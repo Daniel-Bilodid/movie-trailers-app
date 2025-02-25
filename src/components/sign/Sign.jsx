@@ -16,10 +16,9 @@ const Sign = ({ signModal, setSignModal }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loginEmail, setLoginEmail] = useState(""); // Для логина
-  const [loginPassword, setLoginPassword] = useState(""); // Для логина
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
 
-  // Функция регистрации
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -35,10 +34,8 @@ const Sign = ({ signModal, setSignModal }) => {
       );
       const user = userCredential.user;
 
-      // Сохраняем username в профиле пользователя
       await updateProfile(user, { displayName: userName });
 
-      // Сохраняем дополнительные данные в Firestore
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email: user.email,
@@ -57,7 +54,6 @@ const Sign = ({ signModal, setSignModal }) => {
     }
   };
 
-  // Функция входа
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -65,7 +61,7 @@ const Sign = ({ signModal, setSignModal }) => {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       console.log("User logged in:", loginEmail);
       alert("Login successful!");
-      setSignModal(""); // Закрываем модал
+      setSignModal("");
     } catch (error) {
       console.error("Error during login:", error.message);
       alert(error.message);
@@ -74,7 +70,6 @@ const Sign = ({ signModal, setSignModal }) => {
 
   return (
     <div className="sign">
-      {/* Форма входа */}
       <div className={signModal === "login" ? "box active" : "box"}>
         <span className="borderLine"></span>
         <form onSubmit={handleLogin}>
