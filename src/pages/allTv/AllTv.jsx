@@ -7,9 +7,10 @@ import useMovieTrailers from "../../hooks/useMovieTrailers";
 
 import { AuthContext } from "../../components/context/AuthContext";
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
+import usePageHandle from "../../hooks/usePageHandle";
 import Genre from "../../components/genre/Genre";
 
-import { setCurrentPage, setMoviesByGenre } from "../../redux/store";
+import { setMoviesByGenre } from "../../redux/store";
 import { setContentType } from "../../redux/store";
 import Search from "../../components/search/Search";
 import AuthToast from "../../components/authToast/AuthToast";
@@ -49,6 +50,8 @@ const AllTv = () => {
     movieLoading,
   } = useMovieTrailers();
 
+  const { handleNextPage, handlePreviousPage } = usePageHandle();
+
   const fetchPageData = useCallback(async () => {
     setLoading(true);
     await loadTrailers(currentPage);
@@ -62,24 +65,6 @@ const AllTv = () => {
   if (loading && movieLoading) {
     return <Loading />;
   }
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      dispatch(setCurrentPage(currentPage - 1));
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleNextPage = () => {
-    dispatch(setCurrentPage(currentPage + 1));
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
 
   const showAuthToast = () => {
     dispatch(showToast());

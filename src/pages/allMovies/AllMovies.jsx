@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import useMovieTrailers from "../../hooks/useMovieTrailers";
-
+import usePageHandle from "../../hooks/usePageHandle";
 import { AuthContext } from "../../components/context/AuthContext";
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
 
 import Genre from "../../components/genre/Genre";
 
 import Search from "../../components/search/Search";
-import { setCurrentPage, setMoviesByGenre } from "../../redux/store";
+import { setMoviesByGenre } from "../../redux/store";
 import { setContentType } from "../../redux/store";
 import AuthToast from "../../components/authToast/AuthToast";
 import { showToast, hideToast } from "../../redux/store";
@@ -48,6 +48,8 @@ const AllMovies = () => {
     loadTrailers,
   } = useMovieTrailers();
 
+  const { handleNextPage, handlePreviousPage } = usePageHandle();
+
   const fetchPageData = useCallback(() => {
     loadTrailers(currentPage);
   }, [currentPage, loadTrailers]);
@@ -55,24 +57,6 @@ const AllMovies = () => {
   useEffect(() => {
     fetchPageData();
   }, [fetchPageData]);
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      dispatch(setCurrentPage(currentPage - 1));
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleNextPage = () => {
-    dispatch(setCurrentPage(currentPage + 1));
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
 
   if (movieLoading) {
     return <Loading />;
