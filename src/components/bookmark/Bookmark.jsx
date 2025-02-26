@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 
 import "./bookmark.scss";
 import ModalMovie from "../modalMovie/ModalMovie.jsx";
+import MovieCard from "../movieCard/MovieCard.jsx";
 
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = useState([]);

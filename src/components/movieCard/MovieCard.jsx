@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import AuthToast from "../authToast/AuthToast";
 import MovieActions from "../movieActions/MovieActions";
+import { motion } from "framer-motion";
 
 const MovieCard = React.memo(
   ({
@@ -22,7 +23,7 @@ const MovieCard = React.memo(
     selected,
     showToastState,
   }) => (
-    <div key={movie.id}>
+    <>
       <MovieActions
         movie={movie}
         contentType={contentType}
@@ -117,7 +118,7 @@ const MovieCard = React.memo(
           height="513"
         />
       )}
-    </div>
+    </>
   )
 );
 export default React.memo(MovieCard);

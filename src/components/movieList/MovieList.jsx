@@ -24,7 +24,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
 
     loadTrailers,
     handleBookmarkClick: originalHandleBookmarkClick,
-    movieLoading,
+
     setMovieLoading,
   } = useMovieTrailers(fetchMovies);
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,8 +131,6 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [playVideo, contentType, trailers, user]);
 
-  console.log(trailers[playVideo]?.movie?.first_air_date);
-
   return (
     <div className="popular-list">
       <div className="popular__text-wrapper">
@@ -149,10 +147,8 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
         {enablePagination
           ? trailers.map((item, index) => (
               <MovieCard
-                key={item.movie.id}
                 movie={item.movie}
                 trailers={item.trailers}
-                currentTrailerIndex={item.currentTrailerIndex}
                 release_year={item.release_year}
                 first_air_date={
                   contentType !== "Movie" ? item.first_air_date : ""
@@ -161,23 +157,17 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                 onBookmarkClick={handleBookmarkClick}
                 movies={movies}
                 selected={() => selected(item.movie.id)}
-                isSelected={!!selectedMovies[item.movie.id]}
                 contentType={contentType}
                 user={user}
                 showAuthToast={showAuthToast}
-                showToast={showToast}
                 showToastState={showToastState}
-                movieLoading={movieLoading}
               />
             ))
-          : trailers
-              .slice(0, 10)
-              .map((item, index) => (
+          : trailers.slice(0, 10).map((item, index) => (
+              <div>
                 <MovieCard
-                  key={item.movie.id}
                   movie={item.movie}
                   trailers={item.trailers}
-                  currentTrailerIndex={item.currentTrailerIndex}
                   release_year={item.release_year}
                   first_air_date={
                     contentType !== "Movie" ? item.first_air_date : ""
@@ -186,15 +176,13 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
                   onBookmarkClick={handleBookmarkClick}
                   movies={movies}
                   selected={() => selected(item.movie.id)}
-                  isSelected={!!selectedMovies[item.movie.id]}
                   contentType={contentType}
                   user={user}
                   showAuthToast={showAuthToast}
-                  showToast={showToast}
                   showToastState={showToastState}
-                  movieLoading={movieLoading}
                 />
-              ))}
+              </div>
+            ))}
       </div>
       {enablePagination && (
         <div className="popular__pagination">

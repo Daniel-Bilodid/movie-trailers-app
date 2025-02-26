@@ -1,11 +1,29 @@
-export const settings = {
+const NextArrow = (props) => {
+  const { onClick } = props;
+  return (
+    <div className="custom-next-arrow" onClick={onClick}>
+      →
+    </div>
+  );
+};
+
+const PrevArrow = (props) => {
+  const { onClick } = props;
+  return (
+    <div className="custom-prev-arrow" onClick={onClick}>
+      ←
+    </div>
+  );
+};
+
+const sliderSettings = {
   dots: false,
   infinite: true,
   speed: 500,
   slidesToShow: 5,
   slidesToScroll: 2,
-  //   nextArrow: <NextArrow />,
-  //   prevArrow: <PrevArrow />,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
   responsive: [
     {
       breakpoint: 720,
@@ -44,3 +62,5 @@ export const settings = {
     },
   ],
 };
+
+export default sliderSettings;
