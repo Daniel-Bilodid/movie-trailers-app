@@ -19,6 +19,9 @@ const MovieActions = ({
   selected,
   showAuthToast,
 }) => {
+  if (handleRemoveClick) {
+    console.log("yes");
+  }
   return (
     <div className="trending__btn-wrapper">
       <Link

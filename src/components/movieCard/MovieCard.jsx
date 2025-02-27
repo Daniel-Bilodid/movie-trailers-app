@@ -15,6 +15,7 @@ const MovieCard = React.memo(
 
     onPlayVideo,
     onBookmarkClick,
+    handleRemoveClick,
     movies,
 
     contentType,
@@ -32,6 +33,7 @@ const MovieCard = React.memo(
         selected={selected}
         showAuthToast={showAuthToast}
         handleBookmarkClick={onBookmarkClick}
+        handleRemoveClick={handleRemoveClick}
       />
 
       <AuthToast show={showToastState} />

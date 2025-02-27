@@ -128,6 +128,9 @@ const Trending = () => {
                   showAuthToast={showAuthToast}
                   showToastState={showToastState}
                 />
+
+                {console.log("movie", movie)}
+                {console.log("trailers", trailers)}
               </motion.div>
             )
           )}

@@ -91,6 +91,20 @@ const useMovieTrailers = (fetchMovies) => {
     }
   };
 
+  const handleRemoveClick = async (movieId) => {
+    if (!user) {
+      console.log("Please sign in to remove bookmark.");
+      return;
+    }
+
+    try {
+      const bookmarkRef = doc(db, `users/${user.uid}/bookmarks/${movieId}`);
+      await deleteDoc(bookmarkRef);
+    } catch (error) {
+      console.error("Error removing bookmark:", error);
+    }
+  };
+
   return {
     trailers,
     setTrailers,
@@ -101,6 +115,7 @@ const useMovieTrailers = (fetchMovies) => {
     handleNextTrailer,
     handlePrevTrailer,
     handleBookmarkClick,
+    handleRemoveClick,
     loadTrailers,
     movieLoading,
     setMovieLoading,
