@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth, addUserToFirestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+
 import Profile from "../profile/Profile";
 import {
   signInWithPopup,

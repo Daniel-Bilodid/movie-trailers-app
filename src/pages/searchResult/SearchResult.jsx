@@ -11,9 +11,12 @@ import Loading from "../../components/loading/Loading";
 import ModalMovie from "../../components/modalMovie/ModalMovie";
 import { showAuthToast } from "../../utils/showAuthToast";
 import MovieActions from "../../components/movieActions/MovieActions";
+import MovieCard from "../../components/movieCard/MovieCard";
 
 const SearchResult = () => {
   const data = useSelector((state) => state.data.value);
+
+  const showToastState = useSelector((state) => state.toast.showToast);
   const [results, setResults] = useState(data);
   const [playVideo, setPlayVideo] = useState(null);
   const [currentTrailer, setCurrentTrailer] = useState(0);
@@ -65,6 +68,23 @@ const SearchResult = () => {
 
               return (
                 <div key={item.id}>
+                  {/* <MovieCard
+                    movie={item}
+                    trailers={trailers}
+                    release_year={release_year}
+                    first_air_date={
+                      isMovie !== "Movie" ? item.first_air_date : ""
+                    }
+                    onPlayVideo={() => handlePlayVideo(index)}
+                    onBookmarkClick={handleBookmarkClick}
+                    movies={movies}
+                    selected={() => selected(item.id)}
+                    contentType={isMovie}
+                    user={user}
+                    showAuthToast={showAuthToast}
+                    showToastState={showToastState}
+                  /> */}
+
                   <MovieActions
                     movie={item}
                     contentType={item.type}

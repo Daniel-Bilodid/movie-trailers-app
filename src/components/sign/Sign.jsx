@@ -109,7 +109,6 @@ const Sign = ({ signModal, setSignModal }) => {
         </form>
       </div>
 
-      {/* Форма регистрации */}
       <div className={signModal === "sign" ? "box sign__up active" : "box"}>
         <span className="borderLine"></span>
         <form onSubmit={handleSignUp}>
