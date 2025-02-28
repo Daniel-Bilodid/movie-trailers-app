@@ -45,12 +45,14 @@ const MovieCard = React.memo(
         <div className="trending__movie-thumbnail-container">
           <img
             className="trending__movie-thumbnail"
-            src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
-            alt={`${movie.title} thumbnail`}
-            loading="lazy"
-            width="342"
-            height="513"
+            src={
+              movie.poster_path
+                ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
+                : "https://ih1.redbubble.net/image.1861329650.2941/flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+            }
+            alt={`${movie.title || movie.name || "Unknown"} thumbnail`}
           />
+
           <div
             className="trending__movie-thumbnail-overlay"
             onClick={onPlayVideo}

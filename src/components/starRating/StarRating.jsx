@@ -77,7 +77,6 @@ const StarRating = ({ movieId, userId }) => {
         });
       }
 
-      // Обновить локальное состояние после сохранения
       const updatedDocSnap = await getDoc(docRef);
       if (updatedDocSnap.exists()) {
         setRatings(updatedDocSnap.data().ratings || []);

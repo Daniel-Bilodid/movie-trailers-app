@@ -72,7 +72,6 @@ export const fetchMoreTrendingMovies = async (contentType, page = 1) => {
 
     return await Promise.all(trailersPromises);
   } catch (error) {
-    console.error("Error fetching trending movies", error);
     throw error;
   }
 };
@@ -344,7 +343,6 @@ export const fetchGenres = async (contentType) => {
     const response = await axios.get(getGenreUrl(contentType));
     return response.data.genres;
   } catch (error) {
-    console.error("Ошибка при получении жанров", error);
     throw error;
   }
 };
@@ -380,7 +378,6 @@ export const fetchMoviesWithGenres = async (selectedGenre = null, page = 1) => {
 
     return moviesWithGenres;
   } catch (error) {
-    console.error("Ошибка при получении фильмов с жанрами", error);
     throw error;
   }
 };
@@ -392,7 +389,6 @@ const fetchTrailer = async (movieId) => {
     );
     return response.data.results;
   } catch (error) {
-    console.error("Ошибка при получении трейлеров", error);
     return [];
   }
 };
@@ -413,7 +409,6 @@ export const fetchMoviesByGenre = async (contentType, genreId, page = 1) => {
 
     return moviesWithTrailers;
   } catch (error) {
-    console.error("Ошибка при получении фильмов по жанру", error);
     throw error;
   }
 };
@@ -446,7 +441,6 @@ export const fetchTrendingTVShows = async (page = 1) => {
 
     return await Promise.all(trailersPromises);
   } catch (error) {
-    console.error("Error fetching TV show trailers", error);
     throw error;
   }
 };
@@ -509,7 +503,6 @@ export const fetchTvShowsByGenre = async (contentType, genreId, page = 1) => {
 
     return tvShowsWithTrailers;
   } catch (error) {
-    console.error("Ошибка при получении ТВ-шоу по жанру", error);
     throw error;
   }
 };

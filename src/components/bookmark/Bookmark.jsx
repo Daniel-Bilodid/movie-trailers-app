@@ -116,8 +116,6 @@ const Bookmarks = () => {
                 showAuthToast={showAuthToast}
                 showToastState={showToastState}
               />
-
-              {console.log(localMovies)}
             </div>
           ))
         ) : (

@@ -19,11 +19,9 @@ const MovieActions = ({
   selected,
   showAuthToast,
 }) => {
-  if (handleRemoveClick) {
-    console.log("yes");
-  }
   return (
     <div className="trending__btn-wrapper">
+      {console.log(contentType)}
       <Link
         className="trending__info"
         to={`/${contentType === "Movie" ? "movie-info" : "tv-info"}/${

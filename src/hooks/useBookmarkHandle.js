@@ -12,7 +12,7 @@ const useBookmarkHandle = () => {
   const [selectedMovies, setSelectedMovies] = useState({});
   const { movies, loading: bookmarksLoading } = useBookmarks();
 
-  const handleBookmarkClick = async (movieId) => {
+  const handleBookmarkClick = async (movieId, movieType) => {
     if (!user) {
       console.log("Please sign in to bookmark.");
       return;
@@ -25,7 +25,10 @@ const useBookmarkHandle = () => {
       if (bookmarkDoc.exists()) {
         await deleteDoc(bookmarkRef);
       } else {
-        await setDoc(bookmarkRef, { movieId, movieType: contentType });
+        await setDoc(bookmarkRef, {
+          movieId,
+          movieType: movieType ? movieType : contentType,
+        });
       }
     } catch (error) {
       console.error("Error handling bookmark click:", error);
