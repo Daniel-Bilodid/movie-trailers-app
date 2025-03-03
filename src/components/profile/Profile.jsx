@@ -9,7 +9,7 @@ const Profile = ({ handleLogout }) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const menuRef = useRef(null);
   const { user } = useContext(AuthContext);
-  const [userProfilePic, setUserProfilePic] = useState(user.photoUrl);
+  const [userProfilePic, setUserProfilePic] = useState(user.photoURL);
 
   function onProfileMenuToggle() {
     setToggleMenu((prevToggleMenu) => !prevToggleMenu);
@@ -17,9 +17,8 @@ const Profile = ({ handleLogout }) => {
 
   useEffect(() => {
     setUserProfilePic(user.photoURL);
-    console.log(user.photoURL);
-    console.log(user);
-  }, [user, user.photoURL]);
+    console.log("userPhotoUrl", user.photoURL);
+  }, [user.photoURL]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -42,6 +41,7 @@ const Profile = ({ handleLogout }) => {
             src={userProfilePic ? userProfilePic : profilePic}
             alt="User Avatar"
           />
+          {console.log("userProfilePic", userProfilePic)}
 
           <FontAwesomeIcon
             className={

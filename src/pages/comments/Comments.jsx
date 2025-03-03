@@ -19,7 +19,6 @@ const Comments = () => {
   const location = useLocation();
   const type = location.pathname.includes("movie-info") ? "movie" : "tv";
 
-  console.log(user);
   useEffect(() => {
     const fetchMovieData = async () => {
       try {

@@ -3,17 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../components/context/AuthContext";
 import "./manageProfile.scss";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { handleSave } from "../../utils/handleProfile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPen,
@@ -21,7 +12,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import Slider from "react-slick";
-import { button } from "framer-motion/client";
+
 import profilePic from "../../assets/image-avatar.png";
 import imgPlaceholder from "../../assets/image-placeholder.png";
 
@@ -95,69 +86,6 @@ const ManageProfile = () => {
       }
     } catch (error) {
       console.error("Error in handleFileUpload:", error);
-    }
-  };
-
-  const handleSave = async () => {
-    console.log("im here");
-    if (!newDisplayName || !newDisplayPhoto) {
-      console.warn("Display name or photo URL is empty, nothing to save.");
-      return;
-    }
-    setShowIconConfirmation(false);
-    if (auth.currentUser) {
-      try {
-        const hasNameChanged = newDisplayName !== user?.displayName;
-        const hasPhotoChanged = newDisplayPhoto !== user?.photoURL;
-
-        if (hasNameChanged || hasPhotoChanged) {
-          await updateProfile(auth.currentUser, {
-            displayName: newDisplayName,
-            photoURL: newDisplayPhoto,
-          });
-
-          console.log("Profile updated successfully");
-
-          const userRef = doc(db, "users", auth.currentUser.uid);
-          await setDoc(
-            userRef,
-            {
-              displayName: newDisplayName,
-              photoURL: newDisplayPhoto,
-            },
-            { merge: true }
-          );
-
-          const avatarsRef = collection(
-            db,
-            "users",
-            auth.currentUser.uid,
-            "avatars"
-          );
-          const q = query(avatarsRef, where("photoURL", "==", newDisplayPhoto));
-          const querySnapshot = await getDocs(q);
-
-          if (querySnapshot.empty) {
-            await addDoc(avatarsRef, {
-              photoURL: newDisplayPhoto,
-              createdAt: new Date(),
-            });
-            console.log("New avatar added.");
-          } else {
-            console.log("Avatar with this URL already exists.");
-          }
-
-          await auth.currentUser.reload();
-          setUser(auth.currentUser);
-
-          setNewDisplayName(newDisplayName);
-          setNewDisplayPhoto(newDisplayPhoto);
-        } else {
-          console.log("No changes detected.");
-        }
-      } catch (error) {
-        console.error("Error updating profile:", error);
-      }
     }
   };
 
@@ -340,7 +268,19 @@ const ManageProfile = () => {
           className={showIconConfirmation ? "manage__confirmation-btns" : ""}
         >
           <button
-            onClick={handleSave}
+            onClick={() =>
+              handleSave(
+                newDisplayName,
+                newDisplayPhoto,
+                setShowIconConfirmation,
+                user,
+                auth,
+                updateProfile,
+                setUser,
+                setNewDisplayName,
+                setNewDisplayPhoto
+              )
+            }
             className={
               showIconConfirmation
                 ? "manage__save-button manage__confirmation-btn"
