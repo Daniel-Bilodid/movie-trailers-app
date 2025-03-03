@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
 import AuthToast from "../authToast/AuthToast";
 import MovieActions from "../movieActions/MovieActions";
-import { motion } from "framer-motion";
 
 const MovieCard = React.memo(
   ({

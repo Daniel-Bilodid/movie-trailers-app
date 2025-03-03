@@ -6,8 +6,7 @@ import "./comments.scss";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StarRating from "../../components/starRating/StarRating";
-import { doc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { handleAddComment, deleteComments } from "../../utils/handleComments";
 const Comments = () => {
   const { movieId } = useParams();
   const { user } = useContext(AuthContext);
@@ -56,59 +55,6 @@ const Comments = () => {
     }
   }, [movieId]);
 
-  const handleAddComment = async () => {
-    if (!newComment.trim()) return;
-
-    const comment = {
-      id: crypto.randomUUID(),
-      userId: user.uid ? user.uid : "",
-      userName: user.displayName,
-      userPhoto: user.photoURL,
-      text: newComment,
-      date: new Date().toISOString(),
-      type: type,
-    };
-
-    await addComment(movieId, comment);
-
-    setComments((prev) => [...prev, comment]);
-    setNewComment("");
-  };
-
-  async function deleteComments(movieId, commentId) {
-    console.log(confirmation);
-    setConfirmation((prev) => !prev);
-    if (confirmation) {
-      try {
-        const docRef = doc(db, "comments", movieId);
-
-        const docSnap = await getDoc(docRef);
-
-        if (!docSnap.exists()) {
-          console.error(`Document with movieId ${movieId} does not exist.`);
-          return;
-        }
-
-        const data = docSnap.data();
-        const comments = data.comments || [];
-
-        const updatedComments = comments.filter(
-          (comment) => comment.id !== commentId
-        );
-
-        await updateDoc(docRef, { comments: updatedComments });
-
-        console.log(`Comment with ID ${commentId} successfully deleted.`);
-
-        setComments((prevComments) =>
-          prevComments.filter((comment) => comment.id !== commentId)
-        );
-      } catch (error) {
-        console.error("Error while deleting comment:", error);
-      }
-    }
-  }
-
   return (
     <>
       <div className="comments">
@@ -156,7 +102,15 @@ const Comments = () => {
                         <FontAwesomeIcon
                           className="comments__icon"
                           icon={faTrash}
-                          onClick={() => deleteComments(movieId, comment.id)}
+                          onClick={() =>
+                            deleteComments(
+                              movieId,
+                              comment.id,
+                              setConfirmation,
+                              confirmation,
+                              setComments
+                            )
+                          }
                         />
                       ) : null}
                     </div>
@@ -177,7 +131,15 @@ const Comments = () => {
                   <div className="comments__confirmation-wrapper">
                     <button
                       className="comments__confirmation-btn"
-                      onClick={() => deleteComments(movieId, comment.id)}
+                      onClick={() =>
+                        deleteComments(
+                          movieId,
+                          comment.id,
+                          setConfirmation,
+                          confirmation,
+                          setComments
+                        )
+                      }
                     >
                       Delete
                     </button>
@@ -203,7 +165,23 @@ const Comments = () => {
         />
       </div>
       <div className="comments__btn">
-        <button onClick={user ? handleAddComment : null}>Add comment</button>
+        <button
+          onClick={
+            user
+              ? () =>
+                  handleAddComment(
+                    newComment,
+                    setComments,
+                    setNewComment,
+                    user,
+                    movieId,
+                    type
+                  )
+              : null
+          }
+        >
+          Add comment
+        </button>
       </div>
     </>
   );

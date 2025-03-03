@@ -7,10 +7,6 @@ import React, {
 } from "react";
 import useBookmarks from "../../hooks/useBookmarks";
 
-import { db, auth } from "../../firebase";
-
-import { onAuthStateChanged } from "firebase/auth";
-
 import useMovieTrailers from "../../hooks/useMovieTrailers";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast, hideToast } from "../../redux/store";
