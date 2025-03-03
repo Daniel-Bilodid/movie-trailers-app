@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getDocs, collection, onSnapshot } from "firebase/firestore";
 import { fetchMovieById } from "../utils/fetchTrailers";
 import { fetchTVShowById } from "../utils/fetchTrailers";
@@ -12,7 +12,7 @@ const useBookmarks = () => {
   const [movies, setMoviesList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchBookmarks = async (userId) => {
+  const fetchBookmarks = useCallback(async (userId) => {
     try {
       const bookmarksCollection = collection(db, `users/${userId}/bookmarks`);
       const bookmarksSnapshot = await getDocs(bookmarksCollection);
@@ -26,9 +26,9 @@ const useBookmarks = () => {
       console.error("Ошибка при получении закладок: ", error);
       return [];
     }
-  };
+  }, []);
 
-  const loadMovies = async (bookmarksList) => {
+  const loadMovies = useCallback(async (bookmarksList) => {
     try {
       if (!Array.isArray(bookmarksList)) {
         console.error("Bookmarks List is not an array:", bookmarksList);
@@ -69,7 +69,7 @@ const useBookmarks = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {

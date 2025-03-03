@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import useBookmarks from "../../hooks/useBookmarks";
 
 import { db, auth } from "../../firebase";
@@ -35,24 +41,30 @@ const Bookmarks = () => {
 
   const { fetchBookmarks, loadMovies } = useBookmarks();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return;
+  const stableLoadMovies = useCallback(loadMovies, []);
+  const memoizedUser = useMemo(() => user, [user]);
 
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchData = async () => {
       try {
         const bookmarksList = await fetchBookmarks(user.uid);
+        setBookmarks(bookmarksList);
         await loadMovies(bookmarksList, dispatch);
+        setLoading(false);
       } catch (error) {
         console.error("Error loading bookmarks:", error);
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [user, dispatch, fetchBookmarks, loadMovies]);
+  }, [user, fetchBookmarks, dispatch]);
 
-  const handlePlayTrailer = (index) => {
+  const handlePlayTrailer = useCallback((index) => {
     setPlayVideo(index);
-  };
+  }, []);
 
   const showAuthToast = () => {
     dispatch(showToast());
@@ -62,26 +74,7 @@ const Bookmarks = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const bookmarksList = await fetchBookmarks(user.uid);
-        setBookmarks(bookmarksList);
-        if (bookmarksList.length > 0) {
-          await loadMovies(bookmarksList);
-        } else {
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
     setLocalMovies(moviesFromStore);
-    setLoading(false);
   }, [moviesFromStore]);
 
   if (loading) {
@@ -97,7 +90,7 @@ const Bookmarks = () => {
             <div key={movie.id}>
               <MovieCard
                 movie={movie}
-                trailers={localMovies}
+                trailers={stableLoadMovies}
                 release_year={
                   movie.movieType === "Movie"
                     ? new Date(movie.release_date).getFullYear()
@@ -110,9 +103,9 @@ const Bookmarks = () => {
                 }
                 onPlayVideo={() => handlePlayTrailer(index)}
                 handleRemoveClick={handleRemoveClick}
-                movies={loadMovies}
+                movies={stableLoadMovies}
                 contentType={movie.movieType}
-                user={user}
+                user={memoizedUser}
                 showAuthToast={showAuthToast}
                 showToastState={showToastState}
               />
