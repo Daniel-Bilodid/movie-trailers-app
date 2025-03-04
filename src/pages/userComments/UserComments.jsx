@@ -83,7 +83,9 @@ const UserComments = () => {
                     <div className="user__comments-img">
                       <Link
                         to={`/${
-                          element.type === "movie" ? "movie-info" : "tv-info"
+                          element.comments?.[0].type === "movie"
+                            ? "movie-info"
+                            : "tv-info"
                         }/comments/${element.id}`}
                       >
                         <img

@@ -5,6 +5,7 @@ import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../components/context/AuthContext";
 import profilePic from "../../assets/image-avatar.png";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 const Profile = ({ handleLogout }) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const menuRef = useRef(null);
@@ -16,9 +17,9 @@ const Profile = ({ handleLogout }) => {
   }
 
   useEffect(() => {
-    setUserProfilePic(user.photoURL);
-    console.log("userPhotoUrl", user.photoURL);
-  }, [user.photoURL]);
+    console.log("user.photoURL updated:", user?.photoURL);
+    setUserProfilePic(user?.photoURL || profilePic);
+  }, [user?.photoURL]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -38,6 +39,7 @@ const Profile = ({ handleLogout }) => {
       <div className="profile__wrapper">
         <div className="profile__pic" onClick={onProfileMenuToggle}>
           <img
+            key={userProfilePic}
             src={userProfilePic ? userProfilePic : profilePic}
             alt="User Avatar"
           />

@@ -21,7 +21,6 @@ export const handleSave = async (
   setNewDisplayName,
   setNewDisplayPhoto
 ) => {
-  console.log("im here");
   if (!newDisplayName || !newDisplayPhoto) {
     console.warn("Display name or photo URL is empty, nothing to save.");
     return;

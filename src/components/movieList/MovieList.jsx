@@ -146,22 +146,24 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
       <div className="popular__wrapper">
         {enablePagination
           ? trailers.map((item, index) => (
-              <MovieCard
-                movie={item.movie}
-                trailers={item.trailers}
-                release_year={item.release_year}
-                first_air_date={
-                  contentType !== "Movie" ? item.first_air_date : ""
-                }
-                onPlayVideo={() => handlePlayVideo(index)}
-                onBookmarkClick={handleBookmarkClick}
-                movies={movies}
-                selected={() => selected(item.movie.id)}
-                contentType={contentType}
-                user={user}
-                showAuthToast={showAuthToast}
-                showToastState={showToastState}
-              />
+              <div>
+                <MovieCard
+                  movie={item.movie}
+                  trailers={item.trailers}
+                  release_year={item.release_year}
+                  first_air_date={
+                    contentType !== "Movie" ? item.first_air_date : ""
+                  }
+                  onPlayVideo={() => handlePlayVideo(index)}
+                  onBookmarkClick={handleBookmarkClick}
+                  movies={movies}
+                  selected={() => selected(item.movie.id)}
+                  contentType={contentType}
+                  user={user}
+                  showAuthToast={showAuthToast}
+                  showToastState={showToastState}
+                />
+              </div>
             ))
           : trailers.slice(0, 10).map((item, index) => (
               <div>
