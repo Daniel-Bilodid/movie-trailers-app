@@ -28,6 +28,7 @@ import Loading from "../loading/Loading";
 import ModalMovie from "../modalMovie/ModalMovie";
 import sliderSettings from "../../utils/sliderSettings";
 import MovieCard from "../movieCard/MovieCard";
+import useAddHistory from "../../hooks/useAddHistory";
 const Trending = () => {
   const { user } = useContext(AuthContext);
   const [trailers, setTrailers] = useState([]);
@@ -84,6 +85,8 @@ const Trending = () => {
       dispatch(hideToast());
     }, 5000);
   };
+
+  useAddHistory(playVideo, trailers, user, contentType);
 
   return (
     <>

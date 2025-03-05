@@ -21,7 +21,6 @@ const MovieActions = ({
 }) => {
   return (
     <div className="trending__btn-wrapper">
-      {console.log(contentType)}
       <Link
         className="trending__info"
         to={`/${contentType === "Movie" ? "movie-info" : "tv-info"}/${

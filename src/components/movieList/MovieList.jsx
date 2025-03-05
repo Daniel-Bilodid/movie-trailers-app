@@ -10,9 +10,10 @@ import { showToast, hideToast } from "../../redux/store";
 import useBookmarks from "../../hooks/useBookmarks";
 
 import "./movieList.scss";
-import { addHistory } from "../../utils/firestoreUtils";
+
 import ModalMovie from "../modalMovie/ModalMovie";
 import MovieCard from "../movieCard/MovieCard";
+import useAddHistory from "../../hooks/useAddHistory";
 
 const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
   const {
@@ -115,21 +116,7 @@ const MovieList = ({ fetchMovies, title, moreLink, enablePagination }) => {
     }
   }, [contentType, setMovieLoading]);
 
-  useEffect(() => {
-    if (playVideo !== null && user) {
-      const movieId = trailers[playVideo].movie.id;
-
-      const movie = trailers[playVideo].movie;
-      console.log("contentType:", contentType);
-
-      addHistory(
-        user.uid,
-        movieId.toString(),
-        contentType === "Movie" ? movie.title : movie.name,
-        contentType
-      );
-    }
-  }, [playVideo, contentType, trailers, user]);
+  useAddHistory(playVideo, trailers, user, contentType);
 
   return (
     <div className="popular-list">

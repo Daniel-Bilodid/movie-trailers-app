@@ -17,6 +17,7 @@ import Loading from "../../components/loading/Loading";
 
 import ModalMovie from "../../components/modalMovie/ModalMovie";
 import MovieCard from "../../components/movieCard/MovieCard";
+import useAddHistory from "../../hooks/useAddHistory";
 
 const AllTv = () => {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const AllTv = () => {
     loadTrailers,
     movieLoading,
   } = useMovieTrailers();
+  useAddHistory(playVideo, tvShowsByGenre, user, contentType);
 
   const { handleNextPage, handlePreviousPage } = usePageHandle();
 

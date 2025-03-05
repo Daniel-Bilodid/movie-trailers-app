@@ -12,7 +12,6 @@ import {
   collection,
 } from "firebase/firestore";
 
-// Конфигурация Firebase
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -22,12 +21,10 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-// Инициализация Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Добавляем пользователя в Firestore
 export const addUserToFirestore = async (user) => {
   const userRef = doc(db, `users/${user.uid}`);
   const userDoc = await getDoc(userRef);
@@ -42,20 +39,17 @@ export const addUserToFirestore = async (user) => {
   }
 };
 
-// Функция для добавления закладки
 export const addBookmark = async (userId, bookmark) => {
   const bookmarksRef = collection(db, `users/${userId}/bookmarks`);
   await addDoc(bookmarksRef, bookmark);
 };
 
-// Функция для получения закладок
 export const getBookmarks = async (userId) => {
   const bookmarksRef = collection(db, `users/${userId}/bookmarks`);
   const snapshot = await getDocs(bookmarksRef);
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };
 
-// Обновляем данные пользователя
 const updateUserInFirestore = async (userId, updatedData) => {
   try {
     const userRef = doc(db, "users", userId);
@@ -66,7 +60,6 @@ const updateUserInFirestore = async (userId, updatedData) => {
   }
 };
 
-// Удаляем пользователя из Firestore
 const deleteUserFromFirestore = async (userId) => {
   try {
     const userRef = doc(db, "users", userId);
@@ -77,7 +70,6 @@ const deleteUserFromFirestore = async (userId) => {
   }
 };
 
-// Экспортируем функции и объекты
 export {
   auth,
   db,

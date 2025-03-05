@@ -1,18 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
 import { AuthContext } from "../../components/context/AuthContext";
 import Search from "../../components/search/Search";
-import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
+
 import Loading from "../../components/loading/Loading";
 import ModalMovie from "../../components/modalMovie/ModalMovie";
 import { showAuthToast } from "../../utils/showAuthToast";
-import MovieActions from "../../components/movieActions/MovieActions";
-import MovieCard from "../../components/movieCard/MovieCard";
 
+import MovieCard from "../../components/movieCard/MovieCard";
+import useAddHistory from "../../hooks/useAddHistory";
 const SearchResult = () => {
   const data = useSelector((state) => state.data.value);
 
@@ -26,13 +24,12 @@ const SearchResult = () => {
     movies,
     loading: bookmarksLoading,
     selected,
-    selectedMovies,
+
     handleBookmarkClick,
   } = useBookmarkHandle();
 
-  useEffect(() => {
-    console.log("data", data);
-  }, [data]);
+  useAddHistory(playVideo, movies, user, data[playVideo]?.item.type);
+
   const handlePlayVideo = (index) => {
     setPlayVideo(index);
     setCurrentTrailer(0);

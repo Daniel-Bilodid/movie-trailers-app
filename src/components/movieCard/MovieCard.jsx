@@ -24,7 +24,6 @@ const MovieCard = React.memo(
     showToastState,
   }) => (
     <>
-      {console.log("im here")}
       <MovieActions
         movie={movie}
         contentType={contentType}

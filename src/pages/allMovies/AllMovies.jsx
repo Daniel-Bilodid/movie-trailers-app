@@ -7,7 +7,7 @@ import { AuthContext } from "../../components/context/AuthContext";
 import useBookmarkHandle from "../../hooks/useBookmarkHandle";
 
 import Genre from "../../components/genre/Genre";
-
+import useAddHistory from "../../hooks/useAddHistory";
 import Search from "../../components/search/Search";
 import { setMoviesByGenre } from "../../redux/store";
 import { setContentType } from "../../redux/store";
@@ -46,7 +46,7 @@ const AllMovies = () => {
     movieLoading,
     loadTrailers,
   } = useMovieTrailers();
-
+  useAddHistory(playVideo, moviesByGenre, user, contentType);
   const { handleNextPage, handlePreviousPage } = usePageHandle();
 
   const fetchPageData = useCallback(() => {
