@@ -1,8 +1,5 @@
 import axios from "axios";
 
-import { useSelector } from "react-redux"; // для использования состояния из Redux
-
-// Общая функция для построения URL на основе contentType
 const getFetchUrl = (contentType, type, page) => {
   const baseUrl = "https://api.themoviedb.org/3";
   const movieEndpoints = {

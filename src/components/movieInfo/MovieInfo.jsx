@@ -4,6 +4,7 @@ import { useParams, useLocation } from "react-router-dom";
 import "./movieInfo.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { format } from "date-fns";
 
 import axios from "axios";
 
@@ -75,14 +76,16 @@ const MovieInfo = () => {
 
       setPlayVideo(localMovies.findIndex((movie) => movie.id === id));
     } catch (error) {
-      console.error("Ошибка при воспроизведении трейлера:", error);
+      console.error("Erorr:", error);
     }
   };
 
   if (!movie) return <p>Loading...</p>;
+  const formattedDate = format(movie.release_date, "dd MMMM yyyy");
 
   return (
     <div className="movie__info">
+      {console.log(movie)}
       <div className="movie__info-title-wrapper">
         <img
           className="movie__info-img"
@@ -97,44 +100,57 @@ const MovieInfo = () => {
       </div>
       <div className="movie__info-wrapper">
         <h1 className="movie__info-title">{movie.title}</h1>
+        <div className="movie__info-tagline">{movie.tagline}</div>
         <div className="movie__info-rating adaptive">
-          Rating <br />
           <div className="movie__info-rating-wrapper">
-            <FontAwesomeIcon icon={faStar} size="2x" color="gold" />
-            <span>{movie.vote_average}</span>/10
+            <FontAwesomeIcon
+              className="movie__info-icon"
+              icon={faStar}
+              size="2x"
+              color="white"
+            />
+            <div className="movie__info-rating-vote">
+              {" "}
+              {movie.vote_average}
+              <span>/10</span>
+            </div>
           </div>
         </div>
         <div className="movie__info-genres">
-          <span>Genres:</span>{" "}
-          {movie.genres.map((genre) => genre.name).join(", ")}
+          <span>Genres</span>
+          <div className="movie__info-genres-wrapper">
+            {movie.genres.map((genre) => (
+              <div className="movie__info-genres-item">{genre.name}</div>
+            ))}
+          </div>
         </div>
-        <div className="movie__info-tagline">
-          <span>Tagline:</span> {movie.tagline}
-        </div>
+
         <div className="movie__info-overview">
-          <span>Overview:</span>
+          <span>Overview</span>
           <div className="movie__info-overview-text">{movie.overview}</div>
         </div>
         <div className="movie__info-cast">
-          <span>Cast:</span>
+          <span>Cast</span>
           <ul>
             {cast.map((member) => (
-              <li key={member.cast_id}>{member.name}</li>
+              <li className="movie__info-cast-item" key={member.cast_id}>
+                {member.name}
+              </li>
             ))}
           </ul>
         </div>
         <div className="movie__info-footer">
-          <div className="movie__info-runtime">
-            <span>Runtime:</span> {movie.runtime} minutes
+          <div className="movie__info-item">
+            <span>Runtime</span> {movie.runtime} minutes
           </div>
-          <div className="movie__info-language">
-            <span>Language:</span> {movie.spoken_languages[0]?.name}
+          <div className="movie__info-item">
+            <span>Language</span> {movie.spoken_languages[0]?.name}
           </div>
-          <div className="movie__info-release">
-            <span>Release date:</span> {movie.release_date}
+          <div className="movie__info-item">
+            <span>Release date</span> {formattedDate}
           </div>
-          <div className="movie__info-status">
-            <span>Status:</span> {movie.status}
+          <div className="movie__info-item">
+            <span>Status</span> {movie.status}
           </div>
         </div>
         <div className="movie__info-websites">
