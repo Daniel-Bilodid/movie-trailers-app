@@ -81,7 +81,10 @@ const MovieInfo = () => {
   };
 
   if (!movie) return <p>Loading...</p>;
-  const formattedDate = format(movie.release_date, "dd MMMM yyyy");
+  const formattedDate = format(
+    movie.release_date ?? movie.last_air_date,
+    "dd MMMM yyyy"
+  );
 
   return (
     <div className="movie__info">
