@@ -3,9 +3,30 @@
     margin-left: 40px;
     margin-bottom: 20px;
     margin-right: 10px;
+    &-wrapper {
+      margin-top: -15px;
+    }
+    &-title {
+      font-size: 20px;
+      margin-right: 10px;
+    }
   }
   &__average {
     font-size: 22px;
     margin-left: 10px;
   }
+}
+.star__rating-wrapper {
+  transition: color 0.3s, transform 0.2s;
+}
+
+.star__rating-wrapper:hover {
+  color: white;
+  transform: scale(1.2);
+  text-shadow: 0 0 10px white;
+}
+
+.star__rating-wrapper:active {
+  transform: scale(1.1);
+  transition: transform 0.1s;
 }

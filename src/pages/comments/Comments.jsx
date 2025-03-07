@@ -7,6 +7,8 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StarRating from "../../components/starRating/StarRating";
 import { handleAddComment, deleteComments } from "../../utils/handleComments";
+import { format } from "date-fns";
+
 const Comments = () => {
   const { movieId } = useParams();
   const { user } = useContext(AuthContext);
@@ -96,7 +98,8 @@ const Comments = () => {
                     </div>
 
                     <div className="comment__user-date">
-                      {new Date(comment.date).toLocaleDateString()}
+                      {format(new Date(comment.date), "dd MMMM yyyy")}
+
                       {user && comment.userId === user.uid ? (
                         <FontAwesomeIcon
                           className="comments__icon"

@@ -100,16 +100,18 @@ const StarRating = ({ movieId, userId }) => {
       className="star__rating"
       style={{ display: "flex", gap: "5px", cursor: "pointer" }}
     >
-      <span>Rate</span>
+      <spa className="star__rating-title">Rate</spa>
       {Array.from({ length: 5 }, (_, index) => {
         const starValue = index + 1;
 
         return (
           <span
+            className="star__rating-wrapper"
             key={index}
             style={{
-              fontSize: "24px",
-              color: starValue <= (hover || rating) ? "#FFD700" : "#CCCCCC",
+              fontSize: "34px",
+              color:
+                starValue <= (hover || rating) ? "white" : "rgb(40, 50, 80) ",
             }}
             onClick={() => (user ? handleClick(starValue) : "")}
             onMouseEnter={() => (user ? setHover(starValue) : "")}
